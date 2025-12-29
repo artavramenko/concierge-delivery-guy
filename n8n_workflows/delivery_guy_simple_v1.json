@@ -1,0 +1,481 @@
+{
+  "name": "🚚 Delivery Guy (Simple)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule (Every 3h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Configuration\nconst OWNER = 'Artem'; // Change this to your name\n\n// Calculate lookback time (4 hours for overlap)\nconst lookbackHours = 4;\nconst lookbackDate = new Date();\nlookbackDate.setHours(lookbackDate.getHours() - lookbackHours);\nconst afterTimestamp = Math.floor(lookbackDate.getTime() / 1000);\n\nreturn {\n  owner: OWNER,\n  lookbackHours,\n  afterTimestamp,\n  afterDate: lookbackDate.toISOString()\n};"
+      },
+      "id": "config",
+      "name": "Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 400]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 50,
+        "filters": {
+          "q": "=newer_than:1d {order OR bestellung OR shipped OR versandt OR tracking OR sendung OR delivery OR lieferung OR zustellung OR paket OR package}"
+        },
+        "options": {
+          "labelIds": ["INBOX"]
+        }
+      },
+      "id": "gmail-get-emails",
+      "name": "Gmail: Get Emails",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [640, 400],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter emails that are likely order/delivery related\nconst emails = $input.all();\nconst config = $('Config').first().json;\n\n// Keywords indicating order/delivery emails\nconst ORDER_KEYWORDS = [\n  'order confirmation', 'order #', 'your order', 'order placed',\n  'shipped', 'shipping', 'tracking', 'track your',\n  'delivery', 'delivered', 'out for delivery',\n  'package', 'parcel', 'shipment',\n  'bestellbestätigung', 'bestellung', 'bestellt',\n  'versandt', 'versand', 'sendungsverfolgung',\n  'lieferung', 'zustellung', 'zugestellt',\n  'paket', 'sendung'\n];\n\nconst ORDER_SENDERS = [\n  'amazon', 'zalando', 'asos', 'aboutyou', 'otto',\n  'ebay', 'etsy', 'aliexpress', 'mediamarkt', 'saturn',\n  'dhl', 'dpd', 'hermes', 'ups', 'gls', 'fedex',\n  'dhl-noreply', 'pakete', 'delivery', 'shop', 'store'\n];\n\nconst results = [];\n\nfor (const item of emails) {\n  const email = item.json;\n  const subject = (email.subject || '').toLowerCase();\n  const from = (email.from || '').toLowerCase();\n  const snippet = (email.snippet || '').toLowerCase();\n  \n  const matchesKeyword = ORDER_KEYWORDS.some(kw => \n    subject.includes(kw) || snippet.includes(kw)\n  );\n  const matchesSender = ORDER_SENDERS.some(s => from.includes(s));\n  \n  if (matchesKeyword || matchesSender) {\n    results.push({\n      json: {\n        id: email.id,\n        threadId: email.threadId,\n        subject: email.subject,\n        from: email.from,\n        date: email.date,\n        snippet: email.snippet,\n        textPlain: email.textPlain?.substring(0, 8000) || email.snippet,\n        owner: config.owner\n      }\n    });\n  }\n}\n\nif (results.length === 0) {\n  return [{ json: { noEmails: true, message: 'No order-related emails found' } }];\n}\n\nreturn results;"
+      },
+      "id": "filter-emails",
+      "name": "Filter: Order Emails",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.noEmails }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-emails",
+      "name": "Has Emails?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1080, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 1500,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"You are Delivery Guy, an email analysis assistant for parcel tracking. Analyze this email and extract order/delivery information if present.\\n\\nEmail Subject: {{ $json.subject }}\\nFrom: {{ $json.from }}\\nDate: {{ $json.date }}\\nContent: {{ $json.textPlain }}\\n\\nRespond ONLY with valid JSON (no markdown, no explanation):\\n{\\n  \\\"is_order_related\\\": true or false,\\n  \\\"email_type\\\": \\\"order_confirmation|shipping_notification|delivery_update|delivered|return|tracking_info|promotional|other\\\",\\n  \\\"order_id\\\": \\\"order/reference number or null\\\",\\n  \\\"store\\\": \\\"store/shop name or null\\\",\\n  \\\"item_description\\\": \\\"brief description of items (max 100 chars) or null\\\",\\n  \\\"amount\\\": number or null,\\n  \\\"currency\\\": \\\"EUR\\\" or detected currency,\\n  \\\"status\\\": \\\"ordered|confirmed|shipped|out_for_delivery|delivered|returned|unknown\\\",\\n  \\\"delivery_provider\\\": \\\"DHL|DPD|Hermes|UPS|GLS|FedEx|Amazon Logistics|null\\\",\\n  \\\"tracking_number\\\": \\\"tracking number or null\\\",\\n  \\\"tracking_url\\\": \\\"full tracking URL or null\\\",\\n  \\\"store_order_url\\\": \\\"URL to order status page on store's website or null\\\",\\n  \\\"expected_delivery\\\": \\\"YYYY-MM-DD or null\\\",\\n  \\\"notes\\\": \\\"important details or null\\\"\\n}\\n\\nIf not order-related (promotional, newsletter, etc), set is_order_related: false.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "claude-analyze",
+      "name": "Analyze with Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CLAUDE_CREDENTIAL_ID",
+          "name": "Claude Api Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Claude response\nconst response = $input.first().json;\nconst emailData = $('Filter: Order Emails').first().json;\n\nlet analysis;\ntry {\n  const content = response.content?.[0]?.text || '{}';\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : { is_order_related: false };\n} catch (e) {\n  analysis = { is_order_related: false, error: e.message };\n}\n\nif (!analysis.is_order_related) {\n  return { skip: true, reason: analysis.email_type || 'not_order_related' };\n}\n\n// Generate unique order key\nconst orderKey = analysis.order_id \n  ? `${(analysis.store || 'unknown').toLowerCase().replace(/[^a-z0-9]/g, '')}_${analysis.order_id.replace(/[^a-z0-9]/gi, '')}`\n  : `${(analysis.store || 'unknown').toLowerCase().replace(/[^a-z0-9]/g, '')}_${Date.now()}`;\n\nconst now = new Date().toISOString();\nconst emailDate = emailData.date ? new Date(emailData.date).toISOString().split('T')[0] : now.split('T')[0];\n\nreturn {\n  skip: false,\n  orderKey,\n  analysis,\n  emailData: {\n    id: emailData.id,\n    subject: emailData.subject,\n    from: emailData.from,\n    date: emailData.date,\n    owner: emailData.owner\n  },\n  rowData: {\n    order_key: orderKey,\n    order_id: analysis.order_id || '',\n    owner: emailData.owner,\n    email_account: emailData.from?.match(/<([^>]+)>/)?.[1] || '',\n    store: analysis.store || 'Unknown',\n    item_description: (analysis.item_description || '').substring(0, 100),\n    order_date: analysis.email_type === 'order_confirmation' ? emailDate : '',\n    amount: analysis.amount || '',\n    currency: analysis.currency || 'EUR',\n    status: analysis.status || 'unknown',\n    delivery_provider: analysis.delivery_provider || '',\n    tracking_number: analysis.tracking_number || '',\n    tracking_url: analysis.tracking_url || '',\n    store_order_url: analysis.store_order_url || '',\n    expected_delivery: analysis.expected_delivery || '',\n    actual_delivery: analysis.status === 'delivered' ? emailDate : '',\n    last_updated: now,\n    last_email_subject: emailData.subject || '',\n    last_email_date: emailData.date || '',\n    notes: analysis.notes || ''\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1520, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-skip",
+      "name": "Skip?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1740, 500]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "order_key",
+              "lookupValue": "={{ $json.orderKey }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "lookup-order",
+      "name": "Sheets: Lookup",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1960, 600],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decide: Create new or Update existing\nconst lookup = $input.first().json;\nconst parsed = $('Parse Response').first().json;\n\nconst existingRow = lookup.order_key ? lookup : null;\n\nif (existingRow) {\n  // Update existing - merge new info\n  const STATUS_ORDER = ['unknown', 'ordered', 'confirmed', 'shipped', 'out_for_delivery', 'delivered', 'returned'];\n  const oldIdx = STATUS_ORDER.indexOf(existingRow.status || 'unknown');\n  const newIdx = STATUS_ORDER.indexOf(parsed.rowData.status || 'unknown');\n  \n  const updates = { ...existingRow };\n  \n  // Only progress status forward (unless returned)\n  if (newIdx > oldIdx || parsed.rowData.status === 'returned') {\n    updates.status = parsed.rowData.status;\n  }\n  \n  // Fill in missing fields\n  if (!updates.tracking_number && parsed.rowData.tracking_number) {\n    updates.tracking_number = parsed.rowData.tracking_number;\n  }\n  if (!updates.tracking_url && parsed.rowData.tracking_url) {\n    updates.tracking_url = parsed.rowData.tracking_url;\n  }\n  if (!updates.store_order_url && parsed.rowData.store_order_url) {\n    updates.store_order_url = parsed.rowData.store_order_url;\n  }\n  if (!updates.delivery_provider && parsed.rowData.delivery_provider) {\n    updates.delivery_provider = parsed.rowData.delivery_provider;\n  }\n  if (!updates.expected_delivery && parsed.rowData.expected_delivery) {\n    updates.expected_delivery = parsed.rowData.expected_delivery;\n  }\n  if (!updates.actual_delivery && parsed.rowData.actual_delivery) {\n    updates.actual_delivery = parsed.rowData.actual_delivery;\n  }\n  \n  updates.last_updated = parsed.rowData.last_updated;\n  updates.last_email_subject = parsed.rowData.last_email_subject;\n  updates.last_email_date = parsed.rowData.last_email_date;\n  \n  if (parsed.rowData.notes && parsed.rowData.notes !== updates.notes) {\n    updates.notes = updates.notes ? updates.notes + ' | ' + parsed.rowData.notes : parsed.rowData.notes;\n  }\n  \n  return { action: 'update', orderKey: parsed.orderKey, data: updates };\n} else {\n  return { action: 'create', orderKey: parsed.orderKey, data: parsed.rowData };\n}"
+      },
+      "id": "decide-action",
+      "name": "Decide Action",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2180, 600]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputLabel": "Create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputLabel": "Update"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "id": "switch-action",
+      "name": "Switch: Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [2400, 600]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_key": "={{ $json.data.order_key }}",
+            "order_id": "={{ $json.data.order_id }}",
+            "owner": "={{ $json.data.owner }}",
+            "email_account": "={{ $json.data.email_account }}",
+            "store": "={{ $json.data.store }}",
+            "item_description": "={{ $json.data.item_description }}",
+            "order_date": "={{ $json.data.order_date }}",
+            "amount": "={{ $json.data.amount }}",
+            "currency": "={{ $json.data.currency }}",
+            "status": "={{ $json.data.status }}",
+            "delivery_provider": "={{ $json.data.delivery_provider }}",
+            "tracking_number": "={{ $json.data.tracking_number }}",
+            "tracking_url": "={{ $json.data.tracking_url }}",
+            "store_order_url": "={{ $json.data.store_order_url }}",
+            "expected_delivery": "={{ $json.data.expected_delivery }}",
+            "actual_delivery": "={{ $json.data.actual_delivery }}",
+            "last_updated": "={{ $json.data.last_updated }}",
+            "last_email_subject": "={{ $json.data.last_email_subject }}",
+            "last_email_date": "={{ $json.data.last_email_date }}",
+            "notes": "={{ $json.data.notes }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "sheets-create",
+      "name": "Sheets: Create",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2620, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_key": "={{ $json.orderKey }}",
+            "status": "={{ $json.data.status }}",
+            "delivery_provider": "={{ $json.data.delivery_provider }}",
+            "tracking_number": "={{ $json.data.tracking_number }}",
+            "tracking_url": "={{ $json.data.tracking_url }}",
+            "store_order_url": "={{ $json.data.store_order_url }}",
+            "expected_delivery": "={{ $json.data.expected_delivery }}",
+            "actual_delivery": "={{ $json.data.actual_delivery }}",
+            "last_updated": "={{ $json.data.last_updated }}",
+            "last_email_subject": "={{ $json.data.last_email_subject }}",
+            "last_email_date": "={{ $json.data.last_email_date }}",
+            "notes": "={{ $json.data.notes }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "sheets-update",
+      "name": "Sheets: Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2620, 700],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "noop-end",
+      "name": "Done",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2840, 600]
+    }
+  ],
+  "connections": {
+    "Schedule (Every 3h)": {
+      "main": [
+        [
+          { "node": "Config", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          { "node": "Gmail: Get Emails", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Gmail: Get Emails": {
+      "main": [
+        [
+          { "node": "Filter: Order Emails", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Filter: Order Emails": {
+      "main": [
+        [
+          { "node": "Has Emails?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Has Emails?": {
+      "main": [
+        [],
+        [
+          { "node": "Analyze with Claude", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Analyze with Claude": {
+      "main": [
+        [
+          { "node": "Parse Response", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          { "node": "Skip?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Skip?": {
+      "main": [
+        [
+          { "node": "Done", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Sheets: Lookup", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sheets: Lookup": {
+      "main": [
+        [
+          { "node": "Decide Action", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Decide Action": {
+      "main": [
+        [
+          { "node": "Switch: Action", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Switch: Action": {
+      "main": [
+        [
+          { "node": "Sheets: Create", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Sheets: Update", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sheets: Create": {
+      "main": [
+        [
+          { "node": "Done", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sheets: Update": {
+      "main": [
+        [
+          { "node": "Done", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
+
