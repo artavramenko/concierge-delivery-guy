@@ -17,7 +17,7 @@
 4. Add these headers in row 1:
 
 ```
-order_key | order_id | owner | email_account | store | item_description | order_date | amount | currency | status | delivery_provider | tracking_number | tracking_url | store_order_url | expected_delivery | actual_delivery | last_updated | last_email_subject | last_email_date | notes
+order_key | order_id | owner | email_account | store | item_description | order_date | amount | currency | status | delivery_provider | tracking_numbers | tracking_url | store_order_url | expected_delivery | actual_delivery | last_updated | last_email_subject | last_email_date | notes
 ```
 
 5. Copy the **Sheet ID** from the URL:
@@ -125,7 +125,7 @@ Wait a few minutes, then run the workflow manually.
 | `currency` | EUR, USD, etc. |
 | `status` | Current status (ordered/shipped/delivered) |
 | `delivery_provider` | DHL, DPD, Hermes, etc. |
-| `tracking_number` | Tracking number |
+| `tracking_numbers` | Tracking number(s), comma-separated for split shipments |
 | `tracking_url` | Link to tracking page |
 | `store_order_url` | Link to order on store's website |
 | `expected_delivery` | Expected delivery date |
