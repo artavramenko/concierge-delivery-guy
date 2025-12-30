@@ -102,13 +102,40 @@
     },
     {
       "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}"
+      },
+      "id": "gmail-get-full",
+      "name": "Gmail: Get Full Message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1400, 500],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge full email body with filtered email metadata\nconst fullEmail = $input.first().json;\nconst filteredEmail = $('Loop Over Emails').first().json;\n\n// Get text content - prefer textPlain, fallback to snippet\nlet textContent = fullEmail.textPlain || '';\nif (!textContent && fullEmail.textHtml) {\n  // Strip HTML tags as fallback\n  textContent = fullEmail.textHtml.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').substring(0, 8000);\n}\nif (!textContent) {\n  textContent = fullEmail.snippet || filteredEmail.snippet || '';\n}\n\nreturn {\n  id: filteredEmail.id,\n  threadId: filteredEmail.threadId,\n  subject: filteredEmail.subject,\n  from: filteredEmail.from,\n  date: filteredEmail.date,\n  snippet: filteredEmail.snippet,\n  textPlain: textContent,\n  owner: filteredEmail.owner\n};"
+      },
+      "id": "merge-email-data",
+      "name": "Merge Email Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1600, 500]
+    },
+    {
+      "parameters": {
         "jsCode": "// Prepare Claude request for single email\nconst email = $input.first().json;\n\nconst prompt = `You are Delivery Guy, an expert email analyzer for parcel tracking. Extract ALL order/delivery information.\n\nEmail Subject: ${email.subject || 'N/A'}\nFrom: ${email.from || 'N/A'}\nDate: ${email.date || 'N/A'}\nContent: ${email.textPlain || email.snippet || 'N/A'}\n\nRespond ONLY with valid JSON:\n{\n  \"is_order_related\": true/false,\n  \"email_type\": \"order_confirmation|shipping_notification|delivery_update|out_for_delivery|delivered|invoice|payment|return|other\",\n  \"sender_type\": \"shop|carrier|logistics|marketplace\",\n  \"store\": \"the ACTUAL STORE/BRAND name (see rules below)\",\n  \"mentioned_store\": \"store mentioned in carrier/logistics emails, or null\",\n  \"order_ids\": [\"ALL order/reference numbers\"],\n  \"tracking_numbers\": [\"ALL tracking numbers\"],\n  \"item_description\": \"items ordered (max 100 chars)\",\n  \"amount\": number or null,\n  \"currency\": \"EUR|USD|CHF|GBP\",\n  \"status\": \"ordered|confirmed|processing|shipped|in_transit|out_for_delivery|delivered|returned|unknown\",\n  \"delivery_provider\": \"DHL|DPD|Hermes|UPS|GLS|FedEx|PostCH|other\",\n  \"tracking_url\": \"full URL for tracking or null\",\n  \"store_order_url\": \"URL to view order on store website or null\",\n  \"expected_delivery\": \"YYYY-MM-DD format ONLY\",\n  \"notes\": \"important details\"\n}\n\nRULES:\n1. STORE: For carriers (DHL, Hermes, GLS), look for 'von X', 'from X' to find actual store\n2. STORE: For logistics (BARTH+CO), look for 'ex. Fa.' to find actual store\n3. DATES: Always YYYY-MM-DD. Convert '30/12/25' to '2025-12-30'\n4. TRACKING: DHL=20 digits, Hermes=H102.../JD000..., GLS=alphanumeric\n5. URLs: Look for 'track', 'sendung', 'order-detail', 'myaccount'`;\n\nconst requestBody = {\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 1500,\n  messages: [{ role: 'user', content: prompt }]\n};\n\nreturn { requestBody, emailData: email };"
       },
       "id": "prepare-claude",
       "name": "Prepare Claude",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1400, 500]
+      "position": [1800, 500]
     },
     {
       "parameters": {
@@ -132,7 +159,7 @@
       "name": "Claude: Analyze",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1600, 500],
+      "position": [2000, 500],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CLAUDE_CREDENTIAL_ID",
@@ -142,13 +169,13 @@
     },
     {
       "parameters": {
-        "jsCode": "// Parse Claude response for single email\nconst response = $input.first().json;\nconst emailData = $('Prepare Claude').first().json.emailData;\n\nlet analysis;\ntry {\n  const content = response.content?.[0]?.text || '{}';\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : { is_order_related: false };\n} catch (e) {\n  analysis = { is_order_related: false, error: e.message };\n}\n\nif (!analysis.is_order_related) {\n  return { skip: true, reason: analysis.email_type || 'not_order_related' };\n}\n\n// Normalize arrays\nconst orderIds = Array.isArray(analysis.order_ids) ? analysis.order_ids : (analysis.order_id ? [analysis.order_id] : []);\nconst trackingNumbers = Array.isArray(analysis.tracking_numbers) ? analysis.tracking_numbers : (analysis.tracking_number ? [analysis.tracking_number] : []);\n\n// Determine effective store\nconst senderType = analysis.sender_type || 'shop';\nconst needsMentionedStore = ['carrier', 'logistics'].includes(senderType);\nconst effectiveStore = needsMentionedStore \n  ? (analysis.mentioned_store || analysis.store || 'unknown')\n  : (analysis.store || 'unknown');\n\nconst storeName = effectiveStore.toLowerCase().replace(/[^a-z0-9]/g, '');\nconst primaryOrderId = orderIds[0] || '';\n\n// Generate order key\nlet orderKey;\nif (primaryOrderId) {\n  orderKey = `${storeName}_${String(primaryOrderId).replace(/[^a-z0-9]/gi, '')}`;\n} else if (trackingNumbers[0]) {\n  orderKey = `${storeName}_track_${trackingNumbers[0].replace(/[^a-z0-9]/gi, '')}`;\n} else {\n  orderKey = `${storeName}_${emailData.id || Date.now()}`;\n}\n\nconst now = new Date().toISOString();\nconst emailDate = emailData.date ? new Date(emailData.date).toISOString().split('T')[0] : now.split('T')[0];\n\n// Extract email address\nconst emailMatch = (emailData.from || '').match(/<([^>]+)>/);\nconst emailAccount = emailMatch ? emailMatch[1] : emailData.from || '';\n\nreturn {\n  skip: false,\n  orderKey,\n  senderType,\n  effectiveStore,\n  orderIds,\n  trackingNumbers,\n  mentionedStore: analysis.mentioned_store || null,\n  rowData: {\n    order_key: orderKey,\n    order_id: orderIds.join(', '),\n    owner: emailData.owner || 'Unknown',\n    email_account: emailAccount,\n    store: effectiveStore,\n    item_description: (analysis.item_description || '').substring(0, 100),\n    order_date: analysis.email_type === 'order_confirmation' ? emailDate : '',\n    amount: analysis.amount || '',\n    currency: analysis.currency || 'EUR',\n    status: analysis.status || 'unknown',\n    delivery_provider: analysis.delivery_provider || '',\n    tracking_numbers: trackingNumbers.join(', '),\n    tracking_url: analysis.tracking_url || '',\n    store_order_url: analysis.store_order_url || '',\n    expected_delivery: analysis.expected_delivery || '',\n    actual_delivery: analysis.status === 'delivered' ? emailDate : '',\n    last_updated: now,\n    last_email_subject: emailData.subject || '',\n    last_email_date: emailData.date || '',\n    notes: analysis.notes || ''\n  }\n};"
+        "jsCode": "// Parse Claude response for single email\nconst response = $input.first().json;\nconst emailData = $('Merge Email Data').first().json;\n\nlet analysis;\ntry {\n  const content = response.content?.[0]?.text || '{}';\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : { is_order_related: false };\n} catch (e) {\n  analysis = { is_order_related: false, error: e.message };\n}\n\nif (!analysis.is_order_related) {\n  return { skip: true, reason: analysis.email_type || 'not_order_related' };\n}\n\n// Normalize arrays\nconst orderIds = Array.isArray(analysis.order_ids) ? analysis.order_ids : (analysis.order_id ? [analysis.order_id] : []);\nconst trackingNumbers = Array.isArray(analysis.tracking_numbers) ? analysis.tracking_numbers : (analysis.tracking_number ? [analysis.tracking_number] : []);\n\n// Determine effective store\nconst senderType = analysis.sender_type || 'shop';\nconst needsMentionedStore = ['carrier', 'logistics'].includes(senderType);\nconst effectiveStore = needsMentionedStore \n  ? (analysis.mentioned_store || analysis.store || 'unknown')\n  : (analysis.store || 'unknown');\n\nconst storeName = effectiveStore.toLowerCase().replace(/[^a-z0-9]/g, '');\nconst primaryOrderId = orderIds[0] || '';\n\n// Generate order key\nlet orderKey;\nif (primaryOrderId) {\n  orderKey = `${storeName}_${String(primaryOrderId).replace(/[^a-z0-9]/gi, '')}`;\n} else if (trackingNumbers[0]) {\n  orderKey = `${storeName}_track_${trackingNumbers[0].replace(/[^a-z0-9]/gi, '')}`;\n} else {\n  orderKey = `${storeName}_${emailData.id || Date.now()}`;\n}\n\nconst now = new Date().toISOString();\nconst emailDate = emailData.date ? new Date(emailData.date).toISOString().split('T')[0] : now.split('T')[0];\n\n// Extract email address\nconst emailMatch = (emailData.from || '').match(/<([^>]+)>/);\nconst emailAccount = emailMatch ? emailMatch[1] : emailData.from || '';\n\nreturn {\n  skip: false,\n  orderKey,\n  senderType,\n  effectiveStore,\n  orderIds,\n  trackingNumbers,\n  mentionedStore: analysis.mentioned_store || null,\n  rowData: {\n    order_key: orderKey,\n    order_id: orderIds.join(', '),\n    owner: emailData.owner || 'Unknown',\n    email_account: emailAccount,\n    store: effectiveStore,\n    item_description: (analysis.item_description || '').substring(0, 100),\n    order_date: analysis.email_type === 'order_confirmation' ? emailDate : '',\n    amount: analysis.amount || '',\n    currency: analysis.currency || 'EUR',\n    status: analysis.status || 'unknown',\n    delivery_provider: analysis.delivery_provider || '',\n    tracking_numbers: trackingNumbers.join(', '),\n    tracking_url: analysis.tracking_url || '',\n    store_order_url: analysis.store_order_url || '',\n    expected_delivery: analysis.expected_delivery || '',\n    actual_delivery: analysis.status === 'delivered' ? emailDate : '',\n    last_updated: now,\n    last_email_subject: emailData.subject || '',\n    last_email_date: emailData.date || '',\n    notes: analysis.notes || ''\n  }\n};"
       },
       "id": "parse-response",
       "name": "Parse Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1800, 500]
+      "position": [2200, 500]
     },
     {
       "parameters": {
@@ -176,7 +203,7 @@
       "name": "Skip?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [2000, 500]
+      "position": [2400, 500]
     },
     {
       "parameters": {
@@ -197,7 +224,7 @@
       "name": "Fetch Orders",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [2200, 600],
+      "position": [2600, 600],
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -214,7 +241,7 @@
       "name": "Find Match & Merge",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2400, 600]
+      "position": [2800, 600]
     },
     {
       "parameters": {
@@ -258,7 +285,7 @@
       "name": "Create or Update?",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3,
-      "position": [2600, 600]
+      "position": [3000, 600]
     },
     {
       "parameters": {
@@ -304,7 +331,7 @@
       "name": "Sheets: Create",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [2800, 500],
+      "position": [3200, 500],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "GSHEETS_CREDENTIAL_ID",
@@ -354,7 +381,7 @@
       "name": "Sheets: Update",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [2800, 700],
+      "position": [3200, 700],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "GSHEETS_CREDENTIAL_ID",
@@ -368,7 +395,7 @@
       "name": "Done",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [3000, 600]
+      "position": [3400, 600]
     },
     {
       "parameters": {},
@@ -401,8 +428,14 @@
     "Loop Over Emails": {
       "main": [
         [{ "node": "Done", "type": "main", "index": 0 }],
-        [{ "node": "Prepare Claude", "type": "main", "index": 0 }]
+        [{ "node": "Gmail: Get Full Message", "type": "main", "index": 0 }]
       ]
+    },
+    "Gmail: Get Full Message": {
+      "main": [[{ "node": "Merge Email Data", "type": "main", "index": 0 }]]
+    },
+    "Merge Email Data": {
+      "main": [[{ "node": "Prepare Claude", "type": "main", "index": 0 }]]
     },
     "Prepare Claude": {
       "main": [[{ "node": "Claude: Analyze", "type": "main", "index": 0 }]]
