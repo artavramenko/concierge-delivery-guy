@@ -187,22 +187,13 @@
           "mode": "name",
           "value": "Orders"
         },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "order_key",
-              "lookupValue": "={{ $json.orderKey }}"
-            }
-          ]
-        },
         "options": {}
       },
-      "id": "lookup-order",
-      "name": "Sheets: Lookup",
+      "id": "fetch-all-orders",
+      "name": "Fetch All Orders",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [1960, 600],
-      "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "GSHEETS_CREDENTIAL_ID",
@@ -212,7 +203,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Decide: Create new or Update existing\n// Get all items from both inputs\nconst lookupResults = $input.all();\nconst parsedResults = $('Parse Response').all().filter(p => !p.json.skip);\n\nconst results = [];\n\nfor (let i = 0; i < lookupResults.length; i++) {\n  const lookup = lookupResults[i]?.json || {};\n  const parsed = parsedResults[i]?.json;\n  \n  if (!parsed) continue;\n  \n  const existingRow = lookup.order_key ? lookup : null;\n  \n  if (existingRow) {\n    // Update existing - merge new info\n    const STATUS_ORDER = ['unknown', 'ordered', 'confirmed', 'shipped', 'out_for_delivery', 'delivered', 'returned'];\n    const oldIdx = STATUS_ORDER.indexOf(existingRow.status || 'unknown');\n    const newIdx = STATUS_ORDER.indexOf(parsed.rowData.status || 'unknown');\n    \n    const updates = { ...existingRow };\n    \n    // Only progress status forward (unless returned)\n    if (newIdx > oldIdx || parsed.rowData.status === 'returned') {\n      updates.status = parsed.rowData.status;\n    }\n    \n    // Fill in missing fields\n    if (!updates.tracking_number && parsed.rowData.tracking_number) {\n      updates.tracking_number = parsed.rowData.tracking_number;\n    }\n    if (!updates.tracking_url && parsed.rowData.tracking_url) {\n      updates.tracking_url = parsed.rowData.tracking_url;\n    }\n    if (!updates.store_order_url && parsed.rowData.store_order_url) {\n      updates.store_order_url = parsed.rowData.store_order_url;\n    }\n    if (!updates.delivery_provider && parsed.rowData.delivery_provider) {\n      updates.delivery_provider = parsed.rowData.delivery_provider;\n    }\n    if (!updates.expected_delivery && parsed.rowData.expected_delivery) {\n      updates.expected_delivery = parsed.rowData.expected_delivery;\n    }\n    if (!updates.actual_delivery && parsed.rowData.actual_delivery) {\n      updates.actual_delivery = parsed.rowData.actual_delivery;\n    }\n    \n    updates.last_updated = parsed.rowData.last_updated;\n    updates.last_email_subject = parsed.rowData.last_email_subject;\n    updates.last_email_date = parsed.rowData.last_email_date;\n    \n    if (parsed.rowData.notes && parsed.rowData.notes !== updates.notes) {\n      updates.notes = updates.notes ? updates.notes + ' | ' + parsed.rowData.notes : parsed.rowData.notes;\n    }\n    \n    results.push({ json: { action: 'update', orderKey: parsed.orderKey, data: updates } });\n  } else {\n    results.push({ json: { action: 'create', orderKey: parsed.orderKey, data: parsed.rowData } });\n  }\n}\n\nreturn results;"
+        "jsCode": "// Decide: Create new or Update existing\n// Get all existing orders from sheet\nconst existingOrders = $input.all().map(item => item.json);\nconst existingByKey = new Map();\nexistingOrders.forEach(order => {\n  if (order.order_key) {\n    existingByKey.set(order.order_key, order);\n  }\n});\n\n// Get all parsed items (non-skipped)\nconst parsedItems = $('Parse Response').all().filter(p => !p.json.skip);\n\nconst results = [];\n\nfor (const item of parsedItems) {\n  const parsed = item.json;\n  if (!parsed || !parsed.rowData) continue;\n  \n  const existingRow = existingByKey.get(parsed.orderKey);\n  \n  if (existingRow) {\n    // Update existing - merge new info\n    const STATUS_ORDER = ['unknown', 'ordered', 'confirmed', 'shipped', 'out_for_delivery', 'delivered', 'returned'];\n    const oldIdx = STATUS_ORDER.indexOf(existingRow.status || 'unknown');\n    const newIdx = STATUS_ORDER.indexOf(parsed.rowData.status || 'unknown');\n    \n    const updates = { ...existingRow };\n    \n    // Only progress status forward (unless returned)\n    if (newIdx > oldIdx || parsed.rowData.status === 'returned') {\n      updates.status = parsed.rowData.status;\n    }\n    \n    // Fill in missing fields\n    if (!updates.tracking_number && parsed.rowData.tracking_number) {\n      updates.tracking_number = parsed.rowData.tracking_number;\n    }\n    if (!updates.tracking_url && parsed.rowData.tracking_url) {\n      updates.tracking_url = parsed.rowData.tracking_url;\n    }\n    if (!updates.store_order_url && parsed.rowData.store_order_url) {\n      updates.store_order_url = parsed.rowData.store_order_url;\n    }\n    if (!updates.delivery_provider && parsed.rowData.delivery_provider) {\n      updates.delivery_provider = parsed.rowData.delivery_provider;\n    }\n    if (!updates.expected_delivery && parsed.rowData.expected_delivery) {\n      updates.expected_delivery = parsed.rowData.expected_delivery;\n    }\n    if (!updates.actual_delivery && parsed.rowData.actual_delivery) {\n      updates.actual_delivery = parsed.rowData.actual_delivery;\n    }\n    \n    updates.last_updated = parsed.rowData.last_updated;\n    updates.last_email_subject = parsed.rowData.last_email_subject;\n    updates.last_email_date = parsed.rowData.last_email_date;\n    \n    if (parsed.rowData.notes && parsed.rowData.notes !== updates.notes) {\n      updates.notes = updates.notes ? updates.notes + ' | ' + parsed.rowData.notes : parsed.rowData.notes;\n    }\n    \n    results.push({ json: { action: 'update', orderKey: parsed.orderKey, data: updates } });\n  } else {\n    results.push({ json: { action: 'create', orderKey: parsed.orderKey, data: parsed.rowData } });\n  }\n}\n\nif (results.length === 0) {\n  return [{ json: { action: 'none', message: 'No items to process' } }];\n}\n\nreturn results;"
       },
       "id": "decide-action",
       "name": "Decide Action",
@@ -267,6 +258,28 @@
               },
               "renameOutput": true,
               "outputLabel": "Update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "none",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputLabel": "None"
             }
           ]
         },
@@ -449,11 +462,11 @@
           { "node": "Done", "type": "main", "index": 0 }
         ],
         [
-          { "node": "Sheets: Lookup", "type": "main", "index": 0 }
+          { "node": "Fetch All Orders", "type": "main", "index": 0 }
         ]
       ]
     },
-    "Sheets: Lookup": {
+    "Fetch All Orders": {
       "main": [
         [
           { "node": "Decide Action", "type": "main", "index": 0 }
@@ -474,6 +487,9 @@
         ],
         [
           { "node": "Sheets: Update", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Done", "type": "main", "index": 0 }
         ]
       ]
     },
