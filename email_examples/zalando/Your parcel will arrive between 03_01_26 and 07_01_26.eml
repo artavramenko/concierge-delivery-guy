@@ -1,0 +1,1693 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp5762593dlb;
+        Mon, 29 Dec 2025 06:30:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHfkhXc8jSRivOGJT0kfaRHiPMAx3pA/dXD8+wrXbejd0hZdcIeIdXDKbDNFuZVhH1SyzFL
+X-Received: by 2002:a05:6000:610:b0:430:f58d:40e5 with SMTP id ffacd0b85a97d-4324e4fb259mr36756265f8f.30.1767018617729;
+        Mon, 29 Dec 2025 06:30:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767018617; cv=none;
+        d=google.com; s=arc-20240605;
+        b=c8sU/Q4n+jJQOMwy+O9gDyE+M8DBWDXvGqQ6VeJTaj/O78Ql+GMzuC0YQLcHuHiXDR
+         LUQJOtv5EBcut6bOrDnfGxKjNUJZyIYyWCKiGVq3+MJwLTM+StOyu8Vr3q2IFlTO46i4
+         z4tkCFaoNDQ0prMeNVhOIYPHsHlV1PzXT5W2cWoqrsn5TqvN1qyNZXdrphxqsSsE2Ny1
+         J8miuKdNG44QsZCOrU+Ip6pTY5woN4wKLnFaWbaafXxKI15MdUFw5A3mytvu6y6HUlon
+         13J3GSdDkJdv1mxHSyHWD4aBb5YJsHn/VroAMJLnrKFDOzRvFfJFOgmvpnSYt0hmU8ay
+         xW+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:date:mime-version:subject:message-id:to:reply-to:from
+         :dkim-signature:dkim-signature;
+        bh=uVXvuzorXcOtLUUSMmd+tmIUS886dJj8QRCTKDIoDlg=;
+        fh=cn1GiMI3JaU8ksh7qZWqfn4YlX+vmbhniBH/Q3A2AY8=;
+        b=M90U0SzKmyDErXkuSL1Fc4ba4Zk3UjENOD6zISa8fSRkb7HYmJqIxCWDq3mQOygMeL
+         2AeIuW7cqhSC/eUVZ5jQn4uhL84sNJg55LwExnI3TUD6JmYZow17Cu2iVaCMK/5tDWbb
+         0eivQTDnlk4z02eaJZrALlWpqJk96t4f6yyghsagpu2evWC8Sshkj39yV39H1VXwss5Y
+         kjjhY1xBvUOKZ40YpYyfcz3FemS3KYyKORimL+loXNkHeErZs3gW8BqGIiZaZorh6Cxa
+         WJTMYvH8/UywofNFV2B1pPfkLs4fdt9NB1DKK9E+pTkMLvepDDssk5B3RHUO7ZAji6Ie
+         q9yQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@service-mail.zalando.de header.s=pr6hi72vcdsslm3zkyl5ojuws4uoe2vk header.b=GU4vUzb6;
+       dkim=pass header.i=@amazonses.com header.s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn header.b=cYG60pfS;
+       spf=pass (google.com: domain of 0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com designates 54.240.4.16 as permitted sender) smtp.mailfrom=0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=service-mail.zalando.de
+Return-Path: <0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com>
+Received: from a4-16.smtp-out.eu-west-1.amazonses.com (a4-16.smtp-out.eu-west-1.amazonses.com. [54.240.4.16])
+        by mx.google.com with ESMTPS id ffacd0b85a97d-4324eab2747si43727881f8f.153.2025.12.29.06.30.17
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Dec 2025 06:30:17 -0800 (PST)
+Received-SPF: pass (google.com: domain of 0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com designates 54.240.4.16 as permitted sender) client-ip=54.240.4.16;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@service-mail.zalando.de header.s=pr6hi72vcdsslm3zkyl5ojuws4uoe2vk header.b=GU4vUzb6;
+       dkim=pass header.i=@amazonses.com header.s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn header.b=cYG60pfS;
+       spf=pass (google.com: domain of 0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com designates 54.240.4.16 as permitted sender) smtp.mailfrom=0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=service-mail.zalando.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=pr6hi72vcdsslm3zkyl5ojuws4uoe2vk; d=service-mail.zalando.de;
+	t=1767018617;
+	h=From:Reply-To:To:Message-ID:Subject:MIME-Version:Content-Type:Date;
+	bh=7dDqGAkSOGSCyQ8bardqNFCXVrTxDxeu+XdfrRqcs0Q=;
+	b=GU4vUzb6X3yBEOkkmPidlI+ZjZjqMNUxWGSKKADSkOKDT6LsCMDMYS5Jtwk43Ksl
+	ogtVTb/hdLPPPTwjUWTeeFDTpuLt864g66/5euSCTSvOg3n7G8w0KqwbO1kDDgYMGeR
+	MA7mHRo1gFcLV9VmGJ4Zx61E4D4x5+hBBbPs/9OY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1767018617;
+	h=From:Reply-To:To:Message-ID:Subject:MIME-Version:Content-Type:Date:Feedback-ID;
+	bh=7dDqGAkSOGSCyQ8bardqNFCXVrTxDxeu+XdfrRqcs0Q=;
+	b=cYG60pfSkCNe/xoqojPO863RnGR/j7RdUYmon9e5bardrSsCtX/DVpfFMsm998Gp
+	g+RX73KnWFLQnmeb1ZYhQE4CxcvSJ6oZI08JCvaYfEQsKWKwjnE/KVMndH5nBi92hBY
+	LfshyDqRBgjvT+Cd+cG4MPCg92arnTdMGeMCD2r4=
+From: Zalando Team <info@service-mail.zalando.de>
+Reply-To: Zalando <noreply@zalando.de>
+To: artyom.avramenko@gmail.com
+Message-ID: <0102019b6a8459c1-09067089-123b-4394-9011-f71eb406e211-000000@eu-west-1.amazonses.com>
+Subject: Your parcel will arrive between 03/01/26 and 07/01/26
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_537509_1134193614.1767018617202"
+Date: Mon, 29 Dec 2025 14:30:17 +0000
+Feedback-ID: ::1.eu-west-1.J18N3ZLCsnkdyQaJ2hUufdajUHNCkAXgMuiI6Wn0AmA=:AmazonSES
+X-SES-Outgoing: 2025.12.29-54.240.4.16
+
+------=_Part_537509_1134193614.1767018617202
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+=20
+Hooray! It's on its way.=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C  =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C=20
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C  =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=
+=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =
+=E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=80=8C =E2=
+=80=8C =E2=80=8C =E2=80=8C =E2=80=8C=20
+
+
+Zalando Email
+
+=20
+=20
+[Zalando]
+[Zalando]
+<https://en.zalando.de?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd0=
+84=3Dlogo&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8df=
+bc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefau=
+lt&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_=
+NMT_TM010_010_251229.&utm_content=3Dlogo>
+=20
+Women
+<https://en.zalando.de/women-home/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010=
+_251229.&cd084=3Dheader_cta_women&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f0=
+73f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd42=
+4c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=
+=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dheader_cta_wome=
+n> =09
+Men
+<https://en.zalando.de/men-home/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_2=
+51229.&cd084=3Dheader_cta_men&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&=
+wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c78=
+2466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DC=
+RM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dheader_cta_men> =09
+Kids
+<https://en.zalando.de/kids-home/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_=
+251229.&cd084=3Dheader_cta_kids&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073=
+f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c=
+782466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=
+=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dheader_cta_kids=
+> =09
+beauty
+<https://en.zalando.de/beauty/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251=
+229.&cd084=3Dheader_cta_beauty&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f=
+&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c7=
+82466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3D=
+CRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dheader_cta_beauty>
+=20
+=20
+Arriving between 03/01/26 and 07/01/26
+=20
+Hi Artyom,
+=20
+your parcel is packed and on its way!
+
+Did you know that you can easily return items from different orders in just=
+=20
+one package? Find out more here
+<https://en.zalando.de/faq/can-i-return-items-from-different-orders-togethe=
+r.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dfaq_bundlin=
+g&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc716957=
+69972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_s=
+ource=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM01=
+0_010_251229.&utm_content=3Dfaq_bundling>=20
+.
+
+Please make sure your payment reaches us within 14 days of receiving this=
+=20
+email. If your order is sent in multiple parts, your due date will be=20
+calculated only after the last package is sent.
+=20
+View your order
+<https://en.zalando.de/myaccount/order-detail/10103677626050/?wmc=3DCRM49_T=
+MS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dcta_account_nbr&cd085=3Ddffceb2=
+b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_h=
+em=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_m=
+edium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm=
+_content=3Dcta_account_nbr>
+=20
+Track your parcel
+<https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececo=
+de=3DJD000390015819013542>
+=20
+Your tracking number: JD000390015819013542
+Tracking not available? Sometimes it can take up to 24 hours so check again=
+=20
+in a little while.
+=20
+=20
+Delivery address
+Artem Avramenko
+Auerstra=C3=9Fe 25
+10249 Berlin =09 Estimated delivery
+between 03/01/26 and 07/01/26
+=20
+Item shipped
+Order number 10103677626050
+<https://en.zalando.de/myaccount/order-detail/10103677626050/?wmc=3DCRM49_T=
+MS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dcta_account_btn&cd085=3Ddffceb2=
+b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_h=
+em=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_m=
+edium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm=
+_content=3Dcta_account_btn>
+=20
+[U1906 UNISEX - Trainers - black]
+<https://en.zalando.de/new-balance-u1906-unisex-trainers-black-ne215p05c-q1=
+1.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dimg_item&cd=
+085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc7169576997=
+2a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_sourc=
+e=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_01=
+0_251229.&utm_content=3Dimg_item> =09
+New Balance
+Trainers - black
+=20
+Size: 45
+Quantity: 1
+=20
+Complete the look
+<https://en.zalando.de/reco-catalog/NE215P05C-Q11/cmVjby1jYXRhbG9nPXJlcy1yZ=
+WNvLXByb2R1Y3RzLW1haWxpbmcteHNlbGwtdG8tcHJvZHVjdC1tb3Jl?wmc=3DCRM49_TMS_EN.=
+ONL_MIX_NMT_TM010_010_251229.&cd084=3Dcomplete_the_look&cd085=3Ddffceb2b-09=
+bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=
+=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_med=
+ium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_c=
+ontent=3Dcomplete_the_look>
+=20
+=20
+=20
+=20
+You might also like...
+=20
+Browse similar items =09[=E2=86=92]
+[=E2=86=92]
+=20
+[U1906 UNISEX - Trainers - black]
+<https://en.zalando.de/new-balance-u1906-unisex-trainers-black-ne215p057-q1=
+1.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dreco-transa=
+ction-mailing-2006_reco1&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=
+=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466e=
+ce&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dreco-transaction-mailing=
+-2006_reco1>
+Deal
+=20
+New Balance
+Trainers
+=20
+112,00=C2=A0=E2=82=AC
+Last lowest price: 103,95=C2=A0=E2=82=AC
+Originally: 160,00=C2=A0=E2=82=AC
+=20
+[1906 UNISEX - Trainers - black]
+<https://en.zalando.de/new-balance-1906-unisex-trainers-black-ne215p06u-q11=
+.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dreco-transac=
+tion-mailing-2006_reco2&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=
+=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466e=
+ce&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dreco-transaction-mailing=
+-2006_reco2>
+Deal
+=20
+New Balance
+Trainers
+=20
+143,95=C2=A0=E2=82=AC
+Last lowest price: 95,95=C2=A0=E2=82=AC
+Originally: 159,95=C2=A0=E2=82=AC
+=20
+[U740 UNISEX - Trainers - black]
+<https://en.zalando.de/new-balance-u740-unisex-trainers-black-ne215p064-q11=
+.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dreco-transac=
+tion-mailing-2006_reco3&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=
+=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466e=
+ce&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dreco-transaction-mailing=
+-2006_reco3>
+=20
+New Balance
+Trainers
+=20
+119,95=C2=A0=E2=82=AC
+=20
+[U1906 UNISEX - Trainers - castlerock]
+<https://en.zalando.de/new-balance-u1906-unisex-trainers-castlerock-ne215p0=
+5e-a11.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dreco-t=
+ransaction-mailing-2006_reco4&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&=
+wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c78=
+2466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DC=
+RM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dreco-transaction-ma=
+iling-2006_reco4>
+Deal
+=20
+New Balance
+Trainers
+=20
+112,00=C2=A0=E2=82=AC
+Last lowest price: 95,95=C2=A0=E2=82=AC
+Originally: 160,00=C2=A0=E2=82=AC
+=20
+=20
+=20
+[=E2=9C=89=EF=B8=8E]
+Get more great deals
+with our newsletter
+=20
+Along with new arrivals, latest trends and style inspiration
+=20
+Tell me more
+<https://en.zalando.de/zalando-newsletter/?c_ref=3Demail&wmc=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dcta_nl_subscription&cd085=3Ddffceb2b=
+-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_he=
+m=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_me=
+dium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_=
+content=3Dcta_nl_subscription&wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_2512=
+29.&cd084=3Dnl_banner&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D=
+4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&=
+otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS=
+_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dnl_banner> =09
+[=E2=86=92]
+<https://en.zalando.de/zalando-newsletter/?c_ref=3Demail&wmc=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dcta_nl_subscription&cd085=3Ddffceb2b=
+-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_he=
+m=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_me=
+dium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_=
+content=3Dcta_nl_subscription&wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_2512=
+29.&cd084=3Dnl_banner&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D=
+4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&=
+otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS=
+_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dnl_banner>
+=20
+=20
+Best wishes,
+Your Zalando Team
+=20
+=20
+
+Need help?
+
+
+
+    * Track your order
+      <https://en.zalando.de/faq/where-is-my-parcel.html?wmc=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dfaq_parcel_tracking&cd085=3Ddffceb2b=
+-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_he=
+m=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_me=
+dium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_=
+content=3Dfaq_parcel_tracking>
+
+    * Payment by invoice
+      <https://en.zalando.de/faq/how-do-i-pay-by-invoice.html?wmc=3DCRM49_T=
+MS_EN.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dfaq_payment_invoice&cd085=3Ddff=
+ceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&=
+tm_hem=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&u=
+tm_medium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.=
+&utm_content=3Dfaq_payment_invoice>
+
+    * Delivery of partner items
+      <https://en.zalando.de/faq/Zalando-Partner?wmc=3DCRM49_TMS_EN.ONL_MIX=
+_NMT_TM010_010_251229.&cd084=3Dfaq_shipment_partner&cd085=3Ddffceb2b-09bf-4=
+452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f=
+99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3D=
+Email&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=
+=3Dfaq_shipment_partner>
+
+    * Cancelling your order
+      <https://en.zalando.de/faq/can-i-cancel-my-box.html?wmc=3DCRM49_TMS_E=
+N.ONL_MIX_NMT_TM010_010_251229.&cd084=3Dfaq_cancellation&cd085=3Ddffceb2b-0=
+9bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=
+=3Dc6f99ec626709c210dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_med=
+ium=3DEmail&utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_c=
+ontent=3Dfaq_cancellation>
+
+    * Help & Contact
+      <https://en.zalando.de/faq/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_=
+251229.&cd084=3Dfaq&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b=
+106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&ot=
+id=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS_E=
+N.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dfaq>
+
+=20
+=20
+Find inspiration
+=20
+[Instagram] <https://www.instagram.com/zalando/> =09[Facebook]
+<https://www.facebook.com/zalando> =09[TikTok]
+<https://www.tiktok.com/@zalando>
+Shop Easily
+=20
+[Android] <https://play.google.com/store/apps/details?id=3Dde.zalando.mobil=
+e> =09
+[Apple]
+<https://apps.apple.com/de/app/zalando-fashion-and-shopping/id585629514>
+=20
+Legal notice
+Zalando.de
+<https://en.zalando.de?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&cd0=
+84=3Dfooter_home&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=3D4b106=
+daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466ece&otid=
+=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_TMS_EN.=
+ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dfooter_home>=20
+is brought to you by Zalando SE
+Zalando SE, Valeska-Gert-Stra=C3=9Fe 5, 10243 Berlin, Germany | Management=
+=20
+Board: Robert Gentz & David Schr=C3=B6der (both co-Chairs of the Board), Dr=
+.=20
+Astrid Arndt, David Schneider | Chairperson of the Supervisory Board: Kelly=
+=20
+Bennett | Registered at Amtsgericht Charlottenburg Berlin, HRB 158855 B |=
+=20
+VAT ID: DE 260543043 | Tax number: 37/132/45004 | WEEE register number DE:=
+=20
+72754189 | See more details
+<https://en.zalando.de/legal-notice/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_0=
+10_251229.&cd084=3Dfooter_more_details&cd085=3Ddffceb2b-09bf-4452-8d49-7e1f=
+f97f073f&wt_cd=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c21=
+0dd424c782466ece&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_cam=
+paign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dfooter_mor=
+e_details>
+=20
+All prices include VAT. Only while stock lasts. All prices subject to=20
+change. "Originally" refers to the item's first listing price or=20
+recommended retail price. Zalando SE has assigned its claims under the=20
+above referenced purchase to Zalando Payments GmbH.
+
+Responsible for contents of Zalando SE: Robert Gentz
+
+This is an automatic email, please do not reply. Find out how to get in=20
+touch by visiting our help and contact
+<https://en.zalando.de/faq/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229=
+.&cd084=3Dfooter_contact&cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&wt_cd=
+=3D4b106daba8dfbc71695769972a784755&tm_hem=3Dc6f99ec626709c210dd424c782466e=
+ce&otid=3Ddefault&utm_source=3DCRM&utm_medium=3DEmail&utm_campaign=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&utm_content=3Dfooter_contact>=20
+pages.
+=20
+
+------=_Part_537509_1134193614.1767018617202
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+   =20
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt=
+p://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html lang=3D"en"><he=
+ad><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8"=
+ /><title>Zalando</title><meta name=3D"viewport" content=3D"width=3Ddevice-=
+width, initial-scale=3D1" /><meta name=3D"format-detection" content=3D"tele=
+phone=3Dno" /><meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge" />=
+<meta name=3D"x-apple-disable-message-reformatting" /><meta name=3D"color-s=
+cheme" content=3D"light dark only"><meta name=3D"supported-color-schemes" c=
+ontent=3D"light dark only"><link type=3D"image/x-icon" href=3D"https://secu=
+re-skin.ztat.net/s/6n1/zalando/img/MAIN/zalando.ico" rel=3D"icon" /><style =
+type=3D"text/css">
+      table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      }
+      a,
+      a:link,
+      a:visited {
+      text-decoration: none;
+      color: #1A1A1A;
+      }
+      a:hover {
+      text-decoration: underline;
+      }
+      #footer a {
+      color: #FFFFFE !important;
+      }
+      .ExternalClass p,
+      .ExternalClass span,
+      .ExternalClass font,
+      .ExternalClass td {
+      line-height: 100%;
+      }
+      .ExternalClass {
+      width: 100%;
+      }
+      body {
+      -webkit-text-size-adjust: none;
+      -ms-text-size-adjust: none;
+      Margin:0;
+      }
+      a[x-apple-data-detectors] {
+      color: inherit !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+      }
+      [office365] div {
+      display: block !important;
+      }
+      .gmailfix {
+      display:none;
+      display:none!important;
+      }
+      .heading_hide {
+      font-size: 0 !important;
+      line-height: 0 !important;
+      color: transparent !important;
+      height: 0 !important;
+      width: 0 !important;
+      mso-hide: all !important;
+      }
+      /* Targeting FAQ container for Gmail */
+      .gs li, u+.gs li, u+body .gs li,  u+.body .gs li  {Margin: 0!importan=
+t;}
+      u+.body .darkmode_grey p+table {max-width:none !important;text-align:=
+left !important;}
+      u+.body .darkmode_faq p+table {background-color:#505153 !important;ma=
+x-width:none !important;text-align:left !important;}
+      /* Targeting FAQ container */
+      .faq_td > table {max-width:none !important;}
+      .faq_td p, ul, li{Margin: 0!important;}
+      .faq_td u + .body .darkmode_grey table {max-width:none !important;tex=
+t-align:left !important;}
+      .faq_td u + .body .darkmode_faq table {background-color:#505153 !impo=
+rtant;max-width:none !important;text-align:left !important;}
+      .faq_td li {padding-bottom:16px;padding-right:24px;font-family:Helvet=
+icaNow,Helvetica,sans-serif;text-align:left;font-size:14px;line-height:20px=
+;letter-spacing:0px;color:#FFFFFE;mso-padding-alt:0px !important;}
+      .faq_td .mobile-full {align:left !important;width:auto !important;flo=
+at:left !important;}=20
+      .faq_td .mobile-full td {vertical-align:top;valign:top;}
+      .faq_td .mobile-full img {display:block!important;}
+    </style><style>
+      /* Fonts from ZDS. Tiempos cannot be bold */
+      @font-face {
+      font-family: Tiempos;
+      font-weight: 400;
+      font-style: normal;
+      src: url(https://mosaic02.ztat.net/nsg/dx-ui/fonts/TiemposText-Regula=
+r.v1.woff2) format("woff2"),
+      url(https://mosaic02.ztat.net/nsg/dx-ui/fonts/TiemposText-Regular.v1.=
+woff) format("woff");
+      }
+      @font-face {
+      font-family: HelveticaNow;
+      font-weight: 400;
+      font-style: normal;
+      src: url(https://mosaic02.ztat.net/nsg/dx-ui/fonts/HelveticaNowText-R=
+egular.v1.woff2) format("woff2"),
+      url(https://mosaic02.ztat.net/nsg/dx-ui/fonts/HelveticaNowText-Regula=
+r.v1.woff) format("woff");
+      }
+      @font-face {
+      font-family: HelveticaNow;
+      font-weight: 700;
+      font-style: normal;
+      font-weight: bold;
+      src: url(https://mosaic02.ztat.net/nsg/dx-ui/fonts/HelveticaNowText-B=
+old.v1.woff2) format("woff2"),
+      url(https://mosaic02.ztat.net/nsg/dx-ui/fonts/HelveticaNowText-Bold.v=
+1.woff)  format("woff");
+      }
+      /* Media queries */
+      @media screen and (max-width: 600px) {
+      .full-width {width: 100% !important;max-width: 100% !important;}
+      .hide {display: none !important;overflow: hidden !important;max-heigh=
+t: 0px !important;}
+      .show {display: inherit !important;}
+      .revert {display: revert !important;}
+      .width_50 {width: 50% !important;}
+      .width_50_item {width: 50% !important;max-width: 100% !important;}
+      .remove_border {border:none !important;}
+      .inline_block {display:inline-block !important;}
+      .inline_table {display:inline-table !important;}
+      .paddingLeftRight18 {padding-left:18px !important;padding-right:18px =
+!important;}
+      .remove_paddingLeft {padding-left:0px !important;}
+      .remove_paddingRight {padding-right:0px !important;}
+      .paddingRight {padding-right:24px !important;}
+      .paddingLeft {padding-left:24px !important;}
+      }
+      /* DARK MODE STYLES */
+      @media (prefers-color-scheme: dark ) {
+      /* Custom Dark Mode Images */
+      .darkmode_image{ display:block!important;overflow: visible !important=
+; float: none !important; max-height:inherit !important; max-width:inherit =
+!important; width:inherit !important; line-height: auto !important; Margin-=
+top:0px !important; visibility:inherit !important; }
+      .darkmode_image_inline { display:inline !important; max-height:inheri=
+t !important; max-width:inherit !important; width:inherit !important; line-=
+height: auto !important; visibility: visible !important; }
+      .lightmode_image { display:none; display:none!important; }
+      /* Custom Dark Mode Colors */=20
+      .darkmode { background-color: #1A1A1A !important;}
+      .darkmode_button {border: 1px solid #FFFFFE !important;}
+      .darkmodeButtonPrimary {background-color:#FFFFFE !important;border:2p=
+x solid #FFFFFE !important;}
+      .darkmodeButtonPrimaryLink {color:#1A1A1A !important;}
+      .darkmodeButtonSecondary {background-color:#1A1A1A !important;border:=
+2px solid #FFFFFE !important;}
+      .darkmodeButtonSecondaryLink {color:#FFFFFE !important;}
+      .darkmodeButtonTertiary {background-color:#1A1A1A !important;border:1=
+px solid #FFFFFE !important;}
+      .darkmodeButtonTertiaryLink {color:#FFFFFE !important;}
+      .darkmode_nwsl_banner {background-color: #f7f7f7;color:#1A1A1A !impor=
+tant;}
+      .darkmode_nwsl_banner td {color:#1A1A1A !important;}
+      .darkmode_nwsl_banner a {color:#1A1A1A !important;}
+      .darkmode_grey {background-color: #505153;}
+      .darkmode_faq {background-color:#505153 !important;max-width:none !im=
+portant;text-align:left !important;}
+      .darkmode_price_red {color: #D9000C !important;}
+      .darkmode_price_old {color: #FFFFFE !important;}
+       p, span, a, td, h1, h2, h3 { color: #FFFFFE !important; }
+      .ctaLink {text-decoration:none;}
+      .link {border-bottom: 2px solid #FFFFFE !important;}
+      .link_small {border-bottom: 1px solid #FFFFFE !important;}
+      .darkmodeDesignerText {color: #FFFFFE !important;}
+      .darkmodeStatementBackground {background-color:#1A1A1A !important;}
+      .background  {background: none!important;height: auto!important;}
+      }
+      /* Duplicating styles with data-ogsc to target Outlook app */
+      [data-ogsc] .darkmode_image { display:block!important; width: auto !i=
+mportant; overflow: visible !important; float: none !important; max-height:=
+inherit !important; max-width:inherit !important; line-height: auto !import=
+ant; Margin-top:0px !important; visibility:inherit !important; }
+      [data-ogsc] .darkmode_image_inline { display:inline !important; max-h=
+eight:inherit !important; max-width:inherit !important; width:inherit !impo=
+rtant; line-height: auto !important; visibility: visible !important; }
+      [data-ogsc] .lightmode_image { display:none; display:none!important;}
+      [data-ogsc] .darkmode { background-color: #1A1A1A !important;}
+      [data-ogsc] .darkmode_button {border: 1px solid #FFFFFE !important;}
+      [data-ogsc] .darkmodeButtonPrimary {background-color:#FFFFFE !importa=
+nt;border:2px solid #FFFFFE !important;}
+      [data-ogsc] .darkmodeButtonPrimaryLink {color:#1A1A1A !important;}
+      [data-ogsc] .darkmodeButtonSecondary {background-color:#1A1A1A !impor=
+tant;border:2px solid #FFFFFE !important;}
+      [data-ogsc] .darkmodeButtonSecondaryLink {color:#FFFFFE !important;}
+      [data-ogsc] .darkmodeButtonTertiary {background-color:#1A1A1A !import=
+ant;border:1px solid #FFFFFE !important;}
+      [data-ogsc] .darkmodeButtonTertiaryLink {color:#FFFFFE !important;}
+      [data-ogsc] .darkmode_nwsl_banner {background-color: #f7f7f7;color:#1=
+A1A1A !important;}
+      [data-ogsc] .darkmode_nwsl_banner td {color:#1A1A1A !important;}
+      [data-ogsc] .darkmode_nwsl_banner a {color:#1A1A1A !important;}
+      [data-ogsc] .darkmode_grey {background-color: #505153}
+      [data-ogsc] .darkmode_faq {background-color:#505153 !important;max-wi=
+dth:none !important;text-align:left !important;}
+      [data-ogsc] .darkmode_price_red {color: #D9000C !important;}
+      [data-ogsc] .darkmode_price_old {color: #FFFFFE !important}
+      [data-ogsc] h1, [data-ogsc] h2, [data-ogsc] h3, [data-ogsc] p, [data-=
+ogsc] span, [data-ogsc] a {color: #FFFFFE !important;}
+      [data-ogsc] .ctaLink {text-decoration:none;}
+      [data-ogsc] .link {border-bottom: 2px solid #FFFFFE !important;}
+      [data-ogsc] .link_small {border-bottom: 1px solid #FFFFFE !important;=
+}
+      [data-ogsc] .darkmodeDesignerText {color: #FFFFFE !important;}
+      [data-ogsc] .darkmodeStatementBackground {background-color:#1A1A1A !i=
+mportant;}
+      [data-ogsc] .background {background: none!important;height: auto!impo=
+rtant;}
+    </style></head><body class=3D"body" bgcolor=3D"#f2f2f2" style=3D"font-s=
+ize:medium; font-size:max(16px, 1rem);Margin:0;padding:0;-webkit-text-size-=
+adjust:none;-ms-text-size-adjust:none;background-color:#f2f2f2;"><table cla=
+ss=3D"hide darkmode" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" align=3D"center" bgcolor=3D"#f2f2f2" aria-hidden=3D"true"><tr><td=
+ height=3D"40" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></t=
+able><style>
+      @media screen and (max-width: 575px) {
+      .full-width {width: 100% !important;max-width: 100% !important;}
+      .hide {display: none !important;overflow: hidden !important;max-heigh=
+t: 0px !important;}
+      .show {display: inherit !important;}
+      .width_50 {width: 50% !important;}
+      .width_50_item {width: 50% !important;max-width: 100% !important;}
+      .remove_border {border:none !important;}
+      .inline_block {display:inline-block !important;}
+      .inline_table {display:inline-table !important;}
+      .paddingLeftRight18 {padding-left:18px !important;padding-right:18px =
+!important;}
+      .remove_paddingLeft {padding-left:0px !important;}
+      .remove_paddingRight {padding-right:0px !important;}
+      .paddingRight {padding-right:24px !important;}
+      .paddingLeft {padding-left:24px !important;}
+      }
+    </style><table class=3D"darkmode" border=3D"0" cellpadding=3D"0" cellsp=
+acing=3D"0" width=3D"100%" align=3D"center" bgcolor=3D"#f2f2f2" role=3D"pre=
+sentation"><!--[if (gte mso 9)|(IE)]><table class=3D"darkmode" border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"center" bgcolo=
+r=3D"#f2f2f2" role=3D"presentation"><tr><td><![endif]--><tr><td><table clas=
+s=3D"remove_border darkmode" border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" align=3D"center" style=3D"max-width:642px;border:1px soli=
+d #EAEAEA;" bgcolor=3D"#FFFFFE" role=3D"presentation"><!--[if (gte mso 9)|(=
+IE)]><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"642" =
+align=3D"center" role=3D"presentation"><tr><td><![endif]--><tr><td align=3D=
+"center" style=3D"max-width:642px;"><div style=3D"display:none;font-size:0p=
+x;color:#999999;line-height:0px;max-height:0px;max-width:0px;opacity:0;over=
+flow:hidden;">Hooray! It's on its way.=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=
+=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C&nbsp;=E2=80=8C=
+&nbsp;</div><table aria-hidden=3D"true" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" align=3D"center" style=3D"max-width:600px;" ><=
+tr><td width=3D"100%" align=3D"center" style=3D"max-width:600px;"><img styl=
+e=3D"display:none!important" alt=3D"" title=3D"" src=3D"https://probe.zalan=
+do.com/images/probe.png?t_id=3De52941f1-e4c2-11f0-b02d-65ef957c3cea&amp;m_i=
+d=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;mo_src=3DCRM49_TMS_EN.ONL_MIX_=
+NMT_TM010_010_251229.&amp;cd099=3Dnotification_centre,transactions_i_delive=
+ry_slip_removal_experiments_across_various_markets&amp;cd100=3Dnotification=
+_centre_enabled,Standard_Delivery_Slip" /></td></tr></table><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentat=
+ion"><tr><td valign=3D"top"><h1 class=3D"heading_hide" style=3D"font-size: =
+0 !important; line-height: 0 !important; color: transparent !important; hei=
+ght: 0 !important; width: 0 !important; mso-hide: all !important;">
+            Zalando Email
+          </h1></td></tr></table><table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" role=3D"presentation"><tr><td class=3D"backgro=
+und" valign=3D"top" style=3D"background-image: url('https://mosaic01.ztat.n=
+et/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-826=
+0-c25ef7ff7d43/white_header_bg.png');background-size: cover;background-posi=
+tion: top center; background-repeat: repeat;"><table border=3D"0" cellpaddi=
+ng=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td heig=
+ht=3D"8" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><=
+table role=3D"presentation" align=3D"left" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0"><tr><td height=3D"16" style=3D"font-size:0px;line-height:0=
+px;">&nbsp;</td></tr><tr><td align=3D"left" style=3D"font-family:HelveticaN=
+ow,Helvetica,sans-serif;font-size:1.25em;line-height: 1.4;letter-spacing:-0=
+.2px;text-align:center;color:#1A1A1A;text-decoration:none;padding-left:24px=
+;"><a role=3D"link" aria-label=3D"Zalando" href=3D"https://en.zalando.de?wm=
+c=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dlogo&amp;cd085=
+=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc716957699=
+72a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&=
+amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dlogo" target=3D"_blank"><i=
+mg class=3D"lightmode_image" src=3D"https://mosaic01.ztat.net/cuo/messages/=
+810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-8260-c25ef7ff7d43/z=
+alando_logo_rebranded.png"
+                  style=3D"font-family:HelveticaNow,Helvetica,sans-serif;fo=
+nt-size:1.25em;line-height: 1.4;letter-spacing:-0.2px;text-align:center;col=
+or:#1A1A1A;text-decoration:none;display:block;" border=3D"0" alt=3D"Zalando=
+" title=3D"" width=3D"132" /><!--[if !mso]><! --><div class=3D"darkmode_ima=
+ge" style=3D"display:none;overflow:hidden;float:left;width:0px;max-height:0=
+px;max-width:0px;line-height:0px;visibility:hidden;" align=3D"center"><img =
+src=3D"https://mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373=
+fdd24c7/99062661-c7bc-4592-8260-c25ef7ff7d43/zalando_logo_rebranded_dark.pn=
+g" style=3D"display:block;"=20
+                    border=3D"0" alt=3D"Zalando" title=3D"" width=3D"132" /=
+></div><!--<![endif]--></a></td></tr></table><table role=3D"presentation" c=
+lass=3D"full-width" align=3D"right" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0"><tr><td height=3D"16" style=3D"font-size:0px;line-height:0px;">&n=
+bsp;</td></tr><tr><td align=3D"left" style=3D"padding-left:24px;padding-rig=
+ht:24px;"><table role=3D"presentation" align=3D"left" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" ><tr><td align=3D"center" style=3D"font-family:=
+HelveticaNow,Helvetica,sans-serif;font-size:0.75em;line-height: 1.333;lette=
+r-spacing:0px;text-align:center;font-weight:bold;color:#6328E0;text-transfo=
+rm:capitalize;padding-right:12px;"><a role=3D"link" class=3D"link_small" hr=
+ef=3D"https://en.zalando.de/women-home/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM01=
+0_010_251229.&amp;cd084=3Dheader_cta_women&amp;cd085=3Ddffceb2b-09bf-4452-8=
+d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3D=
+c6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&am=
+p;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_=
+251229.&amp;utm_content=3Dheader_cta_women"=20
+                      style=3D"font-weight:bold;text-decoration:none;color:=
+#6328E0;border-bottom: 1px solid #6328E0;text-transform:capitalize;"
+                      target=3D"_blank" >Women</a></td><td align=3D"center"=
+ style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.75em;li=
+ne-height: 1.333;letter-spacing:0px;text-align:center;font-weight:bold;colo=
+r:#6328E0;text-transform:capitalize;padding-left:12px;padding-right:12px;bo=
+rder-right:1px solid #D0D1D3;border-left:1px solid #D0D1D3;"><a role=3D"lin=
+k" class=3D"link_small" href=3D"https://en.zalando.de/men-home/?wmc=3DCRM49=
+_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dheader_cta_men&amp;cd085=
+=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc716957699=
+72a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&=
+amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dheader_cta_men"=20
+                      style=3D"font-weight:bold;text-decoration:none;color:=
+#6328E0;border-bottom: 1px solid #6328E0;text-transform:capitalize;"
+                      target=3D"_blank" >Men</a></td><td align=3D"center" s=
+tyle=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.75em;line=
+-height: 1.333;letter-spacing:0px;text-align:center;font-weight:bold;color:=
+#6328E0;text-transform:capitalize;padding-left:12px;padding-right:12px;bord=
+er-right:1px solid #D0D1D3;border-left:1px solid #D0D1D3;"><a role=3D"link"=
+ class=3D"link_small" href=3D"https://en.zalando.de/kids-home/?wmc=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dheader_cta_kids&amp;cd085=
+=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc716957699=
+72a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&=
+amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dheader_cta_kids"=20
+                        style=3D"font-weight:bold;text-decoration:none;colo=
+r:#6328E0;border-bottom: 1px solid #6328E0;text-transform:capitalize;"
+                        target=3D"_blank" >Kids</a></td><td align=3D"center=
+" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.75em;l=
+ine-height: 1.333;letter-spacing:0px;text-align:center;font-weight:bold;col=
+or:#6328E0;text-transform:capitalize;padding-left:12px;padding-right:12px;"=
+><a role=3D"link" class=3D"link_small" href=3D"https://en.zalando.de/beauty=
+/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dheader_cta_b=
+eauty&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106dab=
+a8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;=
+otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=
+=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dheader_cta_=
+beauty"=20
+                        style=3D"font-weight:bold;text-decoration:none;colo=
+r:#6328E0;border-bottom: 1px solid #6328E0;text-transform:capitalize;"
+                        target=3D"_blank" >beauty</a></td></tr></table></td=
+></tr></table><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" aria-hidden=3D"true"><tr><td height=3D"12" style=3D"font-size:0px=
+;line-height:0px;">&nbsp;</td></tr></table></td></tr></table><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidden=3D"tr=
+ue"><tr><td height=3D"12" style=3D"font-size:0px;line-height:0px;">&nbsp;</=
+td></tr></table><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" wid=
+th=3D"100%" role=3D"presentation"><tr><td width=3D"100%" align=3D"left" sty=
+le=3D"padding-left:24px;padding-right:24px;"><h2 style=3D"font-family:Helve=
+ticaNow,Helvetica,sans-serif;font-size:1.5em;line-height: 1.333;letter-spac=
+ing:-0.24px;text-align:left;font-weight:bold;color:#1A1A1A;margin:0;">
+         Arriving between 03/01/26 and 07/01/26
+          </h2></td></tr><tr><td height=3D"24" style=3D"font-size:0px;line-=
+height:0px;">&nbsp;</td></tr></table><table role=3D"presentation" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"><tr><td align=3D"lef=
+t" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:1em;lin=
+e-height: 1.5;letter-spacing:-0.16px;text-align:left;font-weight:bold;color=
+:#1A1A1A;padding-left:24px;padding-right:24px;">
+=09=09=09Hi Artyom,
+=09=09</td></tr><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-siz=
+e:0px;line-height:0px;">&nbsp;</td></tr></table><table role=3D"presentation=
+" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"><tr><td a=
+lign=3D"left" style=3D"font-family:Tiempos,Times New Roman,serif;font-size:=
+1em;line-height: 1.5;letter-spacing:-0.16px;text-align:left;font-weight: no=
+rmal;color:#1A1A1A;padding-left:24px;padding-right:24px;">
+=09=09=09your parcel is packed and on its way!
+
+
+
+
+
+
+
+
+
+
+<br/><br/>Did you know that you can easily return items from different orde=
+rs in just one package? =09
+<a role=3D"link" href=3D"https://en.zalando.de/faq/can-i-return-items-from-=
+different-orders-together.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251=
+229.&amp;cd084=3Dfaq_bundling&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f0=
+73f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709=
+c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=
+=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;=
+utm_content=3Dfaq_bundling" target=3D"_blank" style=3D"color: inherit !impo=
+rtant; text-decoration:underline; font-weight: bold;">Find out more here</a=
+>.
+
+
+<br/><br/>Please make sure your payment reaches us within 14 days of receiv=
+ing this email. If your order is sent in multiple parts, your due date will=
+ be calculated only after the last package is sent.
+
+
+
+
+
+
+
+=09=09</td></tr><tr><td aria-hidden=3D"true"  height=3D"24" style=3D"font-s=
+ize:0px;line-height:0px;">&nbsp;</td></tr></table><table role=3D"presentati=
+on" align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%"><tr><td height=3D"48" align=3D"center" style=3D"padding-left:24px=
+;padding-right:24px;"><table class=3D"darkmode" role=3D"presentation" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left" b=
+gcolor=3D"#1A1A1A"><tr><td class=3D"darkmodeButtonPrimary" height=3D"48" al=
+ign=3D"center" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-=
+size:1em;line-height: 3;mso-line-height-alt:16px;letter-spacing:-0.16px;tex=
+t-align:center;color:#FFFFFE;border: 2px solid #1A1A1A;font-weight:bold;bac=
+kground-color: #1A1A1A;padding-left:12px;padding-right:12px;"><a role=3D"li=
+nk" class=3D"darkmodeButtonPrimaryLink" href=3D"https://en.zalando.de/myacc=
+ount/order-detail/10103677626050/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_=
+251229.&amp;cd084=3Dcta_account_nbr&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1=
+ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec=
+626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_m=
+edium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.=
+&amp;utm_content=3Dcta_account_nbr" target=3D"_blank" style=3D"color:#FFFFF=
+E;font-size:1em;line-height: 3;mso-line-height-alt:16px;font-weight:bold;te=
+xt-decoration:none;width:100%;display:inline-block;">
+=09=09=09=09=09=09=09View your order
+
+=09=09=09=09=09=09</a></td></tr></table></td></tr></table><!-- SPACER --><t=
+able aria-hidden=3D"true" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" =
+width=3D"100%" align=3D"center"><tr><td height=3D"8" style=3D"font-size:0px=
+;line-height:0px;">&nbsp;</td></tr></table><!-- /SPACER --><table role=3D"p=
+resentation" align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0=
+" width=3D"100%"><tr><td height=3D"48" align=3D"center" style=3D"padding-le=
+ft:24px;padding-right:24px;"><table class=3D"darkmode" role=3D"presentation=
+" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"=
+left" bgcolor=3D"#FFFFFE"><tr><td class=3D"darkmodeButtonSecondary" height=
+=3D"48" align=3D"center" style=3D"font-family:HelveticaNow,Helvetica,sans-s=
+erif;font-size:1em;line-height: 3;mso-line-height-alt:16px;letter-spacing:-=
+0.16px;text-align:center;color:#1A1A1A;border: 2px solid #1A1A1A;font-weigh=
+t:bold;padding-left:12px;padding-right:12px;"><a role=3D"link" class=3D"dar=
+kmodeButtonSecondaryLink" href=3D"https://www.dhl.de/de/privatkunden/pakete=
+-empfangen/verfolgen.html?piececode=3DJD000390015819013542" target=3D"_blan=
+k" style=3D"color:#1A1A1A;text-decoration:none;font-weight:bold;font-size:1=
+em;line-height: 3;mso-line-height-alt:16px;width:100%;display:inline-block;=
+">
+=09=09=09=09=09=09=09Track your parcel
+=09=09=09=09=09=09</a></td></tr></table></td></tr></table><table role=3D"pr=
+esentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"=
+><tr><td aria-hidden=3D"true" height=3D"12" style=3D"font-size:0px;line-hei=
+ght:0px;">&nbsp;</td></tr><tr><td align=3D"left" style=3D"font-family:Helve=
+ticaNow,Helvetica,sans-serif;font-size:0.75em;line-height: 1.333;letter-spa=
+cing:0px;color:#66676E;text-align:left;padding-left:24px;padding-right:24px=
+;" >Your tracking number: JD000390015819013542
+<br>
+Tracking not available? Sometimes it can take up to 24 hours so check again=
+ in a little while.</td></tr><tr><td aria-hidden=3D"true" height=3D"16" sty=
+le=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><!-- SPACER S=
+TART --><table aria-hidden=3D"true" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" width=3D"100%" align=3D"center"><tr><td height=3D"20" style=3D"fo=
+nt-size:0px;line-height:0px;">&nbsp;</td></tr></table><!-- SPACER END --><t=
+able role=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" border=3D"0"=
+ width=3D"100%" ><tr><td align=3D"left" valign=3D"top" width=3D"50%" style=
+=3D"padding-left:24px;padding-right:24px;"><span style=3D"font-family:Helve=
+ticaNow,Helvetica,sans-serif;font-size:1em;line-height: 1.5;letter-spacing:=
+-0.16px;color:#1A1A1A;font-weight:bold;padding-bottom:4px;" >Delivery addre=
+ss</span><br/><span style=3D"font-family:HelveticaNow,Helvetica,sans-serif;=
+font-size:0.875em;line-height: 1.429;letter-spacing:0px;color:#1A1A1A;">Art=
+em Avramenko<br />Auerstra=C3=9Fe <u></u>25<br/>10249 Berlin
+<!--p th:unless=3D"${address}"=20
+   style=3D"color:rgb(0,0,0); text-align: left; margin:0;"=20
+   align=3D"left" th:remove=3D"tag"><br /><br /><th:block th:if=3D"${street=
+2}"><br /></th:block><th:block th:if=3D"${additional_address}"><br /></th:b=
+lock></p--></span></td><td align=3D"right" valign=3D"top" width=3D"50%" sty=
+le=3D"padding-right:24px;"><span style=3D"font-family:HelveticaNow,Helvetic=
+a,sans-serif;font-size:1em;line-height: 1.5;letter-spacing:-0.16px;color:#1=
+A1A1A;font-weight:bold;padding-bottom:4px;">
+                   =20
+                    Estimated delivery
+                </span><br/><span style=3D"font-family:HelveticaNow,Helveti=
+ca,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing:0px;color=
+:#1A1A1A;" >between 03/01/26 and 07/01/26</span></td></tr></table><table bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidden=
+=3D"true"><tr><td height=3D"24" style=3D"font-size:0px;line-height:0px;">&n=
+bsp;</td></tr></table><table role=3D"presentation" cellpadding=3D"0" cellsp=
+acing=3D"0" border=3D"0" width=3D"100%"><tr><td style=3D"font-family:Helvet=
+icaNow,Helvetica,sans-serif;font-size:1.25em;line-height: 1.4;letter-spacin=
+g:-0.2px;text-align:left;font-weight:bold;color:#1A1A1A;padding-left:24px;"=
+>Item shipped</td></tr></table><table cellpadding=3D"0" cellspacing=3D"0" b=
+order=3D"0" width=3D"100%" role=3D"presentation"><tr><td style=3D"font-fami=
+ly:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;l=
+etter-spacing:0px;color:#1A1A1A;padding-left:24px;">
+            Order number <a role=3D"link" aria-label=3D"Go to order page fo=
+r order number 10103677626050" class=3D"link_small" href=3D"https://en.zala=
+ndo.de/myaccount/order-detail/10103677626050/?wmc=3DCRM49_TMS_EN.ONL_MIX_NM=
+T_TM010_010_251229.&amp;cd084=3Dcta_account_btn&amp;cd085=3Ddffceb2b-09bf-4=
+452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_h=
+em=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DC=
+RM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010=
+_010_251229.&amp;utm_content=3Dcta_account_btn" style=3D"font-family:Helvet=
+icaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;letter-spa=
+cing:-0.16px;text-align:left;font-weight:bold;color:#6328E0;text-decoration=
+:none;border-bottom: 2px solid #6328E0;mso-margin-bottom-alt:5px;mso-border=
+-bottom-alt:2px solid #6328E0;" >10103677626050</a></td></tr></table><table=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidde=
+n=3D"true"><tr><td height=3D"24" style=3D"font-size:0px;line-height:0px;">&=
+nbsp;</td></tr></table><table role=3D"presentation" cellpadding=3D"0" cells=
+pacing=3D"0" border=3D"0" width=3D"100%"><tr><td width=3D"77" align=3D"left=
+" valign=3D"top" style=3D"padding-left:24px;padding-right:12px;"><a role=3D=
+"link" href=3D"https://en.zalando.de/new-balance-u1906-unisex-trainers-blac=
+k-ne215p05c-q11.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;c=
+d084=3Dimg_item&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=
+=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782=
+466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;u=
+tm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3D=
+img_item" target=3D"_blank"><img src=3D"https://img01.ztat.net/article/spp-=
+media-p1/a9783d7f7f9b46f494033f1a16e72276/6434eb71a30641c89ae66e6411c48caa.=
+jpg?filter=3Dpackshot&amp;imwidth=3D300" alt=3D"U1906 UNISEX - Trainers - b=
+lack" width=3D"77" style=3D"display:block;background-color:#f7f7f7;line-hei=
+ght:111px;font-size:1px;"></a></td><td align=3D"left" valign=3D"top" style=
+=3D"padding-right:24px;"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" width=3D"100%" role=3D"presentation"><tr><td><table role=3D"presenta=
+tion" cellpadding=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%"><tr >=
+<td style=3D"font-family:Tiempos,Times New Roman,serif;font-size:0.875em;li=
+ne-height: 1.429;letter-spacing:0px;text-align:left;font-weight: normal;col=
+or:#1A1A1A;">New Balance</td></tr><tr><td style=3D"font-family:HelveticaNow=
+,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing:0=
+px;text-align:left;text-decoration:none;color:#1A1A1A;">
+                     =20
+                     =20
+                        Trainers - black
+                     =20
+                    </td></tr><tr><td aria-hidden=3D"true" height=3D"8" sty=
+le=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr><tr><td style=3D"font=
+-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.=
+429;letter-spacing:0px;text-align:left;color:#1A1A1A;">Size:&nbsp;45</td></=
+tr><tr><td style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size=
+:0.875em;line-height: 1.429;letter-spacing:0px;color:#66676E;">Quantity:&nb=
+sp;1</td></tr></table></td><td align=3D"right" valign=3D"top" style=3D"font=
+-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.=
+429;letter-spacing:0px;color:#1A1A1A;"></td></tr></table><table border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation">=
+<tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px;line-heigh=
+t:0px;">&nbsp;</td></tr><tr><td align=3D"left"><table border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" role=3D"presentation"><tr><td align=3D"left" st=
+yle=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line=
+-height: 1.429;letter-spacing:-0.16px;text-align:left;font-weight:bold;colo=
+r:#6328E0;text-decoration:none;border-bottom: 2px solid #6328E0;mso-margin-=
+bottom-alt:5px;mso-border-bottom-alt:2px solid #6328E0;"><a role=3D"link" c=
+lass=3D"link" href=3D"https://en.zalando.de/reco-catalog/NE215P05C-Q11/cmVj=
+by1jYXRhbG9nPXJlcy1yZWNvLXByb2R1Y3RzLW1haWxpbmcteHNlbGwtdG8tcHJvZHVjdC1tb3J=
+l?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dcomplete_the=
+_look&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106dab=
+a8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;=
+otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=
+=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dcomplete_th=
+e_look"=20
+                              target=3D"_blank"
+                               style=3D"color:#6328E0;text-decoration:none;=
+" >Complete the look</a></td></tr></table></td></tr></table></td></tr></tab=
+le><table role=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" border=
+=3D"0" width=3D"100%"></table><table border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td height=3D"12" style=
+=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><table aria-hid=
+den=3D"true" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%=
+" align=3D"center"><tr><td height=3D"32" style=3D"font-size:0px;line-height=
+:0px;">&nbsp;</td></tr></table><table role=3D"presentation" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" width=3D"100%"><tr><td><table border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" bgcolor=3D"#D0D1D3" ar=
+ia-hidden=3D"true"><tr><td height=3D"1" style=3D"font-size:0px;line-height:=
+0px;height:1px!important;">&nbsp;</td></tr></table><table border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td=
+ aria-hidden=3D"true" height=3D"16" style=3D"font-size:0px;line-height:0px;=
+">&nbsp;</td></tr></table><table role=3D"presentation" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left"><tr><td align=3D=
+"left" style=3D"padding-left:24px;padding-right:24px;"><h2 style=3D"font-fa=
+mily:HelveticaNow,Helvetica,sans-serif;font-size:1.5em;line-height: 1.333;l=
+etter-spacing:-0.24px;text-align:left;font-weight:bold;color:#1A1A1A;margin=
+:0;">
+                          You might also like...
+                          </h2></td></tr><tr><td style=3D"padding-left:24px=
+;padding-right:24px;"><h3 style=3D"font-family:Tiempos,Times New Roman,seri=
+f;font-size:1.5em;line-height: 1.333;letter-spacing:-0.24px;text-align:left=
+;font-weight: normal;color:#1A1A1A;margin:0;"></h3></td></tr></table><table=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidde=
+n=3D"true"><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px=
+;line-height:0px;">&nbsp;</td></tr></table><table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tr><td align=
+=3D"left" style=3D"padding-left:24px;padding-right:24px;"><table border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation"><tr><td align=
+=3D"left" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:=
+1em;line-height: 1.5;letter-spacing:-0.16px;text-align:left;font-weight:bol=
+d;color:#6328E0;text-decoration:none;"><a role=3D"link" class=3D"link purpl=
+e_link" href=3D"https://en.zalando.de/reco-catalog/NE215P05C-Q11/cmVjby1jYX=
+RhbG9nPXJlcy1yZWNvLXByb2R1Y3RzLW1haWxpbmctc2ltaWxhci10by1wcm9kdWN0LW1vcmU=
+=3D?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dcta_reco_l=
+ink_vs&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106da=
+ba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp=
+;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaig=
+n=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dcta_reco_l=
+ink_vs
+" style=3D"text-decoration:none;color:#6328E0;" target=3D"_blank" >Browse s=
+imilar items</a></td><td aria-hidden=3D"true" align=3D"left" style=3D"text-=
+decoration:none;color:#6328E0;padding-right:24px;padding-left:4px;"><a href=
+=3D"https://en.zalando.de/reco-catalog/NE215P05C-Q11/cmVjby1jYXRhbG9nPXJlcy=
+1yZWNvLXByb2R1Y3RzLW1haWxpbmctc2ltaWxhci10by1wcm9kdWN0LW1vcmU=3D?wmc=3DCRM4=
+9_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dcta_reco_link_vs&amp;cd0=
+85=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc7169576=
+9972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefaul=
+t&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_=
+EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dcta_reco_link_vs
+" style=3D"text-decoration:none;color:#6328E0;" target=3D"_blank"><img clas=
+s=3D"lightmode_image" src=3D"https://mosaic01.ztat.net/cuo/messages/810d1d0=
+0-4312-43e5-bd31-d8373fdd24c7/13c11237-166f-4413-8a00-0616712add40/arrow_63=
+28E0.png" alt=3D"=E2=86=92" width=3D"16" style=3D"display:block;" /><!--[if=
+ !mso]><! --><div class=3D"darkmode_image" style=3D"display:none;overflow:h=
+idden;float:left;max-height:0px;max-width:0px;line-height:0px;visibility:hi=
+dden;"><img src=3D"https://mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e=
+5-bd31-d8373fdd24c7/13c11237-166f-4413-8a00-0616712add40/arrow_FFFFFF.png" =
+alt=3D"=E2=86=92" width=3D"16" style=3D"display:block;" /></div><!--<![endi=
+f]--></a></td></tr></table><table border=3D"0" cellpadding=3D"0" cellspacin=
+g=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td aria-hidden=3D"true" he=
+ight=3D"24" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></tabl=
+e></td></tr></table><table role=3D"presentation" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%"><tr><td style=3D"padding-right:18px=
+;padding-left:18px;"><!--[if (gte mso 9)|(IE)]><table role=3D"presentation"=
+ width=3D"100%"><tr><td width=3D"50%" valign=3D"top" style=3D"padding-top:0=
+;padding-bottom:0;padding-right:0;padding-left:0;" ><![endif]--><table role=
+=3D"presentation" class=3D"full-width"  border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" align=3D"left" style=3D"width:100%;max-width:3=
+00px;display:inline-block;vertical-align:top;"><tr><td width=3D"50%" align=
+=3D"left" valign=3D"top" style=3D"padding-left:6px;padding-right:6px;"><tab=
+le role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" w=
+idth=3D"100%" align=3D"left"><tr><td aria-hidden=3D"true"><a role=3D"link" =
+href=3D"https://en.zalando.de/new-balance-u1906-unisex-trainers-black-ne215=
+p057-q11.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3D=
+reco-transaction-mailing-2006_reco1&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1=
+ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec=
+626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_m=
+edium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.=
+&amp;utm_content=3Dreco-transaction-mailing-2006_reco1" target=3D"_blank"><=
+img class=3D"full-width" src=3D"https://img01.ztat.net/article/spp-media-p1=
+/38020fb896dd4981b1182dc44d40ca32/b64fc39a55744f60aacdbbb6ebc50400.jpg?filt=
+er=3Dpackshot&amp;imwidth=3D300" width=3D"139" style=3D"font-family:Tiempos=
+,Times New Roman,serif;font-size:0.875em;line-height: 1.429;letter-spacing:=
+0px;text-align:center;text-decoration:none;background-color:#EFEFF0;color:#=
+1A1A1A!important;display:block;width:100%;" border=3D"0" alt=3D"U1906 UNISE=
+X - Trainers - black" /></a></td></tr><tr><td align=3D"center" style=3D"pad=
+ding-right:8px;"><table role=3D"presentation" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" align=3D"center"><tr><td><span style=3D"=
+font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.75em;line-height:=
+ 1.333;letter-spacing:0px;text-align:left;font-weight:bold;background-color=
+:#D9000C!important;color:#FFFFFE!important;padding-left:4px;padding-right:4=
+px;padding-top:4px;padding-bottom:4px;display:inline-block;">
+                                                        Deal
+                                                      </span></td></tr></ta=
+ble></td></tr><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:=
+0px;line-height:0px;">&nbsp;</td></tr><tr><td align=3D"center" style=3D"fon=
+t-family:Tiempos,Times New Roman,serif;font-size:0.875em;line-height: 1.429=
+;letter-spacing:0px;text-align:left;font-weight: normal;color:#1A1A1A;" >Ne=
+w Balance</td></tr><tr><td align=3D"center" style=3D"font-family:HelveticaN=
+ow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing=
+:0px;text-align:left;text-decoration:none;color:#1A1A1A;" >Trainers</td></t=
+r><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px;line-hei=
+ght:0px;">&nbsp;</td></tr><tr><td align=3D"left"><span class=3D"none" style=
+=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-he=
+ight: 1.429;letter-spacing:0px;text-align:left;font-weight:bold;color:#1A1A=
+1A!important;" >112,00=C2=A0=E2=82=AC</span><br/><span class=3D"darkmode_pr=
+ice_old" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0=
+.75em;line-height: 1.333;letter-spacing:0px;text-align:left;color:#66676E;"=
+>
+                                                  Last lowest price:
+                                                 =20
+                                                 =20
+                                                    103,95=C2=A0=E2=82=AC
+                                                 =20
+                                                </span><br/><span class=3D"=
+darkmode_price_old" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;=
+font-size:0.75em;line-height: 1.333;letter-spacing:0px;text-align:left;colo=
+r:#66676E;">
+                                                  Originally:
+                                                 =20
+                                                 =20
+                                                 =20
+                                                  160,00=C2=A0=E2=82=AC
+
+                                                </span></td></tr><tr><td ar=
+ia-hidden=3D"true" height=3D"12" style=3D"font-size:0px;line-height:0px;">&=
+nbsp;</td></tr></table></td><td width=3D"50%" align=3D"left" valign=3D"top"=
+ style=3D"padding-left:6px;padding-right:6px;"><table role=3D"presentation"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"l=
+eft"><tr><td aria-hidden=3D"true"><a role=3D"link" href=3D"https://en.zalan=
+do.de/new-balance-1906-unisex-trainers-black-ne215p06u-q11.html?wmc=3DCRM49=
+_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dreco-transaction-mailing-=
+2006_reco2&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b1=
+06daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece=
+&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_cam=
+paign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dreco-t=
+ransaction-mailing-2006_reco2" target=3D"_blank"><img class=3D"full-width" =
+src=3D"https://img01.ztat.net/article/spp-media-p1/ad96a4bf0c8b4efd8428e500=
+1260452a/ed3f995cea07403cb433d5a7d3d36504.jpg?filter=3Dpackshot&amp;imwidth=
+=3D300" width=3D"139" style=3D"font-family:Tiempos,Times New Roman,serif;fo=
+nt-size:0.875em;line-height: 1.429;letter-spacing:0px;text-align:center;tex=
+t-decoration:none;background-color:#EFEFF0;color:#1A1A1A!important;display:=
+block;width:100%;" border=3D"0" alt=3D"1906 UNISEX - Trainers - black" /></=
+a></td></tr><tr><td align=3D"center" style=3D"padding-right:8px;"><table ro=
+le=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" align=3D"center"><tr><td><span style=3D"font-family:HelveticaNow,=
+Helvetica,sans-serif;font-size:0.75em;line-height: 1.333;letter-spacing:0px=
+;text-align:left;font-weight:bold;background-color:#D9000C!important;color:=
+#FFFFFE!important;padding-left:4px;padding-right:4px;padding-top:4px;paddin=
+g-bottom:4px;display:inline-block;">
+                                                        Deal
+                                                      </span></td></tr></ta=
+ble></td></tr><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:=
+0px;line-height:0px;">&nbsp;</td></tr><tr><td align=3D"center" style=3D"fon=
+t-family:Tiempos,Times New Roman,serif;font-size:0.875em;line-height: 1.429=
+;letter-spacing:0px;text-align:left;font-weight: normal;color:#1A1A1A;" >Ne=
+w Balance</td></tr><tr><td align=3D"center" style=3D"font-family:HelveticaN=
+ow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing=
+:0px;text-align:left;text-decoration:none;color:#1A1A1A;" >Trainers</td></t=
+r><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px;line-hei=
+ght:0px;">&nbsp;</td></tr><tr><td align=3D"left"><span class=3D"none" style=
+=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-he=
+ight: 1.429;letter-spacing:0px;text-align:left;font-weight:bold;color:#1A1A=
+1A!important;" >143,95=C2=A0=E2=82=AC</span><br/><span class=3D"darkmode_pr=
+ice_old" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0=
+.75em;line-height: 1.333;letter-spacing:0px;text-align:left;color:#66676E;"=
+>
+                                                  Last lowest price:
+                                                 =20
+                                                 =20
+                                                    95,95=C2=A0=E2=82=AC
+                                                 =20
+                                                </span><br/><span class=3D"=
+darkmode_price_old" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;=
+font-size:0.75em;line-height: 1.333;letter-spacing:0px;text-align:left;colo=
+r:#66676E;">
+                                                  Originally:
+                                                 =20
+                                                 =20
+                                                 =20
+                                                  159,95=C2=A0=E2=82=AC
+
+                                                </span></td></tr><tr><td ar=
+ia-hidden=3D"true" height=3D"12" style=3D"font-size:0px;line-height:0px;">&=
+nbsp;</td></tr></table></td></tr></table><!--[if (gte mso 9)|(IE)]></td><![=
+endif]--><!--[if (gte mso 9)|(IE)]><td width=3D"50%" valign=3D"top"><![endi=
+f]--><table role=3D"presentation" class=3D"full-width"  border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left" style=3D"width:=
+100%;max-width:300px;display:inline-block;vertical-align:top;"><tr><td widt=
+h=3D"50%" align=3D"left" valign=3D"top" style=3D"padding-left:6px;padding-r=
+ight:6px;"><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" align=3D"left"><tr><td aria-hidden=3D"true"><a=
+ role=3D"link" href=3D"https://en.zalando.de/new-balance-u740-unisex-traine=
+rs-black-ne215p064-q11.html?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229=
+.&amp;cd084=3Dreco-transaction-mailing-2006_reco3&amp;cd085=3Ddffceb2b-09bf=
+-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm=
+_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=
+=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_T=
+M010_010_251229.&amp;utm_content=3Dreco-transaction-mailing-2006_reco3" tar=
+get=3D"_blank"><img class=3D"full-width" src=3D"https://img01.ztat.net/arti=
+cle/spp-media-p1/d0e7451a5ec24e54a722088cf7799fea/592743f5741b4f4089c1bf948=
+387034b.jpg?filter=3Dpackshot&amp;imwidth=3D300" width=3D"139" style=3D"fon=
+t-family:Tiempos,Times New Roman,serif;font-size:0.875em;line-height: 1.429=
+;letter-spacing:0px;text-align:center;text-decoration:none;background-color=
+:#EFEFF0;color:#1A1A1A!important;display:block;width:100%;" border=3D"0" al=
+t=3D"U740 UNISEX - Trainers - black" /></a></td></tr><tr><td aria-hidden=3D=
+"true" height=3D"8" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></t=
+r><tr><td align=3D"center" style=3D"font-family:Tiempos,Times New Roman,ser=
+if;font-size:0.875em;line-height: 1.429;letter-spacing:0px;text-align:left;=
+font-weight: normal;color:#1A1A1A;" >New Balance</td></tr><tr><td align=3D"=
+center" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.=
+875em;line-height: 1.429;letter-spacing:0px;text-align:left;text-decoration=
+:none;color:#1A1A1A;" >Trainers</td></tr><tr><td aria-hidden=3D"true" heigh=
+t=3D"8" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr><tr><td al=
+ign=3D"left"><span style=3D"font-family:HelveticaNow,Helvetica,sans-serif;f=
+ont-size:0.875em;line-height: 1.429;letter-spacing:0px;text-align:left;colo=
+r:#1A1A1A;" >119,95=C2=A0=E2=82=AC</span></td></tr><tr><td aria-hidden=3D"t=
+rue" height=3D"12" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr=
+></table></td><td width=3D"50%" align=3D"left" valign=3D"top" style=3D"padd=
+ing-left:6px;padding-right:6px;"><table role=3D"presentation" border=3D"0" =
+cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left"><tr><td a=
+ria-hidden=3D"true"><a role=3D"link" href=3D"https://en.zalando.de/new-bala=
+nce-u1906-unisex-trainers-castlerock-ne215p05e-a11.html?wmc=3DCRM49_TMS_EN.=
+ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dreco-transaction-mailing-2006_rec=
+o4&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8d=
+fbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;oti=
+d=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3D=
+CRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dreco-transacti=
+on-mailing-2006_reco4" target=3D"_blank"><img class=3D"full-width" src=3D"h=
+ttps://img01.ztat.net/article/spp-media-p1/9b2ea697640e469ba6bafb101f1c1c0b=
+/2a1b1100d8224c77b7aff321dcf01302.jpg?filter=3Dpackshot&amp;imwidth=3D300" =
+width=3D"139" style=3D"font-family:Tiempos,Times New Roman,serif;font-size:=
+0.875em;line-height: 1.429;letter-spacing:0px;text-align:center;text-decora=
+tion:none;background-color:#EFEFF0;color:#1A1A1A!important;display:block;wi=
+dth:100%;" border=3D"0" alt=3D"U1906 UNISEX - Trainers - castlerock" /></a>=
+</td></tr><tr><td align=3D"center" style=3D"padding-right:8px;"><table role=
+=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D=
+"100%" align=3D"center"><tr><td><span style=3D"font-family:HelveticaNow,Hel=
+vetica,sans-serif;font-size:0.75em;line-height: 1.333;letter-spacing:0px;te=
+xt-align:left;font-weight:bold;background-color:#D9000C!important;color:#FF=
+FFFE!important;padding-left:4px;padding-right:4px;padding-top:4px;padding-b=
+ottom:4px;display:inline-block;">
+                                                        Deal
+                                                      </span></td></tr></ta=
+ble></td></tr><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:=
+0px;line-height:0px;">&nbsp;</td></tr><tr><td align=3D"center" style=3D"fon=
+t-family:Tiempos,Times New Roman,serif;font-size:0.875em;line-height: 1.429=
+;letter-spacing:0px;text-align:left;font-weight: normal;color:#1A1A1A;" >Ne=
+w Balance</td></tr><tr><td align=3D"center" style=3D"font-family:HelveticaN=
+ow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing=
+:0px;text-align:left;text-decoration:none;color:#1A1A1A;" >Trainers</td></t=
+r><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px;line-hei=
+ght:0px;">&nbsp;</td></tr><tr><td align=3D"left"><span class=3D"none" style=
+=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-he=
+ight: 1.429;letter-spacing:0px;text-align:left;font-weight:bold;color:#1A1A=
+1A!important;" >112,00=C2=A0=E2=82=AC</span><br/><span class=3D"darkmode_pr=
+ice_old" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0=
+.75em;line-height: 1.333;letter-spacing:0px;text-align:left;color:#66676E;"=
+>
+                                                  Last lowest price:
+                                                 =20
+                                                 =20
+                                                    95,95=C2=A0=E2=82=AC
+                                                 =20
+                                                </span><br/><span class=3D"=
+darkmode_price_old" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;=
+font-size:0.75em;line-height: 1.333;letter-spacing:0px;text-align:left;colo=
+r:#66676E;">
+                                                  Originally:
+                                                 =20
+                                                 =20
+                                                 =20
+                                                  160,00=C2=A0=E2=82=AC
+
+                                                </span></td></tr><tr><td ar=
+ia-hidden=3D"true" height=3D"12" style=3D"font-size:0px;line-height:0px;">&=
+nbsp;</td></tr></table></td></tr></table><!--[if (gte mso 9)|(IE)]></td><![=
+endif]--><!--[if (gte mso 9)|(IE)]></tr></table><![endif]--></td></tr></tab=
+le><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" a=
+ria-hidden=3D"true"><tr><td aria-hidden=3D"true" height=3D"16" style=3D"fon=
+t-size:0px;line-height:0px;">&nbsp;</td></tr></table></td></tr></table><tab=
+le align=3D"center" class=3D"nwsl_banner" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" role=3D"presentation" style=3D"background-co=
+lor:#D83860 !important;"><tr><td><table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" role=3D"presentation"><tr><td align=3D"left" s=
+tyle=3D"padding-left:24px;padding-right:24px;"><table border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td hei=
+ght=3D"24" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table=
+><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" rol=
+e=3D"presentation"><tr><td width=3D"36" aria-hidden=3D"true" align=3D"left"=
+ valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" wid=
+th=3D"100%" aria-hidden=3D"true"><tr><td style=3D"padding-right:12px;paddin=
+g-top:8px;"><img src=3D"https://mosaic01.ztat.net/cuo/messages/810d1d00-431=
+2-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-8260-c25ef7ff7d43/ic_email_whit=
+e.png" width=3D"36" border=3D"0" style=3D"font-family:HelveticaNow,Helvetic=
+a,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing:0px;text-a=
+lign:left;color:#1A1A1A!important;"  alt=3D"=E2=9C=89=EF=B8=8E" title=3D"" =
+/></td></tr></table></td><td align=3D"left"><table width=3D"100%" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation"><tr><td align=
+=3D"left" valign=3D"top" style=3D"padding-right:24px;"><h2 style=3D"font-fa=
+mily:HelveticaNow,Helvetica,sans-serif;font-size:1.5em;line-height: 1.333;l=
+etter-spacing:-0.24px;text-align:left;font-weight:bold;color:#FFFFFE!import=
+ant;margin:0;">Get more great deals</h2></td></tr><tr><td align=3D"left" va=
+lign=3D"top" style=3D"padding-right:24px;"><h3 style=3D"font-family:Tiempos=
+,Times New Roman,serif;font-size:1.5em;line-height: 1.333;letter-spacing:-0=
+.24px;font-weight: normal;text-align:left;color:#FFFFFE!important;margin:0;=
+">with our newsletter</h3></td></tr><tr><td aria-hidden=3D"true" height=3D"=
+8" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr><tr><td style=
+=3D"font-family:Tiempos,Times New Roman,serif;font-size:1em;line-height: 1.=
+5;letter-spacing:-0.16px;font-weight: normal;text-align:left;color:#FFFFFE!=
+important;" >Along with new arrivals, latest trends and style inspiration</=
+td></tr><tr><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px;li=
+ne-height:0px;">&nbsp;</td></tr><tr><td align=3D"left"><table border=3D"0" =
+cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation"><tr><td align=3D"=
+left" style=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:1em;=
+line-height: 1.5;letter-spacing:-0.16px;text-align:left;font-weight:bold;te=
+xt-decoration:none;color:#FFFFFE!important;"><a role=3D"link" href=3D"https=
+://en.zalando.de/zalando-newsletter/?c_ref=3Demail&amp;wmc=3DCRM49_TMS_EN.O=
+NL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dcta_nl_subscription&amp;cd085=3Ddf=
+fceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a78=
+4755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;u=
+tm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_=
+MIX_NMT_TM010_010_251229.&amp;utm_content=3Dcta_nl_subscription&amp;wmc=3DC=
+RM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dnl_banner&amp;cd085=
+=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc716957699=
+72a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&=
+amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN=
+.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dnl_banner" style=3D"text-d=
+ecoration:none;color:#FFFFFE!important;" target=3D"_blank" >Tell me more</a=
+></td><td aria-hidden=3D"true" align=3D"left" style=3D"padding-right:24px;p=
+adding-left:4px;"><a href=3D"https://en.zalando.de/zalando-newsletter/?c_re=
+f=3Demail&amp;wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3D=
+cta_nl_subscription&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt=
+_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c=
+782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&am=
+p;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=
+=3Dcta_nl_subscription&amp;wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.=
+&amp;cd084=3Dnl_banner&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp=
+;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd4=
+24c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail=
+&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_cont=
+ent=3Dnl_banner" style=3D"text-decoration:none;" target=3D"_blank"><img src=
+=3D"https://mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd=
+24c7/13c11237-166f-4413-8a00-0616712add40/arrow_FFFFFF.png" alt=3D"=E2=86=
+=92" width=3D"16" style=3D"display:block;" /></a></td></tr></table></td></t=
+r></table></td></tr></table><table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td height=3D"24" style=3D=
+"font-size:0px;line-height:0px;">&nbsp;</td></tr></table></td></tr></table>=
+</td></tr></table><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" w=
+idth=3D"100%" aria-hidden=3D"true"><tr><td height=3D"24" style=3D"font-size=
+:0px;line-height:0px;">&nbsp;</td></tr></table><table border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tr><td co=
+lspan=3D"2" align=3D"left" style=3D"font-family:Tiempos,Times New Roman,ser=
+if;font-size:1em;line-height: 1.5;letter-spacing:-0.16px;text-align:left;co=
+lor:#1A1A1A;padding-left:24px;padding-right:24px;" >Best wishes,</td></tr><=
+tr><td aria-hidden=3D"true" align=3D"left" width=3D"12" style=3D"padding-le=
+ft:24px;font-family:Tiempos,Times New Roman,serif;font-size:1em;line-height=
+: 1.5;letter-spacing:-0.16px;text-align:left;color:#1A1A1A;padding-right:6p=
+x;">Your Zalando Team</td></tr></table><table border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td height=3D"2=
+4" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><table =
+class=3D"darkmode_grey" cellpadding=3D"0" cellspacing=3D"0"  border=3D"0" w=
+idth=3D"100%" align=3D"left" bgcolor=3D"#1A1A1A" role=3D"presentation" styl=
+e=3D"text-align:left !important;"><tr><td height=3D"24" style=3D"font-size:=
+0px;line-height:0px;">&nbsp;</td></tr><tr><td align=3D"left" class=3D"faq_t=
+d" style=3D"padding-left:24px;"><p class=3D"mso-margin0" style=3D"font-fami=
+ly:Tiempos,Times New Roman,serif;font-size:1.5em;line-height: 1.333;letter-=
+spacing:-0.24px;text-align:left;font-weight: normal;color:#FFFFFE;margin:0!=
+important;padding-bottom:24px;">Need help?</p><table align=3D"center" cellp=
+adding=3D"0" cellspacing=3D"0" border=3D"0" style=3D"border-spacing: 0; Mar=
+gin: 0 auto; width: 100%; max-width: 600px; text-align: center; font-size: =
+0; letter-spacing: 0"><tr><td><!--[if (gte mso 9)|(IE)]><table width=3D"100=
+%"  cellpadding=3D"0" cellspacing=3D"0" border=3D"0"><tr valign=3D"top"><![=
+endif]--><!--[if (gte mso 9)|(IE)]><td valign=3D"top" width=3D"48%"><![endi=
+f]--><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" border=3D"0"=
+ style=3D"width: 100%; display: inline-block; vertical-align: top; max-widt=
+h: 280px; font-size: 14px; letter-spacing: 0.6px; line-height:22px" class=
+=3D"mobile-full"><tbody><tr valign=3D"top"><td align=3D"left" valign=3D"top=
+" class=3D"mobile-full"><ul style=3D"padding-left:0px; margin: 0;"><li clas=
+s=3D"mso-margin0" style=3D"list-style:none; margin-bottom:10px"><table cell=
+padding=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"font-s=
+ize: inherit; letter-spacing: inherit;"><tr><td width=3D"1" valign=3D"top" =
+align=3D"left"><img  width=3D"1"  height=3D"0"  src=3D"https://mosaic01.zta=
+t.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-=
+8260-c25ef7ff7d43/article_24x24_2x.png"  alt=3D"" /></td><td><a style=3D"fo=
+nt-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: =
+1.429;letter-spacing:0px;text-align:left;color:#FFFFFE;text-decoration:unde=
+rline;" href=3D"https://en.zalando.de/faq/where-is-my-parcel.html?wmc=3DCRM=
+49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dfaq_parcel_tracking&amp=
+;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc716=
+95769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Dde=
+fault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dfaq_parcel_tracking"=
+><span>Track your order </span></a></td></tr></table></li><li class=3D"mso-=
+margin0" style=3D"list-style:none; margin-bottom:10px"><table cellpadding=
+=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"font-size: in=
+herit; letter-spacing: inherit;"><tr><td width=3D"1" valign=3D"top" align=
+=3D"left"><img  width=3D"1"  height=3D"0"  src=3D"https://mosaic01.ztat.net=
+/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-8260-=
+c25ef7ff7d43/article_24x24_2x.png"  alt=3D"" /></td><td><a style=3D"font-fa=
+mily:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429=
+;letter-spacing:0px;text-align:left;color:#FFFFFE;text-decoration:underline=
+;" href=3D"https://en.zalando.de/faq/how-do-i-pay-by-invoice.html?wmc=3DCRM=
+49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dfaq_payment_invoice&amp=
+;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc716=
+95769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Dde=
+fault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_=
+TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dfaq_payment_invoice"=
+><span>Payment by invoice </span></a></td></tr></table></li><li class=3D"ms=
+o-margin0" style=3D"list-style:none; margin-bottom:10px"><table cellpadding=
+=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"font-size: in=
+herit; letter-spacing: inherit;"><tr><td width=3D"1" valign=3D"top" align=
+=3D"left"><img  width=3D"1"  height=3D"0"  src=3D"https://mosaic01.ztat.net=
+/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-8260-=
+c25ef7ff7d43/article_24x24_2x.png"  alt=3D"" /></td><td><a style=3D"font-fa=
+mily:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429=
+;letter-spacing:0px;text-align:left;color:#FFFFFE;text-decoration:underline=
+;" href=3D"https://en.zalando.de/faq/Zalando-Partner?wmc=3DCRM49_TMS_EN.ONL=
+_MIX_NMT_TM010_010_251229.&amp;cd084=3Dfaq_shipment_partner&amp;cd085=3Ddff=
+ceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784=
+755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;ut=
+m_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_M=
+IX_NMT_TM010_010_251229.&amp;utm_content=3Dfaq_shipment_partner"><span>Deli=
+very of partner items </span></a></td></tr></table></li><li class=3D"mso-ma=
+rgin0" style=3D"list-style:none; margin-bottom:10px"><table cellpadding=3D"=
+0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"font-size: inheri=
+t; letter-spacing: inherit;"><tr><td width=3D"1" valign=3D"top" align=3D"le=
+ft"><img  width=3D"1"  height=3D"0"  src=3D"https://mosaic01.ztat.net/cuo/m=
+essages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c7bc-4592-8260-c25ef7=
+ff7d43/article_24x24_2x.png"  alt=3D"" /></td><td><a style=3D"font-family:H=
+elveticaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;lette=
+r-spacing:0px;text-align:left;color:#FFFFFE;text-decoration:underline;" hre=
+f=3D"https://en.zalando.de/faq/can-i-cancel-my-box.html?wmc=3DCRM49_TMS_EN.=
+ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dfaq_cancellation&amp;cd085=3Ddffc=
+eb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a7847=
+55&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm=
+_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MI=
+X_NMT_TM010_010_251229.&amp;utm_content=3Dfaq_cancellation"><span>Cancellin=
+g your order </span></a></td></tr></table></li></ul></td></tr></tbody></tab=
+le><!--[if (gte mso 9)|(IE)]></td><td valign=3D"top" width=3D"2%"><![endif]=
+--><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" border=3D"0" s=
+tyle=3D"width: 100%; display: inline-block; vertical-align: top; max-width:=
+ 20px;" class=3D"mobile-full"><tr valign=3D"top"><td align=3D"left" valign=
+=3D"top" class=3D"mobile-full"></td></tr></table><!--[if (gte mso 9)|(IE)]>=
+</td><![endif]--><!--[if (gte mso 9)|(IE)]><td valign=3D"top" width=3D"48%"=
+><![endif]--><table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" bord=
+er=3D"0" style=3D"width: 100%; display: inline-block; vertical-align: top; =
+max-width: 280px; font-size: 14px; letter-spacing: 0.6px; line-height:22px"=
+ class=3D"mobile-full"><tbody><tr valign=3D"top"><td align=3D"left" valign=
+=3D"top" class=3D"mobile-full"><ul style=3D"padding-left:0px; margin: 0;"><=
+li class=3D"mso-margin0" style=3D"list-style:none; margin-bottom:10px"><tab=
+le cellpadding=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D=
+"font-size: inherit; letter-spacing: inherit;"><tr><td width=3D"1" valign=
+=3D"top" align=3D"left"><img  width=3D"1"  height=3D"0"  src=3D"https://mos=
+aic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99062661-c=
+7bc-4592-8260-c25ef7ff7d43/help_24x24_2x.png"  alt=3D"" /></td><td><a style=
+=3D"font-family:HelveticaNow,Helvetica,sans-serif;font-size:0.875em;line-he=
+ight: 1.429;letter-spacing:0px;text-align:left;color:#FFFFFE;text-decoratio=
+n:underline;" href=3D"https://en.zalando.de/faq/?wmc=3DCRM49_TMS_EN.ONL_MIX=
+_NMT_TM010_010_251229.&amp;cd084=3Dfaq&amp;cd085=3Ddffceb2b-09bf-4452-8d49-=
+7e1ff97f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f9=
+9ec626709c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;ut=
+m_medium=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_2512=
+29.&amp;utm_content=3Dfaq"><span>Help & Contact </span></a></td></tr></tabl=
+e></li></ul></td></tr></tbody></table><!--[if (gte mso 9)|(IE)]></td><td va=
+lign=3D"top" width=3D"2%"><![endif]--><table width=3D"100%" cellpadding=3D"=
+0" cellspacing=3D"0" border=3D"0" style=3D"width: 100%; display: inline-blo=
+ck; vertical-align: top; max-width: 20px;" class=3D"mobile-full"><tr valign=
+=3D"top"><td align=3D"left" valign=3D"top" class=3D"mobile-full"></td></tr>=
+</table><!--[if (gte mso 9)|(IE)]></td><![endif]--><!--[if (gte mso 9)|(IE)=
+]></tr></table><![endif]--></td></tr></table><table border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td heigh=
+t=3D"16" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><=
+/td></tr></table><table role=3D"presentation" width=3D"100%" border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" bgcolor=3D"#6328E0"><tr><td style=3D"pad=
+ding-left:24px;padding-right:24px;"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td height=3D"24" =
+style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><table rol=
+e=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" align=
+=3D"left"><tr><td align=3D"left" style=3D"font-family:HelveticaNow,Helvetic=
+a,sans-serif;font-size:0.875em;line-height: 1.429;letter-spacing:0px;font-w=
+eight:bold;color:#FFFFFE!important;" >Find inspiration</td></tr><tr><td ari=
+a-hidden=3D"true" height=3D"8" style=3D"font-size:0px;line-height:0px;">&nb=
+sp;</td></tr><tr><td align=3D"left"><table role=3D"presentation" border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" align=3D"left"><tr><td align=3D"left=
+" style=3D"padding-right:6px;"><a role=3D"link" aria-label=3D"Instagram" hr=
+ef=3D"https://www.instagram.com/zalando/" target=3D"_blank"><img src=3D"htt=
+ps://mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/99=
+062661-c7bc-4592-8260-c25ef7ff7d43/icon_instagram.png" style=3D"display:blo=
+ck;" width=3D"35" border=3D"0" alt=3D"Instagram" /></a></td><td align=3D"le=
+ft" style=3D"padding-right:6px;"><a role=3D"link" aria-label=3D"Facebook" h=
+ref=3D"https://www.facebook.com/zalando" target=3D"_blank"><img src=3D"http=
+s://mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/990=
+62661-c7bc-4592-8260-c25ef7ff7d43/icon_facebook.png" style=3D"display:block=
+;" width=3D"35" border=3D"0" alt=3D"Facebook" /></a></td><td align=3D"left"=
+ style=3D"padding-right:6px;"><a role=3D"link" aria-label=3D"TikTok" href=
+=3D"https://www.tiktok.com/@zalando" target=3D"_blank"><img src=3D"https://=
+mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/9906266=
+1-c7bc-4592-8260-c25ef7ff7d43/icon_tiktok.png" style=3D"display:block;" wid=
+th=3D"35" border=3D"0" alt=3D"TikTok" /></a></td></tr></table></td></tr></t=
+able><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacin=
+g=3D"0" align=3D"right"><tr><td align=3D"right" style=3D"font-family:Helvet=
+icaNow,Helvetica,sans-serif;font-size:0.875em;line-height: 1.429;letter-spa=
+cing:0px;font-weight:bold;color:#FFFFFE!important;">Shop Easily</td></tr><t=
+r><td aria-hidden=3D"true" height=3D"8" style=3D"font-size:0px;line-height:=
+0px;">&nbsp;</td></tr><tr><td><table role=3D"presentation" border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0"><tr><td align=3D"right" style=3D"padding-l=
+eft:6px;text-align:right;"><a role=3D"link" aria-label=3D"Android" href=3D"=
+https://play.google.com/store/apps/details?id=3Dde.zalando.mobile" target=
+=3D"_blank"><img src=3D"https://mosaic01.ztat.net/cuo/messages/810d1d00-431=
+2-43e5-bd31-d8373fdd24c7/13c11237-166f-4413-8a00-0616712add40/logo_android.=
+png" style=3D"display:block;" width=3D"35" border=3D"0" alt=3D"Android" /><=
+/a></td><td align=3D"right" style=3D"padding-left:6px;text-align:right;"><a=
+ role=3D"link" aria-label=3D"Apple" href=3D"https://apps.apple.com/de/app/z=
+alando-fashion-and-shopping/id585629514" target=3D"_blank"><img src=3D"http=
+s://mosaic01.ztat.net/cuo/messages/810d1d00-4312-43e5-bd31-d8373fdd24c7/13c=
+11237-166f-4413-8a00-0616712add40/logo_apple.png" style=3D"display:block;" =
+width=3D"35" border=3D"0" alt=3D"Apple" /></a></td></tr></table></td></tr><=
+/table><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100=
+%" aria-hidden=3D"true"><tr><td aria-hidden=3D"true" height=3D"24" style=3D=
+"font-size:0px;line-height:0px;">&nbsp;</td></tr></table><table role=3D"pre=
+sentation" width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0">=
+<tr><td align=3D"left" style=3D"font-family:HelveticaNow,Helvetica,sans-ser=
+if;font-size:0.75em;line-height: 1.333;letter-spacing:0px;text-decoration:n=
+one;color:#FFFFFE!important;"><b>Legal notice</b><br/><a href=3D"https://en=
+.zalando.de?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dfo=
+oter_home&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b10=
+6daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece&=
+amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_camp=
+aign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dfooter_=
+home" target=3D"_blank" style=3D"color:#FFFFFE !important;text-decoration:u=
+nderline;">Zalando.de</a> is brought to you by Zalando SE
+                        <br/>
+                        Zalando SE, Valeska-Gert-Stra=C3=9Fe 5, 10243 Berli=
+n, Germany | Management Board:
+                        Robert Gentz & David Schr=C3=B6der (both co-Chairs =
+of the Board), Dr. Astrid Arndt, David Schneider | Chairperson of the Super=
+visory Board:
+                        Kelly Bennett | Registered at Amtsgericht Charlotte=
+nburg Berlin, HRB 158855 B | VAT ID: DE 260543043 | Tax number: 37/132/4500=
+4 | WEEE register number DE: 72754189 | <a role=3D"link" href=3D"https://en=
+.zalando.de/legal-notice/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&=
+amp;cd084=3Dfooter_more_details&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97=
+f073f&amp;wt_cd=3D4b106daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec6267=
+09c210dd424c782466ece&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_mediu=
+m=3DEmail&amp;utm_campaign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp=
+;utm_content=3Dfooter_more_details" target=3D"_blank" style=3D"color:#FFFFF=
+E !important;text-decoration:underline;">See more details</a></td></tr><tr>=
+<td aria-hidden=3D"true" height=3D"24" style=3D"font-size:0px;line-height:0=
+px;">&nbsp;</td></tr><tr><td align=3D"left" style=3D"font-family:HelveticaN=
+ow,Helvetica,sans-serif;font-size:0.75em;line-height: 1.333;letter-spacing:=
+0px;text-decoration:none;color:#FFFFFE!important;">
+                        All prices include VAT. Only while stock lasts. All=
+ prices subject to change. "Originally" refers to the item's first listing =
+price or recommended retail price.
+                        Zalando SE has assigned its claims under the above =
+referenced purchase to Zalando Payments GmbH.
+                        <br/><br/>
+                        Responsible for contents of Zalando SE: Robert Gent=
+z
+                       =20
+                       =20
+                            <br/><br/>
+                            This is an automatic email, please do not reply=
+. Find out how to get in touch by visiting our <a href=3D"https://en.zaland=
+o.de/faq/?wmc=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;cd084=3Dfoot=
+er_contact&amp;cd085=3Ddffceb2b-09bf-4452-8d49-7e1ff97f073f&amp;wt_cd=3D4b1=
+06daba8dfbc71695769972a784755&amp;tm_hem=3Dc6f99ec626709c210dd424c782466ece=
+&amp;otid=3Ddefault&amp;utm_source=3DCRM&amp;utm_medium=3DEmail&amp;utm_cam=
+paign=3DCRM49_TMS_EN.ONL_MIX_NMT_TM010_010_251229.&amp;utm_content=3Dfooter=
+_contact" target=3D"_blank" style=3D"color:#FFFFFE !important;text-decorati=
+on:underline;">help and contact</a> pages.
+                       =20
+                    </td></tr></table><table border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" width=3D"100%" aria-hidden=3D"true"><tr><td aria-hidden=
+=3D"true" height=3D"24" style=3D"font-size:0px;line-height:0px;">&nbsp;</td=
+></tr></table></td></tr></table><a name=3D"footer"></a></td></tr><!--[if (g=
+te mso 9)|(IE)]></td></tr></table><![endif]--></table></td></tr><!--[if (gt=
+e mso 9)|(IE)]></td></tr></table><![endif]--></table><table class=3D"hide d=
+arkmode" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" al=
+ign=3D"center" bgcolor=3D"#f2f2f2" aria-hidden=3D"true"><tr><td height=3D"4=
+0" style=3D"font-size:0px;line-height:0px;">&nbsp;</td></tr></table></body>=
+</html>
+   =20
+
+------=_Part_537509_1134193614.1767018617202--

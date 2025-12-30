@@ -1,0 +1,854 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp5871442dlb;
+        Mon, 29 Dec 2025 09:06:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG8QaJpMM2UwNMqkVYOyk29mmBfKHngVytif6mLq9Wuf/TMvh79sUGcxTw9+GCpENYGqzey
+X-Received: by 2002:a05:600c:8b13:b0:477:73e9:dc17 with SMTP id 5b1f17b1804b1-47d2d2a68f3mr271355545e9.35.1767027991581;
+        Mon, 29 Dec 2025 09:06:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767027991; cv=none;
+        d=google.com; s=arc-20240605;
+        b=gb3iWUm2I0Ig+Cta3z8DM8LGmDbgL1HCgLdyLHLQXtjXMbqwC1gg7AxF2+gLTFyWEs
+         5hK74ZAJKgz9cZse/S7ZyGD6jphjF8wqPFOu3RJos9twd9If+5S/6VTzl/ohvNTjWuO0
+         KlNxiLJUaL1tt2ATqfJaTzZsRDn5l7H6a9COhc/Bu7/TQ0bxs/Hkxl7x1oM/ZX6I6OmT
+         IoePQs4gMQ+3Jyk91Fv3IKVnK+I96nP5NPS+32gEcY8EILtDSX9EJ/z7N73eF0W+eYVx
+         lvKYdW6reRlzPvLltw4eT+5I5Ns4bFRPli5rsuBEvUbh3/BnO9fBLYr8PY1rjhKQVT51
+         ieJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=importance:content-transfer-encoding:mime-version:subject:to
+         :reply-to:from:date:message-id:dkim-signature;
+        bh=6ksdkY5aq6diD7vvQ78iN8uCDHATe2TRX5CeWqe1dlo=;
+        fh=cn1GiMI3JaU8ksh7qZWqfn4YlX+vmbhniBH/Q3A2AY8=;
+        b=R3BvFQLRFWTk3wHfrzddtVPxdBThsXJ1NeJt1Pf5/B0ZnPvRWN5HC7t1kUWF1XJQCd
+         MqJkcAF4pfOpIgSZZcI+LRaP5yz8xCtEM3/sqbP05NXa8tnRNUrVHlusZWkTBPQS54mY
+         MyPskkoDmr08zrdLsU7HwXHVdZlUOX3UEKF4QrMYywuCdwanL8yTgm4L6f9KyMGPidNg
+         zLJU3O30PaktOSEvEhCFibO6x+myWOclKMoXyFfZY8bn2S71FIzoVOs4fj+jDrs6Eg9c
+         uv7tJdmEcZdeu4O5BtZndmb7/yWnqgfg/LWGAvBUChRgugCJksnV1hHt1lE7xbOxNkjO
+         mHww==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@massimoDutti.com header.s=2023111300 header.b=E5fEfu29;
+       spf=pass (google.com: domain of noreply@massimodutti.com designates 185.215.217.250 as permitted sender) smtp.mailfrom=noreply@massimodutti.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=massimodutti.com
+Return-Path: <noreply@massimodutti.com>
+Received: from mailwsout-c949.transactional-mail-d.com (mailwsout-c949.transactional-mail-d.com. [185.215.217.250])
+        by mx.google.com with ESMTPS id 5b1f17b1804b1-47d1db6b6c0si103249255e9.31.2025.12.29.09.06.31
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Dec 2025 09:06:31 -0800 (PST)
+Received-SPF: pass (google.com: domain of noreply@massimodutti.com designates 185.215.217.250 as permitted sender) client-ip=185.215.217.250;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@massimoDutti.com header.s=2023111300 header.b=E5fEfu29;
+       spf=pass (google.com: domain of noreply@massimodutti.com designates 185.215.217.250 as permitted sender) smtp.mailfrom=noreply@massimodutti.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=massimodutti.com
+Received: from mailwsout09.mailws.mucre1.retloc (localhost [127.0.0.1])
+	by mailwsout09.transactional-mail-d.com (Postfix) with ESMTP id 4dg2gW0XGPzGqD5
+	for <artyom.avramenko@gmail.com>; Mon, 29 Dec 2025 18:06:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=massimoDutti.com;
+	s=2023111300; t=1767027991;
+	bh=O+FdqmcVYH6WKE5gCqKzy9s4CAv3gIgp+kkPCSlQnWc=;
+	h=Date:From:Reply-To:To:Subject;
+	b=E5fEfu29qNXq63/dSPiGL15KURGbQi4XQWAnBq881p7p3PFCmWj43EDG1McmR84CN
+	 +1qRSxxVXLb1Mkb7Mm5O1+YCFwXVhdXK7Dx4V8QyYGEtC+/K4fi3/iG2Evb5K5i3Ny
+	 oCEsGYhJcHui7SAJ13DWTrxlKKzGOyjP3Znu/Gg1fxHZS3PjTZ12VgKIvrKqL/nVnv
+	 afRk0PqBD/F9aFUpbl9XOoNEVwW2VYz6PJEcBpp5V4qw9aZe84SFjeqVBCxGtNa793
+	 z+YMN79/ywLA29rW7bQ00biDGIb/sP01+OgMKCp4wuwYzjRAVDYi99KRrGOgwFDNdm
+	 /+ad1ffxBKtsQ==
+Message-ID: <20251229-170631.9db15e47-a0a4-422a-a6cf-1ce2c84ef928#d4874aa4#e3dad50e@retarus.com>
+Date: Mon, 29 Dec 2025 17:06:31 +0000 (GMT)
+From: Massimo Dutti <noreply@massimodutti.com>
+Reply-To: 'noreply' <noreply@massimoDutti.com>
+To: artyom.avramenko@gmail.com
+Subject: Your order N. 30101502670 is on its way
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Retarus Mail4A
+X-Priority: 3
+Importance: normal
+
+<!doctype html><html lang=3D"und" dir=3D"auto" xmlns=3D"http://www.w3.org/1=
+999/xhtml" xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas=
+-microsoft-com:office:office"><head><title>MASSIMODUTTI</title><!--[if !mso=
+]><!--><meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge"><!--<![en=
+dif]--><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUT=
+F-8"><meta name=3D"viewport" content=3D"width=3Ddevice-width,initial-scale=
+=3D1"><style type=3D"text/css">#outlook a { padding:0; }
+      body { margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size=
+-adjust:100%; }
+      table, td { border-collapse:collapse;mso-table-lspace:0pt;mso-table-r=
+space:0pt; }
+      img { border:0;height:auto;line-height:100%; outline:none;text-decora=
+tion:none;-ms-interpolation-mode:bicubic; }
+      p { display:block;margin:13px 0; }</style><!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]--><!--[if lte mso 11]>
+    <style type=3D"text/css">
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]--><style type=3D"text/css">@media only screen and (min-width:=
+480px) {
+        .mj-column-per-100 { width:100% !important; max-width: 100%; }
+.mj-column-per-50 { width:50% !important; max-width: 50%; }
+.mj-column-per-30 { width:30% !important; max-width: 30%; }
+.mj-column-per-70 { width:70% !important; max-width: 70%; }
+      }</style><style media=3D"screen and (min-width:480px)">.moz-text-html=
+ .mj-column-per-100 { width:100% !important; max-width: 100%; }
+.moz-text-html .mj-column-per-50 { width:50% !important; max-width: 50%; }
+.moz-text-html .mj-column-per-30 { width:30% !important; max-width: 30%; }
+.moz-text-html .mj-column-per-70 { width:70% !important; max-width: 70%; }<=
+/style><style type=3D"text/css">@media only screen and (max-width:479px) {
+      table.mj-full-width-mobile { width: 100% !important; }
+      td.mj-full-width-mobile { width: auto !important; }
+    }
+ =20
+
+      noinput.mj-menu-checkbox { display:block!important; max-height:none!i=
+mportant; visibility:visible!important; }
+
+      @media only screen and (max-width:479px) {
+        .mj-menu-checkbox[type=3D"checkbox"] ~ .mj-inline-links { display:n=
+one!important; }
+        .mj-menu-checkbox[type=3D"checkbox"]:checked ~ .mj-inline-links,
+        .mj-menu-checkbox[type=3D"checkbox"] ~ .mj-menu-trigger { display:b=
+lock!important; max-width:none!important; max-height:none!important; font-s=
+ize:inherit!important; }
+        .mj-menu-checkbox[type=3D"checkbox"] ~ .mj-inline-links > a { displ=
+ay:block!important; }
+        .mj-menu-checkbox[type=3D"checkbox"]:checked ~ .mj-menu-trigger .mj=
+-menu-icon-close { display:block!important; }
+        .mj-menu-checkbox[type=3D"checkbox"]:checked ~ .mj-menu-trigger .mj=
+-menu-icon-open { display:none!important; }
+      }</style><style type=3D"text/css">.img_width_198_161>img { width: 198=
+px !important; } .p1{ margin:0px; padding:2px; } .flex-between{ display:fle=
+x; align-items:flex-start; justify-content:space-between; } .hide_on_mobile=
+ { display: none !important; } @media only screen and (min-width: 480px) { =
+.hide_on_mobile { display: block !important; } } .hide_on_desktop { display=
+: none !important; } @media only screen and (max-width: 481px) { .hide_on_d=
+esktop { display: block !important; } } .desktop-between div { display: fle=
+x; align-items: flex-start; justify-content: space-between; flex-direction:=
+ row; } @media (max-width:481px) { .desktop-between div { display: flex; al=
+ign-items: flex-start; justify-content: flex.start; flex-direction: column;=
+ } } .btn-default { background-color: #000000; padding: 16px 24px; border-r=
+adius: 8px; color: #ffffff; font-size: 16px; text-decoration: none; } .btn-=
+default:hover { color: #ffffff; background-color: #8E8E8E; } .content_text_=
+70_desktop{ width: 70%; } @media (max-width:481px) { .content_text_70_deskt=
+op{ width: 100%; } .mj-link{ width: 100%; display:block } } .textDirectionR=
+tl *, .textDirectionRtl{ text-align:right !important; direction:rtl !import=
+ant; } .btnDirectionRtl *, .btnDirectionRtl{ text-align:right !important; f=
+loat: right; direction:rtl !important; } .directionRTL *, .directionRTL{ di=
+rection:rtl !important; } .product-loop-title{ padding:0px 16px 8px 0px; ma=
+rgin:0px; width: 100%; } .product-loop-title.textDirectionRtl{ padding:0px =
+0px 8px 16px; } .product-loop-image{ padding-right:0px; } .directionRTL .pr=
+oduct-loop-image{ padding-right: 25px !important; padding-left: 0px !import=
+ant; } .btn-invert-and-icon{ max-width:240px; color:#000000; text-decoratio=
+n:none; border:solid 1px #000000; padding:16px; border-radius:8px; box-sizi=
+ng: border-box; margin:8px 0px; display:flex; justify-content: space-betwee=
+n; align-items: center; } .directionRTL .btn-invert-and-icon .btn-ico{ tran=
+sform: rotate(180deg); } .btn-transparent { color:#292929; background-color=
+: transparent; text-decoration:none; border: 1px solid #292929; padding:16p=
+x; font-size: 16px; border-radius:0px; box-sizing: border-box; margin:8px 0=
+px; display:flex; justify-content: space-between; align-items: center; } .b=
+tn-transparent2 { color:#292929; background-color: transparent; text-decora=
+tion:none; padding:16px; font-size: 16px; border-radius:0px; box-sizing: bo=
+rder-box; margin:8px 0px; align-items: center; } .doble-column-middle .mj-c=
+olumn-per-50.mj-outlook-group-fix { width:50% !important; vertical-align: m=
+iddle !important;} .doble-column-top .mj-column-per-50.mj-outlook-group-fix=
+ { width:50% !important; vertical-align: top !important;} .doble-column-blo=
+ck .mj-column-per-50.mj-outlook-group-fix { width:100% !important; vertical=
+-align: top !important;}</style></head><body style=3D"word-spacing:normal;b=
+ackground-color:#FFFFFF;"><div style=3D"background-color:#FFFFFF;" lang=3D"=
+und" dir=3D"auto">                                                         =
+                            <!--[if mso | IE]><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" role=3D"presentation=
+" style=3D"width:600px;" width=3D"600" bgcolor=3D"#FFFFFF" ><tr><td style=
+=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-=
+-><div style=3D"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto=
+;max-width:600px;"><table align=3D"center" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" style=3D"background:#FFFFFF;backgrou=
+nd-color:#FFFFFF;width:100%;"><tbody><tr><td style=3D"direction:ltr;font-si=
+ze:0px;padding:0px;text-align:center;"><!--[if mso | IE]><table role=3D"pre=
+sentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=
+=3D"" style=3D"vertical-align:top;width:600px;" ><![endif]--><div class=3D"=
+mj-column-per-100 mj-outlook-group-fix" style=3D"font-size:0px;text-align:l=
+eft;direction:ltr;display:inline-block;vertical-align:top;width:100%;"><tab=
+le border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" w=
+idth=3D"100%"><tbody><tr><td style=3D"vertical-align:top;padding:0px;"><tab=
+le border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" w=
+idth=3D"100%"><tbody><tr><td align=3D"center" style=3D"font-size:0px;paddin=
+g:0px;word-break:break-word;"><table border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" role=3D"presentation" style=3D"border-collapse:collapse;border-s=
+pacing:0px;"><tbody><tr><td style=3D"width:600px;"><img alt=3D"" src=3D"htt=
+ps://ir.massimodutti.com/img2/89yv/63dd8d7c-f701-4731-9e9a-26877641abcf/con=
+tent" style=3D"border:0;display:block;outline:none;text-decoration:none;hei=
+ght:auto;width:100%;font-size:13px;" width=3D"600" height=3D"auto"></td></t=
+r></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div=
+><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></tbody></table>=
+</div><!--[if mso | IE]></td></tr></table><table align=3D"center" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" role=3D"presentation" st=
+yle=3D"width:600px;" width=3D"600" bgcolor=3D"#FFFFFF" ><tr><td style=3D"li=
+ne-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]--><div=
+ style=3D"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-w=
+idth:600px;"><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" role=3D"presentation" style=3D"background:#FFFFFF;background-col=
+or:#FFFFFF;width:100%;"><tbody><tr><td style=3D"direction:ltr;font-size:0px=
+;padding:24px 0;text-align:center;"><!--[if mso | IE]><table role=3D"presen=
+tation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D""=
+ style=3D"vertical-align:top;width:600px;" ><![endif]--><div class=3D"mj-co=
+lumn-per-100 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;d=
+irection:ltr;display:inline-block;vertical-align:top;width:100%;"><table bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=
+=3D"100%"><tbody><tr><td style=3D"vertical-align:top;padding:0px;"><table b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=
+=3D"100%"><tbody><tr><td align=3D"left" style=3D"font-size:0px;padding:10px=
+ 25px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;fo=
+nt-size:16px;font-weight:600;line-height:20px;text-align:left;text-transfor=
+m:UPPERCASE;color:#000000;"><p dir=3D"ltr" style=3D"margin:0px">Tracking or=
+der</p></div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;paddin=
+g:10px 25px;word-break:break-word;"><div style=3D"font-family:Helvetica, Ar=
+ial;font-size:12px;font-weight:400;line-height:16px;text-align:left;color:#=
+000000;"><p dir=3D"ltr" style=3D"margin:0px">Hello=C2=A0Artem,=C2=A0 We can=
+ confirm that your order has left the warehouse with  GLS   and the trackin=
+g number YVMH7TNK. </p></div></td></tr></tbody></table></td></tr></tbody></=
+table></div><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></tbo=
+dy></table></div><!--[if mso | IE]></td></tr></table><![endif]-->   <!--[if=
+ mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" class=3D"doble-column-middle-outlook" role=3D"presentation" style=
+=3D"width:600px;" width=3D"600" bgcolor=3D"#FFFFFF" ><tr><td style=3D"line-=
+height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]--><div cl=
+ass=3D"doble-column-middle" style=3D"background:#FFFFFF;background-color:#F=
+FFFFF;margin:0px auto;max-width:600px;"><table align=3D"center" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"backgr=
+ound:#FFFFFF;background-color:#FFFFFF;width:100%;"><tbody><tr><td style=3D"=
+direction:ltr;font-size:0px;padding:24px;text-align:center;"><!--[if mso | =
+IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0"><tr><td class=3D"" style=3D"vertical-align:top;width:276px;" ><![end=
+if]--><div class=3D"mj-column-per-50 mj-outlook-group-fix" style=3D"font-si=
+ze:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:to=
+p;width:100%;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%"><tbody><tr><td style=3D"background-color:#=
+F6F6F6;vertical-align:top;padding:0px;padding-bottom:32px;"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"1=
+00%"><tbody><tr><td align=3D"left" style=3D"font-size:0px;padding:10px 25px=
+;padding-top:24px;word-break:break-word;"><div style=3D"font-family:Helveti=
+ca, Arial;font-size:14px;font-weight:700;line-height:16px;text-align:left;t=
+ext-transform:UPPERCASE;color:#000000;"><p dir=3D"ltr" style=3D"margin:0;">=
+  Order No. </p></div></td></tr><tr><td align=3D"left" style=3D"font-size:0=
+px;padding:10px 25px;padding-top:0px;padding-bottom:16px;word-break:break-w=
+ord;"><div style=3D"font-family:Helvetica, Arial;font-size:14px;font-weight=
+:400;line-height:20px;text-align:left;text-transform:UPPERCASE;color:#00000=
+0;"><p dir=3D"ltr" style=3D"margin:0;">  30101502670  </p></div></td></tr> =
+  <tr><td align=3D"left" style=3D"font-size:0px;padding:10px 25px;word-brea=
+k:break-word;"><div style=3D"font-family:Helvetica, Arial;font-size:12px;fo=
+nt-weight:700;line-height:16px;text-align:left;text-transform:UPPERCASE;col=
+or:#000000;"><p dir=3D"ltr" style=3D"margin:0;">Estimated date</p></div></t=
+d></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:10px 25px;padd=
+ing-top:0px;padding-bottom:16px;word-break:break-word;"><div style=3D"font-=
+family:Helvetica, Arial;font-size:12px;font-weight:700;line-height:20px;tex=
+t-align:left;text-transform:UPPERCASE;color:#000000;"><p dir=3D"ltr" style=
+=3D"margin:0;"><mj-raw></mj-raw><mj-raw></mj-raw>2025-12-30=C2=A0-=C2=A0202=
+6-01-03<mj-raw></mj-raw><mj-raw></mj-raw></p></div></td></tr></tbody></tabl=
+e></td></tr></tbody></table></div><!--[if mso | IE]></td><td class=3D"" sty=
+le=3D"vertical-align:middle;width:276px;" ><![endif]--><div class=3D"mj-col=
+umn-per-50 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;dir=
+ection:ltr;display:inline-block;vertical-align:middle;width:100%;"><table b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=
+=3D"100%"><tbody><tr><td style=3D"background-color:#FFFFFF;vertical-align:m=
+iddle;padding:0px;padding-bottom:32px;"><table border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><td al=
+ign=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:24px;word=
+-break:break-word;"><div style=3D"font-family:Helvetica, Arial;font-size:14=
+px;font-weight:700;line-height:18px;text-align:left;text-transform:UPPERCAS=
+E;color:#000000;"><p dir=3D"ltr" style=3D"margin:0;"><img width=3D"10" heig=
+ht=3D"10" src=3D"https://ir.massimodutti.com/img2/89yv/79a4a809-97ca-40e7-8=
+35c-1dc2832cca08/content" alt=3D"">=C2=A0=C2=A0=C2=A0<strong>Confirmed</str=
+ong></p></div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;paddi=
+ng:10px 25px;padding-top:8px;word-break:break-word;"><div style=3D"font-fam=
+ily:Helvetica, Arial;font-size:14px;font-weight:700;line-height:18px;text-a=
+lign:left;text-transform:UPPERCASE;color:#000000;"><p dir=3D"ltr" style=3D"=
+margin:0;"><img width=3D"10" height=3D"10" src=3D"https://ir.massimodutti.c=
+om/img2/89yv/79a4a809-97ca-40e7-835c-1dc2832cca08/content" alt=3D''>=C2=A0=
+=C2=A0=C2=A0Leaving warehouse</p></div></td></tr><tr><td align=3D"left" sty=
+le=3D"font-size:0px;padding:10px 25px;padding-top:8px;word-break:break-word=
+;"><div style=3D"font-family:Helvetica, Arial;font-size:14px;font-weight:70=
+0;line-height:18px;text-align:left;text-transform:UPPERCASE;color:#000000;"=
+><p dir=3D"ltr" style=3D"margin:0;"><img width=3D"10" height=3D"10" src=3D"=
+https://ir.massimodutti.com/img2/89yv/79a4a809-97ca-40e7-835c-1dc2832cca08/=
+content" alt=3D''>=C2=A0=C2=A0=C2=A0On its way</p></div></td></tr><tr><td a=
+lign=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:8px;word=
+-break:break-word;"><div style=3D"font-family:Helvetica, Arial;font-size:14=
+px;font-weight:700;line-height:18px;text-align:left;text-transform:UPPERCAS=
+E;color:#000000;"><p dir=3D"ltr" style=3D"margin:0;"><img width=3D"10" heig=
+ht=3D"10" src=3D"https://ir.massimodutti.com/img2/89yv/5b72e229-a786-4c40-b=
+684-b26e52be5831/content" alt=3D''>=C2=A0=C2=A0=C2=A0Delivered</p></div></t=
+d></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]></=
+td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if mso | I=
+E]></td></tr></table><![endif]--> <!--[if mso | IE]><table align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" role=3D"presen=
+tation" style=3D"width:600px;" width=3D"600" bgcolor=3D"#F6F6F6" ><tr><td s=
+tyle=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![end=
+if]--><div style=3D"background:#F6F6F6;background-color:#F6F6F6;margin:0px =
+auto;max-width:600px;"><table align=3D"center" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" role=3D"presentation" style=3D"background:#F6F6F6;back=
+ground-color:#F6F6F6;width:100%;"><tbody><tr><td style=3D"direction:ltr;fon=
+t-size:0px;padding:16px 0px;text-align:center;"><!--[if mso | IE]><table ro=
+le=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><t=
+d class=3D"" style=3D"vertical-align:top;width:600px;" ><![endif]--><div cl=
+ass=3D"mj-column-per-100 mj-outlook-group-fix" style=3D"font-size:0px;text-=
+align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%=
+;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presenta=
+tion" width=3D"100%"><tbody><tr><td style=3D"background-color:#F6F6F6;verti=
+cal-align:top;padding:0px;"><table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><td align=3D"cente=
+r" style=3D"font-size:0px;padding:10px 25px;word-break:break-word;"><div st=
+yle=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:400;line-hei=
+ght:16px;text-align:center;color:#000000;"><p dir=3D"ltr" style=3D"margin: =
+auto 0px">We remind you that you can consult </p></div></td></tr><tr><td al=
+ign=3D"center" style=3D"font-size:0px;padding:10px 25px;padding-top:24px;wo=
+rd-break:break-word;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" role=3D"presentation" style=3D"border-collapse:separate;width:100%;line-=
+height:100%;"><tbody><tr><td align=3D"center" bgcolor=3D"transparent" role=
+=3D"presentation" style=3D"border:1px solid #1A1A1A;border-radius:0;cursor:=
+auto;mso-padding-alt:10px 25px;background:transparent;" valign=3D"middle"><=
+a href=3D"https://www.massimodutti.com/34009454/-1/my-account/orders-type/o=
+nline?&orderId=3D30101502670" style=3D"display:inline-block;background:tran=
+sparent;color:#000000;font-family:Helvetica, Arial;font-size:14px;font-weig=
+ht:400;line-height:120%;margin:0;text-decoration:none;text-transform:UPPERC=
+ASE;padding:10px 25px;mso-padding-alt:0px;border-radius:0;" target=3D"_blan=
+k">Order details</a></td></tr></tbody></table></td></tr></tbody></table></t=
+d></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><![endif]-=
+-></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><![en=
+dif]--> <!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" role=3D"presentation" style=3D"width:60=
+0px;" width=3D"600" bgcolor=3D"#FFFFFF" ><tr><td style=3D"line-height:0px;f=
+ont-size:0px;mso-line-height-rule:exactly;"><![endif]--><div style=3D"backg=
+round:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;"><t=
+able align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"background:#FFFFFF;background-color:#FFFFFF;widt=
+h:100%;"><tbody><tr><td style=3D"direction:ltr;font-size:0px;padding:16px 0=
+px;text-align:center;"><!--[if mso | IE]><table role=3D"presentation" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=3D"ver=
+tical-align:middle;width:600px;" ><![endif]--><div class=3D"mj-column-per-1=
+00 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;direction:l=
+tr;display:inline-block;vertical-align:middle;width:100%;"><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%=
+"><tbody><tr><td style=3D"background-color:#FFFFFF;vertical-align:middle;pa=
+dding:0px;padding-bottom:32px;"><table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><td align=3D"c=
+enter" style=3D"font-size:0px;padding:10px 25px;word-break:break-word;"><di=
+v style=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:700;line=
+-height:16px;text-align:center;text-transform:UPPERCASE;color:#000000;"><p =
+dir=3D"ltr" style=3D"margin:0px auto;">Delivery address:</p></div></td></tr=
+><tr><td align=3D"center" style=3D"font-size:0px;padding:10px 25px;word-bre=
+ak:break-word;"><div style=3D"font-family:Helvetica, Arial;font-size:12px;f=
+ont-weight:400;line-height:12px;text-align:center;text-transform:UPPERCASE;=
+color:#000000;"><p dir=3D"ltr" style=3D"margin:0px auto;">Artem</p></div></=
+td></tr><tr><td align=3D"center" style=3D"font-size:0px;padding:10px 25px;w=
+ord-break:break-word;"><div style=3D"font-family:Helvetica, Arial;font-size=
+:12px;font-weight:400;line-height:12px;text-align:center;text-transform:UPP=
+ERCASE;color:#000000;"><p dir=3D"ltr" style=3D"margin:0px auto;">Buchschlag=
+er Allee 27</p></div></td></tr><tr><td align=3D"center" style=3D"font-size:=
+0px;padding:10px 25px;word-break:break-word;"><div style=3D"font-family:Hel=
+vetica, Arial;font-size:12px;font-weight:400;line-height:12px;text-align:ce=
+nter;text-transform:UPPERCASE;color:#000000;"><p dir=3D"ltr" style=3D"margi=
+n:0px auto;">63303 Dreieich  </p></div></td></tr><tr><td align=3D"center" s=
+tyle=3D"font-size:0px;padding:10px 25px;word-break:break-word;"><div style=
+=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:400;line-height=
+:12px;text-align:center;text-transform:UPPERCASE;color:#000000;"><p dir=3D"=
+ltr" style=3D"margin:0px auto;">Tel:=C2=A0+49=C2=A015151901452</p></div></t=
+d></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]></=
+td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if mso | I=
+E]></td></tr></table><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" class=3D"" role=3D"presentation" style=3D"width:600px;" =
+width=3D"600" bgcolor=3D"#FFFFFF" ><tr><td style=3D"line-height:0px;font-si=
+ze:0px;mso-line-height-rule:exactly;"><![endif]--><div style=3D"background:=
+#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;"><table a=
+lign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pr=
+esentation" style=3D"background:#FFFFFF;background-color:#FFFFFF;width:100%=
+;"><tbody><tr><td style=3D"direction:ltr;font-size:0px;padding:0px;text-ali=
+gn:center;"><!--[if mso | IE]><table role=3D"presentation" border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=3D"vertical-align=
+:top;width:600px;" ><![endif]--><div class=3D"mj-column-per-100 mj-outlook-=
+group-fix" style=3D"font-size:0px;text-align:left;direction:ltr;display:inl=
+ine-block;vertical-align:top;width:100%;"><table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><t=
+d style=3D"background-color:#FFFFFF;vertical-align:top;padding:0px;"><table=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" wid=
+th=3D"100%"><tbody><tr><td align=3D"left" style=3D"font-size:0px;padding:10=
+px 25px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;=
+font-size:16px;font-weight:700;line-height:20px;text-align:left;text-transf=
+orm:UPPERCASE;color:#000000;"><p dir=3D"ltr" style=3D"margin:0px">ORDER SUM=
+MARY</p></div></td></tr></tbody></table></td></tr></tbody></table></div><!-=
+-[if mso | IE]></td></tr></table><![endif]--></td></tr></tbody></table></di=
+v><!--[if mso | IE]></td></tr></table><![endif]-->    <!--[if mso | IE]><ta=
+ble align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=
+=3D"" role=3D"presentation" style=3D"width:600px;" width=3D"600" bgcolor=3D=
+"#FFFFFF" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-r=
+ule:exactly;"><![endif]--><div style=3D"background:#FFFFFF;background-color=
+:#FFFFFF;margin:0px auto;max-width:600px;"><table align=3D"center" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"b=
+ackground:#FFFFFF;background-color:#FFFFFF;width:100%;"><tbody><tr><td styl=
+e=3D"direction:ltr;font-size:0px;padding:16px 0px;text-align:center;"><!--[=
+if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0"><tr><![endif]-->      <!--[if mso | IE]><td class=3D"" styl=
+e=3D"width:600px;" ><![endif]--><div class=3D"mj-column-per-100 mj-outlook-=
+group-fix" style=3D"font-size:0;line-height:0;text-align:left;display:inlin=
+e-block;width:100%;direction:ltr;"><!--[if mso | IE]><table border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" role=3D"presentation" ><tr><td style=3D"v=
+ertical-align:top;width:180px;" ><![endif]--><div class=3D"mj-column-per-30=
+ mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;direction:ltr=
+;display:inline-block;vertical-align:top;width:30%;"><table border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbo=
+dy><tr><td style=3D"vertical-align:top;padding:0px;padding-right:0px;"><tab=
+le border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" w=
+idth=3D"100%"><tbody><tr><td align=3D"center" class=3D"product-loop-image" =
+style=3D"font-size:0px;padding:10px 25px;padding-right:0px;word-break:break=
+-word;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pre=
+sentation" style=3D"border-collapse:collapse;border-spacing:0px;"><tbody><t=
+r><td style=3D"width:155px;"><img alt=3D"100% mercerised cotton T-shirt" sr=
+c=3D"https://static.massimodutti.net/3/photos/2025/I/0/2/p/1422/291/800/142=
+2291800_1_1_3.jpg?timestamp=3D20251229015203 " style=3D"border:0;display:bl=
+ock;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px=
+;" width=3D"155" height=3D"auto"></td></tr></tbody></table></td></tr></tbod=
+y></table></td></tr></tbody></table></div><!--[if mso | IE]></td><td style=
+=3D"vertical-align:top;width:420px;" ><![endif]--><div class=3D"mj-column-p=
+er-70 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;directio=
+n:ltr;display:inline-block;vertical-align:top;width:70%;"><table border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"=
+><tbody><tr><td style=3D"vertical-align:top;padding:0px;padding-bottom:0px;=
+"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentat=
+ion" width=3D"100%"><tbody><tr><td align=3D"left" class=3D"desktop-between"=
+ style=3D"font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break=
+-word;"><div style=3D"font-family:Helvetica;font-size:14px;font-weight:400;=
+line-height:24px;text-align:left;text-transform:UPPERCASE;color:#000000;"><=
+p dir=3D"ltr" class=3D"product-loop-title"> 100% mercerised cotton T-shirt<=
+/p></div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:10=
+px 25px;padding-top:0px;padding-bottom:4px;word-break:break-word;"><div sty=
+le=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:400;line-heig=
+ht:16px;text-align:left;text-transform:UPPERCASE;color:#000000;"> 19.95 =E2=
+=82=AC  </div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;paddi=
+ng:10px 25px;padding-top:8px;padding-bottom:64;word-break:break-word;"><div=
+ style=3D"font-family:Helvetica;font-size:12px;font-weight:400;line-height:=
+1;text-align:left;color:#8E8E8E;">1422/291</div></td></tr><tr><td align=3D"=
+left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-bott=
+om:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;f=
+ont-size:12px;font-weight:400;line-height:16px;text-align:left;text-transfo=
+rm:UPPERCASE;color:#000000;">Quantity: 1</div></td></tr><tr><td align=3D"le=
+ft" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom=
+:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;fon=
+t-size:12px;font-weight:400;line-height:16px;text-align:left;text-transform=
+:UPPERCASE;color:#000000;">Colour: BLACK</div></td></tr><tr><td align=3D"le=
+ft" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom=
+:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;fon=
+t-size:12px;font-weight:400;line-height:16px;text-align:left;text-transform=
+:UPPERCASE;color:#000000;">Size: M</div></td></tr></tbody></table></td></tr=
+></tbody></table></div><!--[if mso | IE]></td></tr></table><![endif]--></di=
+v><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></tbody></table=
+></div><!--[if mso | IE]></td></tr></table><![endif]--> <!--[if mso | IE]><=
+table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cla=
+ss=3D"" role=3D"presentation" style=3D"width:600px;" width=3D"600" bgcolor=
+=3D"#FFFFFF" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-heigh=
+t-rule:exactly;"><![endif]--><div style=3D"background:#FFFFFF;background-co=
+lor:#FFFFFF;margin:0px auto;max-width:600px;"><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"=
+background:#FFFFFF;background-color:#FFFFFF;width:100%;"><tbody><tr><td sty=
+le=3D"direction:ltr;font-size:0px;padding:16px 0px;text-align:center;"><!--=
+[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0"><tr><![endif]-->      <!--[if mso | IE]><td class=3D"" sty=
+le=3D"width:600px;" ><![endif]--><div class=3D"mj-column-per-100 mj-outlook=
+-group-fix" style=3D"font-size:0;line-height:0;text-align:left;display:inli=
+ne-block;width:100%;direction:ltr;"><!--[if mso | IE]><table border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" ><tr><td style=3D"=
+vertical-align:top;width:180px;" ><![endif]--><div class=3D"mj-column-per-3=
+0 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;direction:lt=
+r;display:inline-block;vertical-align:top;width:30%;"><table border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tb=
+ody><tr><td style=3D"vertical-align:top;padding:0px;padding-right:0px;"><ta=
+ble border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" =
+width=3D"100%"><tbody><tr><td align=3D"center" class=3D"product-loop-image"=
+ style=3D"font-size:0px;padding:10px 25px;padding-right:0px;word-break:brea=
+k-word;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"pr=
+esentation" style=3D"border-collapse:collapse;border-spacing:0px;"><tbody><=
+tr><td style=3D"width:155px;"><img alt=3D"Wool blend crew neck sweater" src=
+=3D"https://static.massimodutti.net/3/photos/2025/I/0/2/p/1010/240/353/1010=
+240353_1_1_3.jpg?timestamp=3D20251229015203 " style=3D"border:0;display:blo=
+ck;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;=
+" width=3D"155" height=3D"auto"></td></tr></tbody></table></td></tr></tbody=
+></table></td></tr></tbody></table></div><!--[if mso | IE]></td><td style=
+=3D"vertical-align:top;width:420px;" ><![endif]--><div class=3D"mj-column-p=
+er-70 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;directio=
+n:ltr;display:inline-block;vertical-align:top;width:70%;"><table border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"=
+><tbody><tr><td style=3D"vertical-align:top;padding:0px;padding-bottom:0px;=
+"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentat=
+ion" width=3D"100%"><tbody><tr><td align=3D"left" class=3D"desktop-between"=
+ style=3D"font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break=
+-word;"><div style=3D"font-family:Helvetica;font-size:14px;font-weight:400;=
+line-height:24px;text-align:left;text-transform:UPPERCASE;color:#000000;"><=
+p dir=3D"ltr" class=3D"product-loop-title"> Wool blend crew neck sweater</p=
+></div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:10px=
+ 25px;padding-top:0px;padding-bottom:4px;word-break:break-word;"><div style=
+=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:400;line-height=
+:16px;text-align:left;text-transform:UPPERCASE;color:#000000;"> 39.95 =E2=
+=82=AC  </div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;paddi=
+ng:10px 25px;padding-top:8px;padding-bottom:64;word-break:break-word;"><div=
+ style=3D"font-family:Helvetica;font-size:12px;font-weight:400;line-height:=
+1;text-align:left;color:#8E8E8E;">1010/240</div></td></tr><tr><td align=3D"=
+left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-bott=
+om:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;f=
+ont-size:12px;font-weight:400;line-height:16px;text-align:left;text-transfo=
+rm:UPPERCASE;color:#000000;">Quantity: 1</div></td></tr><tr><td align=3D"le=
+ft" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom=
+:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;fon=
+t-size:12px;font-weight:400;line-height:16px;text-align:left;text-transform=
+:UPPERCASE;color:#000000;">Colour: TERRA-COTTA</div></td></tr><tr><td align=
+=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-=
+bottom:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Ari=
+al;font-size:12px;font-weight:400;line-height:16px;text-align:left;text-tra=
+nsform:UPPERCASE;color:#000000;">Size: L</div></td></tr></tbody></table></t=
+d></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><![endif]-=
+-></div><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></tbody><=
+/table></div><!--[if mso | IE]></td></tr></table><![endif]--> <!--[if mso |=
+ IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" class=3D"" role=3D"presentation" style=3D"width:600px;" width=3D"600" bg=
+color=3D"#FFFFFF" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-=
+height-rule:exactly;"><![endif]--><div style=3D"background:#FFFFFF;backgrou=
+nd-color:#FFFFFF;margin:0px auto;max-width:600px;"><table align=3D"center" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" styl=
+e=3D"background:#FFFFFF;background-color:#FFFFFF;width:100%;"><tbody><tr><t=
+d style=3D"direction:ltr;font-size:0px;padding:16px 0px;text-align:center;"=
+><!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0"><tr><![endif]-->      <!--[if mso | IE]><td class=3D"=
+" style=3D"width:600px;" ><![endif]--><div class=3D"mj-column-per-100 mj-ou=
+tlook-group-fix" style=3D"font-size:0;line-height:0;text-align:left;display=
+:inline-block;width:100%;direction:ltr;"><!--[if mso | IE]><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" ><tr><td styl=
+e=3D"vertical-align:top;width:180px;" ><![endif]--><div class=3D"mj-column-=
+per-30 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;directi=
+on:ltr;display:inline-block;vertical-align:top;width:30%;"><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%=
+"><tbody><tr><td style=3D"vertical-align:top;padding:0px;padding-right:0px;=
+"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentat=
+ion" width=3D"100%"><tbody><tr><td align=3D"center" class=3D"product-loop-i=
+mage" style=3D"font-size:0px;padding:10px 25px;padding-right:0px;word-break=
+:break-word;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"border-collapse:collapse;border-spacing:0px;"><t=
+body><tr><td style=3D"width:155px;"><img alt=3D"Wool blend crew neck sweate=
+r" src=3D"https://static.massimodutti.net/3/photos/2025/I/0/2/p/1010/240/35=
+3/1010240353_1_1_3.jpg?timestamp=3D20251229015203 " style=3D"border:0;displ=
+ay:block;outline:none;text-decoration:none;height:auto;width:100%;font-size=
+:13px;" width=3D"155" height=3D"auto"></td></tr></tbody></table></td></tr><=
+/tbody></table></td></tr></tbody></table></div><!--[if mso | IE]></td><td s=
+tyle=3D"vertical-align:top;width:420px;" ><![endif]--><div class=3D"mj-colu=
+mn-per-70 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:70%;"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"1=
+00%"><tbody><tr><td style=3D"vertical-align:top;padding:0px;padding-bottom:=
+0px;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"prese=
+ntation" width=3D"100%"><tbody><tr><td align=3D"left" class=3D"desktop-betw=
+een" style=3D"font-size:0px;padding:10px 25px;padding-bottom:0;word-break:b=
+reak-word;"><div style=3D"font-family:Helvetica;font-size:14px;font-weight:=
+400;line-height:24px;text-align:left;text-transform:UPPERCASE;color:#000000=
+;"><p dir=3D"ltr" class=3D"product-loop-title"> Wool blend crew neck sweate=
+r</p></div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:=
+10px 25px;padding-top:0px;padding-bottom:4px;word-break:break-word;"><div s=
+tyle=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:400;line-he=
+ight:16px;text-align:left;text-transform:UPPERCASE;color:#000000;"> 39.95 =
+=E2=82=AC  </div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;pa=
+dding:10px 25px;padding-top:8px;padding-bottom:64;word-break:break-word;"><=
+div style=3D"font-family:Helvetica;font-size:12px;font-weight:400;line-heig=
+ht:1;text-align:left;color:#8E8E8E;">1010/240</div></td></tr><tr><td align=
+=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-=
+bottom:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Ari=
+al;font-size:12px;font-weight:400;line-height:16px;text-align:left;text-tra=
+nsform:UPPERCASE;color:#000000;">Quantity: 1</div></td></tr><tr><td align=
+=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;padding-=
+bottom:4px;word-break:break-word;"><div style=3D"font-family:Helvetica, Ari=
+al;font-size:12px;font-weight:400;line-height:16px;text-align:left;text-tra=
+nsform:UPPERCASE;color:#000000;">Colour: TERRA-COTTA</div></td></tr><tr><td=
+ align=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;pa=
+dding-bottom:4px;word-break:break-word;"><div style=3D"font-family:Helvetic=
+a, Arial;font-size:12px;font-weight:400;line-height:16px;text-align:left;te=
+xt-transform:UPPERCASE;color:#000000;">Size: M</div></td></tr></tbody></tab=
+le></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><![e=
+ndif]--></div><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></t=
+body></table></div><!--[if mso | IE]></td></tr></table><![endif]--> <!--[if=
+ mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" class=3D"" role=3D"presentation" style=3D"width:600px;" width=3D"6=
+00" bgcolor=3D"#FFFFFF" ><tr><td style=3D"line-height:0px;font-size:0px;mso=
+-line-height-rule:exactly;"><![endif]--><div style=3D"background:#FFFFFF;ba=
+ckground-color:#FFFFFF;margin:0px auto;max-width:600px;"><table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation=
+" style=3D"background:#FFFFFF;background-color:#FFFFFF;width:100%;"><tbody>=
+<tr><td style=3D"direction:ltr;font-size:0px;padding:16px 0px;text-align:ce=
+nter;"><!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0"><tr><![endif]-->      <!--[if mso | IE]><td cla=
+ss=3D"" style=3D"width:600px;" ><![endif]--><div class=3D"mj-column-per-100=
+ mj-outlook-group-fix" style=3D"font-size:0;line-height:0;text-align:left;d=
+isplay:inline-block;width:100%;direction:ltr;"><!--[if mso | IE]><table bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" ><tr><t=
+d style=3D"vertical-align:top;width:180px;" ><![endif]--><div class=3D"mj-c=
+olumn-per-30 mj-outlook-group-fix" style=3D"font-size:0px;text-align:left;d=
+irection:ltr;display:inline-block;vertical-align:top;width:30%;"><table bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=
+=3D"100%"><tbody><tr><td style=3D"vertical-align:top;padding:0px;padding-ri=
+ght:0px;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"p=
+resentation" width=3D"100%"><tbody><tr><td align=3D"center" class=3D"produc=
+t-loop-image" style=3D"font-size:0px;padding:10px 25px;padding-right:0px;wo=
+rd-break:break-word;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" role=3D"presentation" style=3D"border-collapse:collapse;border-spacing:0=
+px;"><tbody><tr><td style=3D"width:155px;"><img alt=3D"Wool blend crew neck=
+ sweater" src=3D"https://static.massimodutti.net/3/photos/2025/I/0/2/p/1010=
+/240/606/1010240606_1_1_3.jpg?timestamp=3D20251229015203 " style=3D"border:=
+0;display:block;outline:none;text-decoration:none;height:auto;width:100%;fo=
+nt-size:13px;" width=3D"155" height=3D"auto"></td></tr></tbody></table></td=
+></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]></t=
+d><td style=3D"vertical-align:top;width:420px;" ><![endif]--><div class=3D"=
+mj-column-per-70 mj-outlook-group-fix" style=3D"font-size:0px;text-align:le=
+ft;direction:ltr;display:inline-block;vertical-align:top;width:70%;"><table=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" wid=
+th=3D"100%"><tbody><tr><td style=3D"vertical-align:top;padding:0px;padding-=
+bottom:0px;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%"><tbody><tr><td align=3D"left" class=3D"des=
+ktop-between" style=3D"font-size:0px;padding:10px 25px;padding-bottom:0;wor=
+d-break:break-word;"><div style=3D"font-family:Helvetica;font-size:14px;fon=
+t-weight:400;line-height:24px;text-align:left;text-transform:UPPERCASE;colo=
+r:#000000;"><p dir=3D"ltr" class=3D"product-loop-title"> Wool blend crew ne=
+ck sweater</p></div></td></tr><tr><td align=3D"left" style=3D"font-size:0px=
+;padding:10px 25px;padding-top:0px;padding-bottom:4px;word-break:break-word=
+;"><div style=3D"font-family:Helvetica, Arial;font-size:12px;font-weight:40=
+0;line-height:16px;text-align:left;text-transform:UPPERCASE;color:#000000;"=
+> 39.95 =E2=82=AC  </div></td></tr><tr><td align=3D"left" style=3D"font-siz=
+e:0px;padding:10px 25px;padding-top:8px;padding-bottom:64;word-break:break-=
+word;"><div style=3D"font-family:Helvetica;font-size:12px;font-weight:400;l=
+ine-height:1;text-align:left;color:#8E8E8E;">1010/240</div></td></tr><tr><t=
+d align=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;p=
+adding-bottom:4px;word-break:break-word;"><div style=3D"font-family:Helveti=
+ca, Arial;font-size:12px;font-weight:400;line-height:16px;text-align:left;t=
+ext-transform:UPPERCASE;color:#000000;">Quantity: 1</div></td></tr><tr><td =
+align=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;pad=
+ding-bottom:4px;word-break:break-word;"><div style=3D"font-family:Helvetica=
+, Arial;font-size:12px;font-weight:400;line-height:16px;text-align:left;tex=
+t-transform:UPPERCASE;color:#000000;">Colour: BURGUNDY</div></td></tr><tr><=
+td align=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-top:0px;=
+padding-bottom:4px;word-break:break-word;"><div style=3D"font-family:Helvet=
+ica, Arial;font-size:12px;font-weight:400;line-height:16px;text-align:left;=
+text-transform:UPPERCASE;color:#000000;">Size: M</div></td></tr></tbody></t=
+able></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><!=
+[endif]--></div><!--[if mso | IE]></td></tr></table><![endif]--></td></tr><=
+/tbody></table></div><!--[if mso | IE]></td></tr></table><![endif]--> <!--[=
+if mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" class=3D"" role=3D"presentation" style=3D"width:600px;" width=3D=
+"600" bgcolor=3D"#FFFFFF" ><tr><td style=3D"line-height:0px;font-size:0px;m=
+so-line-height-rule:exactly;"><![endif]--><div style=3D"background:#FFFFFF;=
+background-color:#FFFFFF;margin:0px auto;max-width:600px;"><table align=3D"=
+center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentati=
+on" style=3D"background:#FFFFFF;background-color:#FFFFFF;width:100%;"><tbod=
+y><tr><td style=3D"direction:ltr;font-size:0px;padding:24px 0px;text-align:=
+center;"><!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=3D"vertical-align:to=
+p;width:600px;" ><![endif]--><div class=3D"mj-column-per-100 mj-outlook-gro=
+up-fix" style=3D"font-size:0px;text-align:left;direction:ltr;display:inline=
+-block;vertical-align:top;width:100%;"><table border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><td sty=
+le=3D"vertical-align:top;padding:0px;"><table border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><td ali=
+gn=3D"left" style=3D"font-size:0px;padding:10px 25px;padding-bottom:0px;wor=
+d-break:break-word;"><table cellpadding=3D"0" cellspacing=3D"0" width=3D"10=
+0%" border=3D"0" style=3D"color:#000000;font-family:Helvetica, Arial;font-s=
+ize:16px;line-height:22px;table-layout:auto;width:100%;border:none;"><mj-ra=
+w></mj-raw><tr><th align=3D"left">Payment method</th><td style=3D"padding: =
+4px 0px; text-align:right"><mj-raw> </mj-raw>Invoice<mj-raw></mj-raw></td><=
+/tr><tr><th align=3D"left">Subtotal</th><td style=3D"padding: 4px 0px; text=
+-align:right">139.80 =E2=82=AC </td></tr><tr><th align=3D"left">Delivery co=
+sts</th><td style=3D"padding: 4px 0px; text-align:right"><mj-raw></mj-raw>4=
+.95 =E2=82=AC <mj-raw></mj-raw></td></tr><mj-raw></mj-raw><tr><th align=3D"=
+left">Delivery discount</th><td style=3D"padding: 4px 0px; text-align:right=
+">-4.95 =E2=82=AC </td></tr><mj-raw></mj-raw><!-- <tr> <th align=3D"left">T=
+otal (VAT included)</th> <th style=3D"padding: 4px 0px; text-align:right">1=
+39.80 =E2=82=AC </th> </tr> --></table></td></tr><tr><td align=3D"left" sty=
+le=3D"font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word=
+;"><table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" border=3D"0" s=
+tyle=3D"color:#000000;font-family:Helvetica, Arial;font-size:15px;line-heig=
+ht:22px;table-layout:auto;width:100%;border:none;"><tr><th align=3D"left">T=
+otal (VAT included)</th><td align=3D"right">139.80 =E2=82=AC </td></tr></ta=
+ble></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso |=
+ IE]></td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if =
+mso | IE]></td></tr></table><![endif]--> <!--[if mso | IE]><table align=3D"=
+center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" role=3D=
+"presentation" style=3D"width:600px;" width=3D"600" bgcolor=3D"#F6F6F6" ><t=
+r><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;"=
+><![endif]--><div style=3D"background:#F6F6F6;background-color:#F6F6F6;marg=
+in:0px auto;max-width:600px;"><table align=3D"center" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"background:#F6F6=
+F6;background-color:#F6F6F6;width:100%;"><tbody><tr><td style=3D"direction:=
+ltr;font-size:0px;padding:16px 0px;text-align:center;"><!--[if mso | IE]><t=
+able role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+><tr><td class=3D"" style=3D"vertical-align:middle;width:600px;" ><![endif]=
+--><div class=3D"mj-column-per-100 mj-outlook-group-fix" style=3D"font-size=
+:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:midd=
+le;width:100%;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" rol=
+e=3D"presentation" width=3D"100%"><tbody><tr><td style=3D"background-color:=
+#F6F6F6;vertical-align:middle;padding:0px;"><table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><t=
+d align=3D"left" style=3D"font-size:0px;padding:10px 25px;word-break:break-=
+word;"><div style=3D"font-family:Helvetica, Arial;font-size:12px;font-weigh=
+t:700;line-height:16px;text-align:left;text-transform:UPPERCASE;color:#0000=
+00;"><p dir=3D"ltr" style=3D"margin:0px">Can we help you with anything?</p>=
+</div></td></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:10px =
+25px;word-break:break-word;"><div style=3D"font-family:Helvetica, Arial;fon=
+t-size:12px;font-weight:400;line-height:16px;text-align:left;color:#000000;=
+"><p dir=3D"ltr" style=3D"margin:0px">Our Customer Service Department is at=
+ your complete disposal for any questions about Massimo Dutti.</p></div></t=
+d></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:10px 25px;padd=
+ing-top:24px;word-break:break-word;"><table border=3D"0" cellpadding=3D"0" =
+cellspacing=3D"0" role=3D"presentation" style=3D"border-collapse:separate;w=
+idth:100%;line-height:100%;"><tbody><tr><td align=3D"center" bgcolor=3D"tra=
+nsparent" role=3D"presentation" style=3D"border:1px solid #1A1A1A;border-ra=
+dius:0;cursor:auto;mso-padding-alt:10px 25px;background:transparent;" valig=
+n=3D"middle"><a href=3D"https://massimodutti.com/DE/contact-page" style=3D"=
+display:inline-block;background:transparent;color:#000000;font-family:Helve=
+tica, Arial;font-size:14px;font-weight:400;line-height:120%;margin:0;text-d=
+ecoration:none;text-transform:UPPERCASE;padding:10px 25px;mso-padding-alt:0=
+px;border-radius:0;" target=3D"_blank">Access</a></td></tr></tbody></table>=
+</td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]=
+></td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if mso =
+| IE]></td></tr></table><table align=3D"center" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" class=3D"" role=3D"presentation" style=3D"width:600px=
+;" width=3D"600" bgcolor=3D"#ffffff" ><tr><td style=3D"line-height:0px;font=
+-size:0px;mso-line-height-rule:exactly;"><![endif]--><div style=3D"backgrou=
+nd:#ffffff;background-color:#ffffff;margin:0px auto;max-width:600px;"><tabl=
+e align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D=
+"presentation" style=3D"background:#ffffff;background-color:#ffffff;width:1=
+00%;"><tbody><tr><td style=3D"direction:ltr;font-size:0px;padding:0px;paddi=
+ng-bottom:16px;padding-left:16px;padding-right:16px;padding-top:50px;text-a=
+lign:center;"><!--[if mso | IE]><table role=3D"presentation" border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=3D"vertical-ali=
+gn:top;width:568px;" ><![endif]--><div class=3D"mj-column-per-100 mj-outloo=
+k-group-fix" style=3D"font-size:0px;text-align:left;direction:ltr;display:i=
+nline-block;vertical-align:top;width:100%;"><table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><t=
+d style=3D"vertical-align:top;padding:0px;"><table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><tr><t=
+d align=3D"left" style=3D"font-size:0px;padding:10px 25px;word-break:break-=
+word;"><div style=3D"font-family:helvetica, Arial;font-size:13px;line-heigh=
+t:1;text-align:left;color:#555555;"><a href=3D"https://static.massimodutti.=
+net/3/root/qr/qr.html" style=3D"color: #000;text-transform: uppercase;font-=
+size: 14px;font-weight: 400;text-decoration: none;">Download our app</a></d=
+iv></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | =
+IE]></td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if m=
+so | IE]></td></tr></table><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" role=3D"presentation" style=3D"width:60=
+0px;" width=3D"600" bgcolor=3D"#ffffff" ><tr><td style=3D"line-height:0px;f=
+ont-size:0px;mso-line-height-rule:exactly;"><![endif]--><div style=3D"backg=
+round:#ffffff;background-color:#ffffff;margin:0px auto;max-width:600px;"><t=
+able align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"background:#ffffff;background-color:#ffffff;widt=
+h:100%;"><tbody><tr><td style=3D"direction:ltr;font-size:0px;padding:0px;te=
+xt-align:center;"><!--[if mso | IE]><table role=3D"presentation" border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=3D"vertical=
+-align:top;width:600px;" ><![endif]--><div class=3D"mj-column-per-100 mj-ou=
+tlook-group-fix" style=3D"font-size:0px;text-align:left;direction:ltr;displ=
+ay:inline-block;vertical-align:top;width:100%;"><table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><t=
+r><td style=3D"vertical-align:top;padding:0px;"><table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%"><tbody><t=
+r><td align=3D"center" style=3D"font-size:0px;word-break:break-word;"><div =
+class=3D"mj-inline-links"><!--[if mso | IE]><table role=3D"presentation" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" align=3D"center"><tr><td sty=
+le=3D"padding:15px 10px;" class=3D"" ><![endif]--> <a class=3D"mj-link" hre=
+f=3D"https://www.instagram.com/massimodutti/" target=3D"_blank" style=3D"di=
+splay:inline-block;color:#000000;font-family:helvetica, Arial;font-size:14p=
+x;font-weight:400;line-height:22px;text-decoration:none;text-transform:uppe=
+rcase;padding:15px 10px;"><p style=3D"text-transform: lowercase;"><span sty=
+le=3D"text-transform: uppercase;">I</span>nstagram</p></a><!--[if mso | IE]=
+></td><td style=3D"padding:15px 10px;" class=3D"" ><![endif]--> <a class=3D=
+"mj-link" href=3D"https://www.tiktok.com/@massimodutti" target=3D"_blank" s=
+tyle=3D"display:inline-block;color:#000000;font-family:helvetica, Arial;fon=
+t-size:14px;font-weight:400;line-height:22px;text-decoration:none;text-tran=
+sform:uppercase;padding:15px 10px;"><p style=3D"text-transform: lowercase;"=
+><span style=3D"text-transform: uppercase;">T</span>ik<span style=3D"text-t=
+ransform: uppercase;">T</span>ok</p></a><!--[if mso | IE]></td><td style=3D=
+"padding:15px 10px;" class=3D"" ><![endif]--> <a class=3D"mj-link" href=3D"=
+https://www.facebook.com/MassimoDuttiOfficial" target=3D"_blank" style=3D"d=
+isplay:inline-block;color:#000000;font-family:helvetica, Arial;font-size:14=
+px;font-weight:400;line-height:22px;text-decoration:none;text-transform:upp=
+ercase;padding:15px 10px;"><p style=3D"text-transform: lowercase;"><span st=
+yle=3D"text-transform: uppercase;">F</span>acebook</p></a><!--[if mso | IE]=
+></td><td style=3D"padding:15px 10px;" class=3D"" ><![endif]--> <a class=3D=
+"mj-link" href=3D"https://twitter.com/massimodutti" target=3D"_blank" style=
+=3D"display:inline-block;color:#000000;font-family:helvetica, Arial;font-si=
+ze:14px;font-weight:400;line-height:22px;text-decoration:none;text-transfor=
+m:uppercase;padding:15px 10px;">X </a><!--[if mso | IE]></td><td style=3D"p=
+adding:15px 10px;" class=3D"" ><![endif]--> <a class=3D"mj-link" href=3D"ht=
+tps://www.pinterest.com/massimodutti/" target=3D"_blank" style=3D"display:i=
+nline-block;color:#000000;font-family:helvetica, Arial;font-size:14px;font-=
+weight:400;line-height:22px;text-decoration:none;text-transform:uppercase;p=
+adding:15px 10px;"><p style=3D"text-transform: lowercase;"><span style=3D"t=
+ext-transform: uppercase;">p</span>interest</p></a><!--[if mso | IE]></td><=
+td style=3D"padding:15px 10px;" class=3D"" ><![endif]--> <a class=3D"mj-lin=
+k" href=3D"https://www.youtube.com/user/MassimoDuttiOfficial" target=3D"_bl=
+ank" style=3D"display:inline-block;color:#000000;font-family:helvetica, Ari=
+al;font-size:14px;font-weight:400;line-height:22px;text-decoration:none;tex=
+t-transform:uppercase;padding:15px 10px;"><p style=3D"text-transform: lower=
+case;"><span style=3D"text-transform: uppercase;">Y</span>outube</p></a><!-=
+-[if mso | IE]></td></tr></table><![endif]--></div></td></tr></tbody></tabl=
+e></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><![en=
+dif]--></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table>=
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"" role=3D"presentation" style=3D"width:600px;" width=3D"600" bgcolor=
+=3D"#ffffff" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-heigh=
+t-rule:exactly;"><![endif]--><div style=3D"background:#ffffff;background-co=
+lor:#ffffff;margin:0px auto;max-width:600px;"><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"=
+background:#ffffff;background-color:#ffffff;width:100%;"><tbody><tr><td sty=
+le=3D"direction:ltr;font-size:0px;padding:0px;padding-bottom:24px;padding-l=
+eft:16px;padding-right:16px;padding-top:16px;text-align:center;"><!--[if ms=
+o | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0"><tr><td class=3D"" style=3D"vertical-align:top;width:568px;" ><!=
+[endif]--><div class=3D"mj-column-per-100 mj-outlook-group-fix" style=3D"fo=
+nt-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-ali=
+gn:top;width:100%;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ role=3D"presentation" width=3D"100%"><tbody><tr><td style=3D"vertical-alig=
+n:top;padding:0px;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ role=3D"presentation" width=3D"100%"><tbody><tr><td align=3D"left" style=
+=3D"font-size:0px;padding:10px 25px;word-break:break-word;"><div style=3D"f=
+ont-family:helvetica, Arial;font-size:13px;line-height:1;text-align:left;co=
+lor:#8E8E8E;"> Massimo Dutti is a trade name used by Fashion Retail S.A.</d=
+iv></td></tr><tr><td align=3D"left" style=3D"font-size:0px;padding:10px 25p=
+x;word-break:break-word;"><div style=3D"font-family:helvetica, Arial;font-s=
+ize:13px;line-height:1;text-align:left;color:#8E8E8E;"> DE-289132978 - <a h=
+ref=3D"https://static.massimodutti.net/3/static2/itxwebstandard/pdf/privacy=
+_policy/34009454/privacy_policy-1.pdf" style=3D"color: #8e8e8e">Privacy Pol=
+icy</a> - <a href=3D"https://static.massimodutti.net/3/static2/itxwebstanda=
+rd/pdf/purchase_conditions/34009454/general_conditions-1.pdf" style=3D"colo=
+r: #8e8e8e">Purchase conditions</a><mj-raw></mj-raw></div></td></tr></tbody=
+></table></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></tabl=
+e><![endif]--></td></tr></tbody></table></div><!--[if mso | IE]></td></tr><=
+/table><![endif]--></div><img src=3D"https://track-mail-de2.transactional-m=
+ail-d.com/v1/img?t=3DeyJraWQiOiJ2MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.ey=
+JzdWIiOiJtNGEyLm90IiwidmVyIjoxLCJkc3QiOiJodHRwOi8vaHR0cC10by1rYWZrYS5tNGEub=
+XVjcmUxLnJldGxvYy9yZXN0L3YxL3RvcGljcy9ldmVudHMtdHJhY2tpbmciLCJleHAiOjE3Njk2=
+MTk5OTEsImV0bCI6MTc2Nzg5MTk5MSwiaWF0IjoxNzY3MDI3OTkxLCJqdGkiOiJMcHRmaDQiLCJ=
+jaWQiOiI5ZGIxNWU0Ny1hMGE0LTQyMmEtYTZjZi0xY2UyYzg0ZWY5MjgjZDQ4NzRhYTQjZTNkYW=
+Q1MGUifQ.24mo3CLQtv7hqaI0zesxGM5k6ZOOG0ZsPjnEsDU1iEs&d=3DeyJhbGciOiJBMTI4S1=
+ciLCJ6aXAiOiJERUYiLCJraWQiOiJ2MSIsImVuYyI6IkExMjhDQkMtSFMyNTYifQ.F_vgX4VgqB=
+eoY1YQT0vMDt1v5cYGCpf76FErwyuuG1Q2HTVOxNOf4g.-l4aUDu1dgwKOhCes4bH6w.bnCGM69=
+DdlYGpBS-e9P139wrqWhHC6hdcCxsq6a8Af15c9JjS7kufCVTKxD4DlG0vzRxWJ287vqkKexcYY=
+L20yTplzFzo0Q-WoIrAgxvGzyW3oHISdYFkhOskllToyzckibtLDcUFW-kC3E2PbMkkgf_rRI68=
+19P_PxvxIRZP5kDA3IYdIXiUoh6VzH3RErnuK2Bc_LEkUtgLlTUUgHSy1EobxXD3k-WUlP29f9M=
+z87qTuS_qXJvbRlTE6N-zS8VfR-e-43UvJYoVrt30QqzTMoShpZx5spck3FLLk9prPTdJVxy8hg=
+u6r2elydOH0a0jaA-aPAO5sh6tozl_P1AFS1lJ3UzG2WaDuwV9Smqi5p3YHugz9AV7BudvAIhg0=
+Q6WQOQh5ujHq0MHbCAwbwGA4SgQtCLDKHYrzSh3DhQX1v7S0sYhsiZ2lD6LVti_Rq8-8eWMZyNi=
+aVDupdDXlKjWEiBE-wrFYCm4xO58ImPZsJ3XREZcEVEcS8uqoxDRx1KT7g_zj-a1JyluXXP9CaP=
+unw24sFaFe25FSFlgFGq7aXspxUhdP_Js7ejw23UOCsl5Ai2ehZkP7Kx5wngnnKWH5F9CBO5qoN=
+Xil7NwKzhu5Yn4L_1B33MDqxjDxVxmaPVw-2gvnDIgF8I3C47JmyPjSexiRdGGmHbuEAzyg4YjI=
+BWifI9obXLBuVYDL9fPTzM7r1dqEuwUcBZCS-mwqSvoSm39DA51oiWIoWEIK1Lked9-9i7N3_c1=
+RCYFidx9cbu.Mk8TWb-3h5AZhRo1RHrcUQ" style=3D"border: none; padding: 0; marg=
+in: 0; min-height: 0; min-width: 0; background:none;  height: 0; width: 0 "=
+ height=3D"1" width=3D"1"/></body></html>

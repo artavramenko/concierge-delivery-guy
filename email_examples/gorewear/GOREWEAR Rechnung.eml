@@ -1,0 +1,1702 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp5861465dlb;
+        Mon, 29 Dec 2025 08:52:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFhHkGNKZWwahi5QswX/MT4uUBM1xBD+LFerN0xNmbGUiZeXWaQlXlJKLI6lKYDDvRpPxBO
+X-Received: by 2002:a17:902:ef12:b0:29e:e642:95dc with SMTP id d9443c01a7336-2a2caacef70mr336349235ad.12.1767027131100;
+        Mon, 29 Dec 2025 08:52:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767027131; cv=none;
+        d=google.com; s=arc-20240605;
+        b=a1XE5FxRPSxkchKNY7j/flCpJvcjuSO94dSAsMcGhyn4cCjeBfwE27hYSTJD2FAxGo
+         n1jlhZs1OsWg+6ivUt91CjEwjpefmldfC9mZ8KLwisXydo5PY7VKdu4rlgkZwSKm2o82
+         45CNby6YttciBjsSlk+qhq/v3CPTBrbz01XrZ3etcDLoh8da6yGuasQrQgzJgcPCU2bc
+         qVwQjOa6VntRj2e4MPuJOyHRI1qbXP7axRwDV5k1y5eNC/OZAVhmHkt8oXGODVDxz4cW
+         XD5auOc+MclNTjR8rACvRRiIegwZn9RSIlFtRj7EB8Q9+ZRTbKPNwINd1oXxPpi553QT
+         BN8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:list-unsubscribe-post:list-unsubscribe:feedback-id:reply-to
+         :subject:message-id:mime-version:from:date:dkim-signature
+         :dkim-signature;
+        bh=THgRsAy3bYCs8B+LvUBc3qe3HJZCeqjRQCwy7F/adU8=;
+        fh=Y+x1h8sIVZa0hzOWNPFOiRkIUm6pEtXjSTQntbWAtJg=;
+        b=O3nvLiAJzZpeZDPaZYW7r+9eBWfQAbte6g3aVdCWJTwYTyqAgwHiyJbC5AJYywqmw2
+         FY0i5Vta3Zrg5Bo0uC8/mWWO4J5BRqqNftRFFlRPJvhHdooX8bJ/kcKhz3aQfU2XOB+l
+         K5emgNDpMCLbv6MXVBy6JSKarghOOA5/Ra6tZxO2N8RI67B3EJStEpAWgv6JPNRosx8A
+         fDK62J8Soz18NUzezDSGoJkreycmbGoEmfWtZSJ1PBEHRvBVAD/cRftyJ1Wc0XqJt0Cg
+         SdhWw0cdAyI++QMnQfrUJSJjzie7y1Fmpcli93Sjv6oXePKduXfIdmC1O/wSaMWv5Ndn
+         VfCw==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gorewear.com header.s=kl header.b=fHXHCqtm;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=ucqzLwK6;
+       spf=pass (google.com: domain of bounces+25796656-cbff-artyom.avramenko=gmail.com@e.gorewear.com designates 149.72.212.40 as permitted sender) smtp.mailfrom="bounces+25796656-cbff-artyom.avramenko=gmail.com@e.gorewear.com";
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=gorewear.com
+Return-Path: <bounces+25796656-cbff-artyom.avramenko=gmail.com@e.gorewear.com>
+Received: from o1685.e.gorewear.com (o1685.e.gorewear.com. [149.72.212.40])
+        by mx.google.com with ESMTPS id d9443c01a7336-2a2f3d3cb88si439028595ad.127.2025.12.29.08.52.10
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Dec 2025 08:52:11 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounces+25796656-cbff-artyom.avramenko=gmail.com@e.gorewear.com designates 149.72.212.40 as permitted sender) client-ip=149.72.212.40;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gorewear.com header.s=kl header.b=fHXHCqtm;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=ucqzLwK6;
+       spf=pass (google.com: domain of bounces+25796656-cbff-artyom.avramenko=gmail.com@e.gorewear.com designates 149.72.212.40 as permitted sender) smtp.mailfrom="bounces+25796656-cbff-artyom.avramenko=gmail.com@e.gorewear.com";
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=gorewear.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorewear.com;
+	h=content-type:date:from:mime-version:subject:reply-to:feedback-id:
+	list-unsubscribe:list-unsubscribe-post:to:cc:content-type:date:feedback-id:from:
+	subject:to;
+	s=kl; bh=THgRsAy3bYCs8B+LvUBc3qe3HJZCeqjRQCwy7F/adU8=;
+	b=fHXHCqtmiCER1d2HbolXo8DNoThQ1RstyrXiWgfJ3mRzvW9N1oTKrXqiGwk3wNRbBRvG
+	S3xKGpe+MegiDPKmQ+MYOjPmd7QuUWr6cWfw2EKv4OVOzdrKo/k4+tju/uyHIvfAyM32Bt
+	N3BJLVgHXvcYTFQfNFGgsiIPCJGiXyNRymWznEehs2tt9SeIA47v14LkbS0xvVmsFQD9uQ
+	g8oWDdp+aEizhXFULOfEWoLBSUczNKOYxupA4UqOJJK1uOYYPfH14nTJ2F3ZLlbDMPv2pl
+	eLarwXD0a1HY1ORCSwfN3PvqfsAI2yJK/XvxOnIZFgkbwnBQOabcsNUYQM6+Lqew==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.info;
+	h=content-type:date:from:mime-version:subject:reply-to:feedback-id:
+	list-unsubscribe:list-unsubscribe-post:to:cc:content-type:date:feedback-id:from:
+	subject:to;
+	s=smtpapi; bh=THgRsAy3bYCs8B+LvUBc3qe3HJZCeqjRQCwy7F/adU8=;
+	b=ucqzLwK6CaL2GEEMlAYLJAuvnvdDf6YoHRhyAT5FCcMwkncsOzQ6Hr8o9fWNt331ZnM2
+	F1iOjgXJwSlRaTE8OZfVp7r+DYVRpFZdMYWGFlDdRk7++T/6a3fikThyM9h35wToVMUcZJ
+	JCjnnLrAxBS0xuibXp1X91m2pR+wA5waY=
+Received: by recvd-874656597-sdf64 with SMTP id recvd-874656597-sdf64-1-6952B1BA-8
+	2025-12-29 16:52:10.148578507 +0000 UTC m=+1017641.415417561
+Received: from MjU3OTY2NTY (unknown)
+	by geopod-ismtpd-51 (SG) with HTTP
+	id Efm2tHvWTHqrAHXq0c9YOA
+	Mon, 29 Dec 2025 16:52:10.112 +0000 (UTC)
+Content-Type: multipart/alternative; boundary=5dc85f48432f2fe563b646d979a774018f386c752cb192696908b8552a14
+Date: Mon, 29 Dec 2025 16:52:10 +0000 (UTC)
+From: GOREWEAR <Info@e.gorewear.com>
+Mime-Version: 1.0
+Message-ID: <Efm2tHvWTHqrAHXq0c9YOA@geopod-ismtpd-51>
+Subject: GOREWEAR Rechnung
+Reply-To: customercare.de@eu.gorewear.com
+Feedback-ID: WPi4en:V69zSX:28127987829:kl
+List-Unsubscribe: 
+ =?us-ascii?Q?=3Chttps=3A=2F=2Fmanage=2Ekmail-lists=2Ecom=2Fsubscriptions=2Funsubscribe=3Fa=3DV6?=
+ =?us-ascii?Q?9zSX&c=3D01KCNY0YCF69QHJH3TBZHDKZ1V&k=3Db20?=
+ =?us-ascii?Q?8ead2817d76b9bdce90a0a43a3bdf&m=3DWPi4en&?=
+ =?us-ascii?Q?r=3D01KDNGCEGA8BZB3XTDS9X3W67Z&e=3D6Lzk2mEM?=
+ =?us-ascii?Q?Qf6=3E?=
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+X-Kmail-Account: V69zSX
+X-Kmail-Flow: V2SaHT
+X-Kmail-Message: WPi4en
+X-Kmail-Ops: 01KCNY0YCF69QHJH3TBZHDKZ1V
+X-Report-Abuse: Please report any spam or abuse to: abuse@klaviyo.com
+X-SG-EID: 
+ =?us-ascii?Q?u001=2EW9BHbCyPuk04ScyZ8K1=2F+os7gwbL4elNml3ocTZWi3SPW=2FFn1PRRA9YMJ?=
+ =?us-ascii?Q?fJjS0iU2uAX6C55i1MinwivcFIzkVYb1Lcjc6Lz?=
+ =?us-ascii?Q?HaXjXACFHW9HB4XVeAkcCx1N1ziLB0dhN5d6eTV?=
+ =?us-ascii?Q?8g9tW8nyzw203KVbGrXgAl8THVYkUoAGd+1dRl7?=
+ =?us-ascii?Q?9OP7peQPJimTGWMxPZ=2FKx+cszZoGuUvnm=2F904iO?=
+ =?us-ascii?Q?0QsyN3O4YHSvP2s0RKMP6TZaqNTS6UrwRPYEyV+?= =?us-ascii?Q?g8FK?=
+X-SG-ID: 
+ =?us-ascii?Q?u001=2ESdBcvi+Evd=2FbQef8eZF3BoMNuFmcP5rq+Py=2FzrrMdK6QuthCfWhsA2OXF?=
+ =?us-ascii?Q?d2ogPal4ckQvNFR1EjfVO86+djZuqnlBnHwhUIY?=
+ =?us-ascii?Q?K74ma5QDDBZN08Ub14j4VEGYO2qOmw=2FbBSRuQ6n?=
+ =?us-ascii?Q?AxJtmDeYaHCa2GK2yANMRFND9WO15xJsx7Bw4sg?=
+ =?us-ascii?Q?hvhk75esZxlOADgc85YBATRciqFnGsVGTM2JCii?=
+ =?us-ascii?Q?SVS+8NiflOfGPT1FkKYLzEgEkNy1DxKUc02q8Ru?=
+ =?us-ascii?Q?fyPMfMriazESvvSjv6Ak4bQl9su58jfF5gKdbiL?=
+ =?us-ascii?Q?4q3g2=2FMXEmtb+BLKD0gKM1WV7zfsaISXFbBufkQ?=
+ =?us-ascii?Q?mBAdeTifzgGYmcaOckSxbTYNSk3WMwkhUU2sVMD?=
+ =?us-ascii?Q?5mTWhULyQVPmh63fPOQZmLcB6ckm87BiQKOKw=3D=3D?=
+To: ARTEM AVRAMENKO <artyom.avramenko@gmail.com>
+X-Entity-ID: u001.rt02QnDv3203SVkqwvZdHA==
+
+--5dc85f48432f2fe563b646d979a774018f386c752cb192696908b8552a14
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+
+[GOREWEAR](http://www.gorewear.com)
+
+[GOREWEAR](http://www.gorewear.com)
+
+GOREWEAR.COM Rechnung
+
+=E2=80=8A
+
+Verk=C3=A4ufer:
+W.L. GORE & Associates GmbH
+AIBLINGER STRASSE 60
+83620 FELDKIRCHEN-WESTERHAM
+Deutschland
+Ust. DE129489861
+
+Rechnungs-Nr.: 51886962
+Rechnungsdatum: 29/12/2025
+Bestellung-Nr.: 517746
+Bestellungdatum: Sun, 28 Dec 2025 08:31:40 +0000
+
+=E2=80=8A
+
+K=C3=A4ufer:
+ARTEM AVRAMENKO
+Auerstra=C3=9Fe 25
+Berlin
+Berlin
+10249
+Germany
+
+Empf=C3=A4nger:
+ARTEM AVRAMENKO
+Auerstra=C3=9Fe 25
+Berlin
+Berlin
+10249
+Germany
+
+=E2=80=8A
+
+BESTELLDETAILS
+
+Everyday Mid 1/4-Zip Herren
+
+Lab Red - L
+No. 101093-DC00-L
+Menge: 1
+
+Unit price: =E2=82=AC79.95
+Gesamtpreis: =E2=82=AC79.95
+
+Everyday Mid 1/4-Zip Herren
+
+Lab Red - M
+No. 101093-DC00-M
+Menge: 1
+
+Unit price: =E2=82=AC79.95
+Gesamtpreis: =E2=82=AC79.95
+
+Zwischensumme:
+Versand:
+Gesamt:
+Steuer im Gesamtpreis enthalten: (19%)
+Zahlungsmethode:
+
+=E2=82=AC159.90
+=E2=82=AC0.00
+=E2=82=AC119.92
+=E2=82=AC19.14
+Apple Pay (via Adyen)
+
+ORDER DETAILS
+
+[Everyday Mid 1/4-Zip Herren]
+
+Everyday Mid 1/4-Zip Herren
+
+Lab Red - L
+No. 101093-DC00-L
+Quantity: 1
+
+Unit price: =E2=82=AC79.95
+Total price: =E2=82=AC79.95
+
+[Everyday Mid 1/4-Zip Herren]
+
+Everyday Mid 1/4-Zip Herren
+
+Lab Red - M
+No. 101093-DC00-M
+Quantity: 1
+
+Unit price: =E2=82=AC79.95
+Total price: =E2=82=AC79.95
+
+Zwischensumme: =E2=82=AC159.90
+
+Versand: =E2=82=AC0.00
+
+Gesamt: =E2=82=AC119.92
+
+Steuer im Gesamtpreis enthalten: =E2=82=AC19.14
+
+Zahlungsmethode:
+Apple Pay (via Adyen)
+
+=E2=80=8A
+
+00800 4508 4508
+GEB=C3=9CHRENFREIER ANFRUF, MONTAG - FREITAG, 9.00 - 18:00 UHR
+
+[CUSTOMERCARE.DE@EU.GOREWEAR.COM](mailto:CUSTOMERCARE.DE@EU.GOREWEAR.COM)
+
+[Facebook](https://www.facebook.com/gorewear/)
+[Instagram](https://www.instagram.com/gorewear)
+[YouTube](https://www.youtube.com/gorewear)
+[Custom](https://www.strava.com/clubs/241135)
+[Custom](https://www.komoot.de/user/gorewear)
+
+=C2=A0
+=C2=A9 2025 W. L. Gore & Associates GmbH. GORE-TEX, GORE-TEX INFINIUM, GTX,=
+ PACLITE, SHAKEDRY, GORE WINDSTOPPER, GUARANTEED TO KEEP YOU DRY, and GORE =
+and designs are trademarks of W. L. Gore & Associates.
+
+Can't see images? [View in Your Browser](https://manage.kmail-lists.com/sub=
+scriptions/web-view?a=3DV69zSX&c=3D01KCNY0YCF69QHJH3TBZHDKZ1V&k=3Db208ead28=
+17d76b9bdce90a0a43a3bdf&m=3DWPi4en&r=3D01KDNGCEGA8BZB3XTDS9X3W67Z&e=3D6Lzk2=
+mEMQf6)
+--5dc85f48432f2fe563b646d979a774018f386c752cb192696908b8552a14
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+Mime-Version: 1.0
+
+<!DOCTYPE html><html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:o=3D"urn:=
+schemas-microsoft-com:office:office" xmlns:v=3D"urn:schemas-microsoft-com:v=
+ml"><head>
+<title>
+</title>
+<!--[if !mso]><!-->
+<meta content=3D"IE=3Dedge" http-equiv=3D"X-UA-Compatible">
+<!--<![endif]-->
+<meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Type">
+<meta content=3D"width=3Ddevice-width, initial-scale=3D1" name=3D"viewport"=
+>
+<!--[if mso]>
+        <noscript>
+        <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+        </xml>
+        </noscript>
+        <![endif]-->
+<!--[if lte mso 11]>
+        <style type=3D"text/css" data-inliner=3D"ignore">
+          .mj-outlook-group-fix { width:100% !important; }
+        </style>
+        <![endif]-->
+<!--[if !mso]><!--><!--<![endif]-->
+<style>a:not([name]) {color:#000;text-decoration:underline}
+a:link {color:#000;text-decoration:underline}
+a:visited {color:#000;text-decoration:underline}
+a:active {color:#000;text-decoration:underline}
+a:hover {color:#000;text-decoration:underline}</style><style>@import url(ht=
+tps://static-forms.klaviyo.com/fonts/api/v1/V69zSX/custom_fonts.css);
+#outlook a {
+    padding: 0
+    }
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%
+    }
+table, td {
+    border-collapse: collapse;
+    mso-table-lspace: 0;
+    mso-table-rspace: 0
+    }
+img {
+    border: 0;
+    line-height: 100%;
+    outline: none;
+    text-decoration: none;
+    -ms-interpolation-mode: bicubic
+    }
+p {
+    display: block;
+    margin: 13px 0
+    }
+@media only screen and (min-width: 480px) {
+    .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%
+        }
+    }
+.moz-text-html .mj-column-per-100 {
+    width: 100% !important;
+    max-width: 100%
+    }
+@media only screen and (max-width: 480px) {
+    div.kl-row.colstack div.kl-column {
+        display: block !important;
+        width: 100% !important
+        }
+    }
+@media only screen and (max-width: 480px) {
+    .component-wrapper .mob-no-spc {
+        padding-left: 0 !important;
+        padding-right: 0 !important
+        }
+    }
+@media only screen and (max-width: 480px) {
+    td.kl-img-base-auto-width {
+        width: 100% !important
+        }
+    }
+@media only screen and (max-width: 480px) {
+    .kl-split-subblock.top .spacer, .kl-split-subblock.bottom .spacer {
+        padding: 0 !important
+        }
+    .kl-split-subblock.top .spacer {
+        padding-bottom: 9px !important
+        }
+    .kl-split-subblock.top {
+        display: table-header-group !important;
+        width: 100% !important
+        }
+    .kl-split-subblock.bottom {
+        display: table-footer-group !important;
+        width: 100% !important
+        }
+    }
+@media only screen and (max-width: 480px) {
+    .kl-table-subblock.use-legacy-mobile-padding {
+        padding-left: 9px !important;
+        padding-right: 9px !important
+        }
+    }
+@media screen and (max-width: 480px) {
+    .kl-sl-stk {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 0 9px !important;
+        text-align: center !important
+        }
+    .kl-sl-stk.lbls {
+        padding: 0 !important
+        }
+    .kl-sl-stk.spcblk {
+        display: none !important
+        }
+    }
+img {
+    border: 0;
+    height: auto;
+    line-height: 100%;
+    outline: none;
+    text-decoration: none;
+    max-width: 100%
+    }
+.root-container {
+    background-repeat: repeat !important;
+    background-size: auto !important;
+    background-position: left top !important
+    }
+.root-container-spacing {
+    padding-top: 50px !important;
+    padding-bottom: 20px !important;
+    font-size: 0 !important
+    }
+.content-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important
+    }
+.content-padding.first {
+    padding-top: 0 !important
+    }
+.content-padding.last {
+    padding-bottom: 0 !important
+    }
+@media only screen and (max-width: 480px) {
+    td.mobile-only {
+        display: table-cell !important
+        }
+    div.mobile-only {
+        display: block !important
+        }
+    table.mobile-only {
+        display: table !important
+        }
+    .desktop-only {
+        display: none !important
+        }
+    }
+@media only screen and (max-width: 480px) {
+    .table-mobile-only {
+        display: table-cell !important;
+        max-height: none !important
+        }
+    .table-mobile-only.block {
+        display: block !important
+        }
+    .table-mobile-only.inline-block {
+        display: inline-block !important
+        }
+    .table-desktop-only {
+        max-height: 0 !important;
+        display: none !important;
+        mso-hide: all !important;
+        overflow: hidden !important
+        }
+    }
+p {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 1em
+    }
+@media only screen and (max-width: 480px) {
+    body.mce-content-body, /* NOTE: needed for internal tinymce styles */.k=
+l-text > div, .kl-table-subblock > div, .kl-split-subblock > div {
+        font-size: 18px !important;
+        line-height: 1.3 !important
+        }
+    }
+h1 {
+    color: #000;
+    font-family: "Theinhardt", Arial, "Helvetica Neue", Helvetica, sans-ser=
+if;
+    font-size: 28px;
+    font-style: Normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0;
+    margin: 0;
+    margin-bottom: 20px;
+    text-align: left
+    }
+@media only screen and (max-width: 480px) {
+    h1 {
+        font-size: 28px !important;
+        line-height: normal !important
+        }
+    }
+h2 {
+    color: #000;
+    font-family: "Theinhardt", "Helvetica Neue", Helvetica, Arial, sans-ser=
+if;
+    font-size: 32px;
+    font-style: Normal;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0;
+    margin: 0;
+    margin-bottom: 16px;
+    text-align: left
+    }
+@media only screen and (max-width: 480px) {
+    h2 {
+        font-size: 24px !important;
+        line-height: 1.1 !important
+        }
+    }
+h3 {
+    color: #000;
+    font-family: "Theinhardt", "Helvetica Neue", Helvetica, Arial, sans-ser=
+if;
+    font-size: 24px;
+    font-style: Normal;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0;
+    margin: 0;
+    margin-bottom: 12px;
+    text-align: left
+    }
+@media only screen and (max-width: 480px) {
+    h3 {
+        font-size: 18px !important;
+        line-height: 1.3 !important
+        }
+    }
+h4 {
+    color: #000;
+    font-family: "Theinhardt", "Helvetica Neue", Helvetica, Arial, sans-ser=
+if;
+    font-size: 18px;
+    font-style: Normal;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0;
+    margin: 0;
+    margin-bottom: 9px;
+    text-align: left
+    }
+@media only screen and (max-width: 480px) {
+    h4 {
+        font-size: 18px !important;
+        line-height: 1.1 !important
+        }
+    }
+@media only screen and (max-width: 480px) {
+    .root-container {
+        width: 100% !important
+        }
+    .root-container-spacing {
+        padding: 0 !important
+        }
+    .content-padding {
+        padding-left: 0 !important;
+        padding-right: 0 !important
+        }
+    .content-padding.first {
+        padding-top: 0 !important
+        }
+    .content-padding.last {
+        padding-bottom: 0 !important
+        }
+    .kl-column > .component-wrapper {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: unset !important
+        }
+    .kl-text {
+        padding-right: 18px !important;
+        padding-left: 18px !important
+        }
+    }</style></head>
+<body style=3D"word-spacing:normal;background-color:#FFFFFF;">
+<div style=3D"display:none;font-size:1px;color:#ffffff;line-height:1px;max-=
+height:0px;max-width:0px;opacity:0;overflow:hidden;">
+      GOREWEAR Rechnung #.=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=
+=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=
+=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=
+=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=
+=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=
+=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=
+=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=
+=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=
+=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=
+=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=
+=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=
+=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=
+=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=
+=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=
+=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=
+=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=
+=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=
+=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=
+=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =
+=E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=
+=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =E2=80=87=CD=8F =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =
+=C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD
+    </div>
+<img src=3D"https://ctrk.klclick1.com/o/01KDNGCF5358X9X6FEW95TN1WR" alt=3D"=
+" width=3D"1" height=3D"1" border=3D"0" style=3D"height:1px !important;widt=
+h:1px !important;border-width:0 !important;margin-top:0 !important;margin-b=
+ottom:0 !important;margin-right:0 !important;margin-left:0 !important;paddi=
+ng-top:0 !important;padding-bottom:0 !important;padding-right:0 !important;=
+padding-left:0 !important;"/>
+<div class=3D"root-container" id=3D"bodyTable" style=3D"background-color:#F=
+FFFFF;">
+<div class=3D"root-container-spacing">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"kl-section" role=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td>
+<!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" class=3D"kl-section-outlook" style=3D"width:600px;" width=
+=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-ru=
+le:exactly;"><![endif]-->
+<div style=3D"margin:0px auto;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" bgcolor=
+=3D"#ffffff" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-heigh=
+t-rule:exactly;"><![endif]-->
+<div style=3D"background:#ffffff;background-color:#ffffff;margin:0px auto;b=
+order-radius:0px 0px 0px 0px;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"background:#ffffff;background-color:#ffffff;wi=
+dth:100%;border-radius:0px 0px 0px 0px;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0px;=
+padding-left:0px;padding-right:0px;padding-top:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><![endif]-->
+<div class=3D"content-padding first">
+<!--[if true]><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"600" style=3D"width:600px;direction:ltr"><tr><![endif]-->
+<div class=3D"kl-row" style=3D"display:table;table-layout:fixed;width:100%;=
+">
+<!--[if true]><td style=3D"vertical-align:bottom;width:600px;"><![endif]-->
+<div class=3D"kl-column" style=3D"display:table-cell;vertical-align:bottom;=
+width:100%;">
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper desk=
+top-only" style=3D"font-size:0px;text-align:left;direction:ltr;vertical-ali=
+gn:top;width:100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"mob-no-spc" style=3D"vertical-align:top;padding-top:0px;paddin=
+g-right:0px;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"center" class=3D"kl-image" style=3D"font-size:0px;word-break:b=
+reak-word;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border-col=
+lapse:collapse;border-spacing:0px;">
+<tbody>
+<tr>
+<td class=3D"kl-img-base-auto-width" style=3D"border:0;padding:0px 0px 0px =
+0px;width:600px;" valign=3D"top">
+<a class=3D"kl-img-link" style=3D"color:#000; text-decoration:underline; di=
+splay:block" href=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR=
+_0">
+<img alt=3D"GOREWEAR" src=3D"https://d3k81ch9hvuctc.cloudfront.net/company/=
+RK4PUH/images/0e143414-7c11-4e16-9505-bccfa3b9e808.png" style=3D"display:bl=
+ock;outline:none;text-decoration:none;height:auto;font-size:13px;width:100%=
+;" title=3D"GOREWEAR" width=3D"600">
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if !mso]><!--><div class=3D"mj-column-per-100 mj-outlook-group-fix com=
+ponent-wrapper mobile-only" style=3D"display:none; font-size:0; text-align:=
+left; direction:ltr; vertical-align:top; width:100%"><table border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"width:100%=
+;" width=3D"100%"><tbody><tr><td class=3D"mob-no-spc" style=3D"vertical-ali=
+gn:top;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0p=
+x;"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"present=
+ation" style=3D"" width=3D"100%"><tbody><tr><td align=3D"center" class=3D"k=
+l-image" style=3D"font-size:0px;word-break:break-word;"><table border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" style=3D"border-collapse:collapse;bord=
+er-spacing:0px;"><tbody><tr><td class=3D"kl-img-base-auto-width" style=3D"b=
+order:0;padding:0px 0px 0px 0px;width:380px;" valign=3D"top"><a class=3D"kl=
+-img-link" style=3D"color:#000; text-decoration:underline; display:block" h=
+ref=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR_1"><img alt=
+=3D"GOREWEAR" src=3D"https://d3k81ch9hvuctc.cloudfront.net/company/RK4PUH/i=
+mages/a066b262-96f8-4814-9e4d-d012bfdd30d6.png" style=3D"display:block;outl=
+ine:none;text-decoration:none;height:auto;font-size:13px;width:100%;" title=
+=3D"GOREWEAR" width=3D"380"></a></td></tr></tbody></table></td></tr></tbody=
+></table></td></tr></tbody></table></div><!--<![endif]-->
+</div>
+<!--[if true]></td><![endif]-->
+</div>
+<!--[if true]></tr></table><![endif]-->
+</div>
+<!--[if mso | IE]></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"kl-section" role=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td>
+<!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" class=3D"kl-section-outlook" style=3D"width:600px;" width=
+=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-ru=
+le:exactly;"><![endif]-->
+<div style=3D"margin:0px auto;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" bgcolor=
+=3D"#ffffff" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-heigh=
+t-rule:exactly;"><![endif]-->
+<div style=3D"background:#ffffff;background-color:#ffffff;margin:0px auto;b=
+order-radius:0px 0px 0px 0px;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"background:#ffffff;background-color:#ffffff;wi=
+dth:100%;border-radius:0px 0px 0px 0px;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0px;=
+padding-left:20px;padding-right:20px;padding-top:60px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><![endif]-->
+<div class=3D"content-padding">
+<!--[if true]><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"560" style=3D"width:560px;direction:ltr"><tr><![endif]-->
+<div class=3D"kl-row colstack" style=3D"display:table;table-layout:fixed;wi=
+dth:100%;">
+<!--[if true]><td style=3D"vertical-align:top;width:560px;"><![endif]-->
+<div class=3D"kl-column" style=3D"display:table-cell;vertical-align:top;wid=
+th:100%;">
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"mob-no-spc" style=3D"vertical-align:top;padding-top:0px;paddin=
+g-right:20px;padding-bottom:0px;padding-left:20px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-text" style=3D"font-size:0px;padding:0px;pad=
+ding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;word-bre=
+ak:break-word;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; text-align:center; font-size:28px; line-height:26px; text-transf=
+orm:uppercase">GOREWEAR.COM Rechnung</p></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:0px;padding-right:0p=
+x;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td style=3D"font-size:0px;word-break:break-word;">
+<div style=3D"height:30px;line-height:30px;">=E2=80=8A</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:9px;padding-right:18=
+px;padding-bottom:9px;padding-left:18px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-split" style=3D"font-size:0px;padding:0px;wo=
+rd-break:break-word;">
+<div style=3D"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13=
+px;line-height:1;text-align:left;color:#000000;"><!--[if true]><table role=
+=3D"presentation" width=3D"100%" style=3D"all:unset;opacity:0;"><tr><![endi=
+f]-->
+<!--[if false]></td></tr></table><![endif]-->
+<div style=3D"display:table;width:100%;">
+<!--[if true]><td vertical-align=3D"top" width=3D"50%"><![endif]-->
+<!--[if !true]><!--><div class=3D"kl-split-subblock top" style=3D"display:t=
+able-cell;vertical-align: top;width:50%"><!--<![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"spacer" style=3D"padding-left:0px;padding-right:18px;" vertica=
+l-align=3D"top">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody><tr>
+<td>
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:14px; line-height:16px">Verk=C3=A4ufer:<br>W.L. GORE &=
+amp; Associates GmbH<br>AIBLINGER STRASSE 60<br>83620 FELDKIRCHEN-WESTERHAM=
+<br>Deutschland<br>Ust. DE129489861</p></div>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody>
+</table>
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if true]></td><![endif]-->
+<!--[if true]><td vertical-align=3D"top" width=3D"50%"><![endif]-->
+<!--[if !true]><!--><div class=3D"kl-split-subblock bottom" style=3D"displa=
+y:table-cell;vertical-align: top;width:50%"><!--<![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"spacer" style=3D"padding-left:18px;padding-right:0px;" vertica=
+l-align=3D"top">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody><tr>
+<td>
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:14px; line-height:16px">Rechnungs-Nr.: 51886962<br>Rec=
+hnungsdatum: 29/12/2025<br>Bestellung-Nr.: 517746<br>Bestellungdatum: Sun, =
+28 Dec 2025 08:31:40 +0000</p></div>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody>
+</table>
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if true]></td><![endif]-->
+</div>
+<!--[if true]></tr></table><![endif]--></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:0px;padding-right:0p=
+x;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td style=3D"font-size:0px;word-break:break-word;">
+<div style=3D"height:30px;line-height:30px;">=E2=80=8A</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:9px;padding-right:18=
+px;padding-bottom:9px;padding-left:18px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-split" style=3D"font-size:0px;padding:0px;wo=
+rd-break:break-word;">
+<div style=3D"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13=
+px;line-height:1;text-align:left;color:#000000;"><!--[if true]><table role=
+=3D"presentation" width=3D"100%" style=3D"all:unset;opacity:0;"><tr><![endi=
+f]-->
+<!--[if false]></td></tr></table><![endif]-->
+<div style=3D"display:table;width:100%;">
+<!--[if true]><td vertical-align=3D"top" width=3D"50%"><![endif]-->
+<!--[if !true]><!--><div class=3D"kl-split-subblock top" style=3D"display:t=
+able-cell;vertical-align: top;width:50%"><!--<![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"spacer" style=3D"padding-left:0px;padding-right:18px;" vertica=
+l-align=3D"top">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody><tr>
+<td>
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:14px; line-height:16px">K=C3=A4ufer:<br>ARTEM AVRAMENK=
+O<br> Auerstra=C3=9Fe 25<br>  Berlin<br> Berlin<br> 10249<br> Germany</p></=
+div>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody>
+</table>
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if true]></td><![endif]-->
+<!--[if true]><td vertical-align=3D"top" width=3D"50%"><![endif]-->
+<!--[if !true]><!--><div class=3D"kl-split-subblock bottom" style=3D"displa=
+y:table-cell;vertical-align: top;width:50%"><!--<![endif]-->
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"spacer" style=3D"padding-left:18px;padding-right:0px;" vertica=
+l-align=3D"top">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" width=3D"100%">
+<tbody><tr>
+<td>
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:14px; line-height:16px">Empf=C3=A4nger:<br>ARTEM AVRAM=
+ENKO<br> Auerstra=C3=9Fe 25<br>   Berlin<br>  Berlin<br>  10249<br>  German=
+y</p></div>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody>
+</table>
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if true]></td><![endif]-->
+</div>
+<!--[if true]></tr></table><![endif]--></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:0px;padding-right:0p=
+x;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td style=3D"font-size:0px;word-break:break-word;">
+<div style=3D"height:30px;line-height:30px;">=E2=80=8A</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!--[if true]></td><![endif]-->
+</div>
+<!--[if true]></tr></table><![endif]-->
+</div>
+<!--[if mso | IE]></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"kl-section" role=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td>
+<!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" class=3D"kl-section-outlook" style=3D"width:600px;" width=
+=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-ru=
+le:exactly;"><![endif]-->
+<div style=3D"margin:0px auto;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" bgcolor=
+=3D"#ffffff" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-heigh=
+t-rule:exactly;"><![endif]-->
+<div style=3D"background:#ffffff;background-color:#ffffff;margin:0px auto;b=
+order-radius:0px 0px 0px 0px;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"background:#ffffff;background-color:#ffffff;wi=
+dth:100%;border-radius:0px 0px 0px 0px;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0px;=
+padding-left:0px;padding-right:0px;padding-top:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><![endif]-->
+<div class=3D"content-padding">
+<!--[if true]><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"600" style=3D"width:600px;direction:ltr"><tr><![endif]-->
+<div class=3D"kl-row colstack" style=3D"display:table;table-layout:fixed;wi=
+dth:100%;">
+<!--[if true]><td style=3D"vertical-align:top;width:600px;"><![endif]-->
+<div class=3D"kl-column" style=3D"display:table-cell;vertical-align:top;wid=
+th:100%;">
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper desk=
+top-only" style=3D"font-size:0px;text-align:left;direction:ltr;vertical-ali=
+gn:top;width:100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:0px;padding-right:0p=
+x;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-table" style=3D"font-size:0px;padding:0px;wo=
+rd-break:break-word;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"color:#000=
+000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-he=
+ight:22px;table-layout:fixed;width:100%;border:solid 1px #C4C4C4;" width=3D=
+"100%">
+       =20
+        <thead>
+<tr>
+<th class=3D"kl-table-subblock" style=3D"width:57%;overflow:hidden;padding-=
+top:15px;padding-right:15px;padding-bottom:15px;padding-left:15px;">
+<div style=3D"font-family:'TheinhardtPan', 'Helvetica Neue', Helvetica, Ari=
+al, sans-serif;font-size:18px;font-style:Normal;font-weight:700;letter-spac=
+ing:0px;line-height:1.3;text-align:left;color:#222222;">BESTELLDETAILS</div=
+>
+</th>
+<th class=3D"kl-table-subblock" style=3D"width:43%;overflow:hidden;padding-=
+top:15px;padding-right:15px;padding-bottom:15px;padding-left:15px;">
+<div style=3D"font-family:'TheinhardtPan', 'Helvetica Neue', Helvetica, Ari=
+al, sans-serif;font-size:18px;font-style:Normal;font-weight:700;letter-spac=
+ing:0px;line-height:1.3;text-align:left;color:#222222;"></div>
+</th>
+</tr>
+</thead>
+<tbody>
+         =20
+           =20
+   =20
+      <tr>
+<td class=3D"kl-table-subblock" style=3D"width:57%;overflow:hidden;border-t=
+op:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:15px=
+;padding-bottom:15px;padding-left:15px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">
+<tbody><tr>
+<td align=3D"left" class=3D"" style=3D"font-size:0px;word-break:break-word;=
+">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border-col=
+lapse:collapse;border-spacing:0px;">
+<tbody>
+<tr>
+<td class=3D"" style=3D"border:0;padding:0;width:160px;" valign=3D"top">
+<img alt=3D"" src=3D"https://cdn11.bigcommerce.com/s-vay0d6lrhe/product_ima=
+ges/attribute_rule_images/17074_source_1759957513.png" style=3D"display:blo=
+ck;outline:none;text-decoration:none;height:auto;font-size:13px;width:100%;=
+" title=3D"" width=3D"160">
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody></table>
+</td>
+<td class=3D"kl-table-subblock" style=3D"width:43%;overflow:hidden;border-t=
+op:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:15px=
+;padding-bottom:15px;padding-left:15px;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:16px; line-height:17px"><span style=3D"text-transform:=
+ uppercase; font-weight: bold;">Everyday Mid 1/4-Zip Herren</span><br><br><=
+span style=3D"font-size: 12px;"> Lab Red <span style=3D"color: #999999;">-<=
+/span> L<br>No. 101093-DC00-L<br>Menge: 1<br><br> Unit price: =E2=82=AC79.9=
+5<br><strong>Gesamtpreis: =E2=82=AC79.95</strong>  </span></p></div>
+</td>
+</tr>
+     =20
+   =20
+         =20
+           =20
+   =20
+      <tr>
+<td class=3D"kl-table-subblock" style=3D"width:57%;overflow:hidden;border-t=
+op:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:15px=
+;padding-bottom:15px;padding-left:15px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">
+<tbody><tr>
+<td align=3D"left" class=3D"" style=3D"font-size:0px;word-break:break-word;=
+">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"border-col=
+lapse:collapse;border-spacing:0px;">
+<tbody>
+<tr>
+<td class=3D"" style=3D"border:0;padding:0;width:160px;" valign=3D"top">
+<img alt=3D"" src=3D"https://cdn11.bigcommerce.com/s-vay0d6lrhe/product_ima=
+ges/attribute_rule_images/17073_source_1759957514.png" style=3D"display:blo=
+ck;outline:none;text-decoration:none;height:auto;font-size:13px;width:100%;=
+" title=3D"" width=3D"160">
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody></table>
+</td>
+<td class=3D"kl-table-subblock" style=3D"width:43%;overflow:hidden;border-t=
+op:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:15px=
+;padding-bottom:15px;padding-left:15px;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:16px; line-height:17px"><span style=3D"text-transform:=
+ uppercase; font-weight: bold;">Everyday Mid 1/4-Zip Herren</span><br><br><=
+span style=3D"font-size: 12px;"> Lab Red <span style=3D"color: #999999;">-<=
+/span> M<br>No. 101093-DC00-M<br>Menge: 1<br><br> Unit price: =E2=82=AC79.9=
+5<br><strong>Gesamtpreis: =E2=82=AC79.95</strong>  </span></p></div>
+</td>
+</tr>
+     =20
+   =20
+         =20
+           =20
+   =20
+      <tr>
+<td class=3D"kl-table-subblock" style=3D"width:57%;overflow:hidden;border-t=
+op:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:15px=
+;padding-bottom:15px;padding-left:15px;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:16px; line-height:32px">Zwischensumme:<br>Versand:<br>=
+<strong>Gesamt:</strong><br>Steuer im Gesamtpreis enthalten: (19%)<br>Zahlu=
+ngsmethode:</p></div>
+</td>
+<td class=3D"kl-table-subblock" style=3D"width:43%;overflow:hidden;border-t=
+op:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:15px=
+;padding-bottom:15px;padding-left:15px;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; font-size:16px; line-height:32px; text-align:right"> =E2=82=AC15=
+9.90<br>=E2=82=AC0.00<br><strong>=E2=82=AC119.92</strong><br>=E2=82=AC19.14=
+<br>Apple Pay (via Adyen) </p></div>
+</td>
+</tr>
+</tbody>
+     =20
+      </table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if !mso]><!--><div class=3D"mj-column-per-100 mj-outlook-group-fix com=
+ponent-wrapper mobile-only" style=3D"display:none; font-size:0; text-align:=
+left; direction:ltr; vertical-align:top; width:100%"><table border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"width:100%=
+;" width=3D"100%"><tbody><tr><td class=3D"" style=3D"vertical-align:top;pad=
+ding-top:15px;padding-right:15px;padding-bottom:15px;padding-left:15px;"><t=
+able border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation"=
+ style=3D"" width=3D"100%"><tbody><tr><td align=3D"left" class=3D"kl-table"=
+ style=3D"font-size:0px;padding:0px;word-break:break-word;"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"color:#000000;font-fami=
+ly:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;tab=
+le-layout:fixed;width:100%;border:solid 1px #C4C4C4;" width=3D"100%">=20
+<thead><tr><th class=3D"kl-table-subblock" style=3D"width:40%;overflow:hidd=
+en;padding-top:15px;padding-right:15px;padding-bottom:15px;padding-left:15p=
+x;"><div style=3D"font-family:'TheinhardtPan', 'Helvetica Neue', Helvetica,=
+ Arial, sans-serif;font-size:18px;font-style:Normal;font-weight:700;letter-=
+spacing:0px;line-height:1.3;text-align:left;color:#222222;">ORDER DETAILS</=
+div></th></tr></thead><tbody>=20
+<tr><td class=3D"kl-table-subblock" style=3D"width:40%;overflow:hidden;bord=
+er-top:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:=
+15px;padding-bottom:15px;padding-left:15px;"><div style=3D"font-family:'The=
+inhardt', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:18px;fon=
+t-style:Normal;font-weight:400;letter-spacing:0px;line-height:normal;text-a=
+lign:left;color:#000000;"><div><div><img align=3D"left" alt=3D"Everyday Mid=
+ 1/4-Zip Herren" height=3D"100" src=3D"https://cdn11.bigcommerce.com/s-vay0=
+d6lrhe/product_images/attribute_rule_images/17074_source_1759957513.png" st=
+yle=3D"float: left; margin-right: 10px;" width=3D"100"></div><p style=3D"pa=
+dding-bottom:0; font-size:16px; line-height:17px; overflow:hidden"><span st=
+yle=3D"text-transform: uppercase; font-weight: bold;">Everyday Mid 1/4-Zip =
+Herren</span><br><br><span style=3D"font-size: 12px;">Lab Red <span style=
+=3D"color: #999999;">-</span> L<br>No. 101093-DC00-L<br>Quantity: 1<br><br>=
+ Unit price: =E2=82=AC79.95<br><strong>Total price: =E2=82=AC79.95</strong>=
+  </span></p></div></div></td></tr>=20
+<tr><td class=3D"kl-table-subblock" style=3D"width:40%;overflow:hidden;bord=
+er-top:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:=
+15px;padding-bottom:15px;padding-left:15px;"><div style=3D"font-family:'The=
+inhardt', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:18px;fon=
+t-style:Normal;font-weight:400;letter-spacing:0px;line-height:normal;text-a=
+lign:left;color:#000000;"><div><div><img align=3D"left" alt=3D"Everyday Mid=
+ 1/4-Zip Herren" height=3D"100" src=3D"https://cdn11.bigcommerce.com/s-vay0=
+d6lrhe/product_images/attribute_rule_images/17073_source_1759957514.png" st=
+yle=3D"float: left; margin-right: 10px;" width=3D"100"></div><p style=3D"pa=
+dding-bottom:0; font-size:16px; line-height:17px; overflow:hidden"><span st=
+yle=3D"text-transform: uppercase; font-weight: bold;">Everyday Mid 1/4-Zip =
+Herren</span><br><br><span style=3D"font-size: 12px;">Lab Red <span style=
+=3D"color: #999999;">-</span> M<br>No. 101093-DC00-M<br>Quantity: 1<br><br>=
+ Unit price: =E2=82=AC79.95<br><strong>Total price: =E2=82=AC79.95</strong>=
+  </span></p></div></div></td></tr>=20
+<tr><td class=3D"kl-table-subblock" style=3D"width:40%;overflow:hidden;bord=
+er-top:solid 1px #C4C4C4;vertical-align:top;padding-top:15px;padding-right:=
+15px;padding-bottom:15px;padding-left:15px;"><div style=3D"font-family:'The=
+inhardt', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:18px;fon=
+t-style:Normal;font-weight:400;letter-spacing:0px;line-height:normal;text-a=
+lign:left;color:#000000;"><p style=3D"padding-bottom:0; font-size:14px; lin=
+e-height:16px; text-align:right"> Zwischensumme: =E2=82=AC159.90<br><br>Ver=
+sand: =E2=82=AC0.00<br><br><strong>Gesamt: =E2=82=AC119.92</strong><br><br>=
+Steuer im Gesamtpreis enthalten: =E2=82=AC19.14<br><br>Zahlungsmethode:<br>=
+Apple Pay (via Adyen) </p></div></td></tr></tbody>=20
+</table></td></tr></tbody></table></td></tr></tbody></table></div><!--<![en=
+dif]-->
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:0px;padding-right:0p=
+x;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td style=3D"font-size:0px;word-break:break-word;">
+<div style=3D"height:60px;line-height:60px;">=E2=80=8A</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!--[if true]></td><![endif]-->
+</div>
+<!--[if true]></tr></table><![endif]-->
+</div>
+<!--[if mso | IE]></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cl=
+ass=3D"kl-section" role=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td>
+<!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" class=3D"kl-section-outlook" style=3D"width:600px;" width=
+=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-ru=
+le:exactly;"><![endif]-->
+<div style=3D"margin:0px auto;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"width:100%;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" bgcolor=
+=3D"#ffffff" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line-heigh=
+t-rule:exactly;"><![endif]-->
+<div style=3D"background:#ffffff;background-color:#ffffff;margin:0px auto;b=
+order-radius:0px 0px 0px 0px;max-width:600px;">
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" style=3D"background:#ffffff;background-color:#ffffff;wi=
+dth:100%;border-radius:0px 0px 0px 0px;">
+<tbody>
+<tr>
+<td style=3D"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0px;=
+padding-left:0px;padding-right:0px;padding-top:0px;text-align:center;">
+<!--[if mso | IE]><table role=3D"presentation" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0"><![endif]-->
+<div class=3D"content-padding last">
+<!--[if true]><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"600" style=3D"width:600px;direction:ltr"><tr><![endif]-->
+<div class=3D"kl-row colstack" style=3D"display:table;table-layout:fixed;wi=
+dth:100%;">
+<!--[if true]><td style=3D"vertical-align:top;width:600px;"><![endif]-->
+<div class=3D"kl-column" style=3D"display:table-cell;vertical-align:top;wid=
+th:100%;">
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"background-color:#000000;vertical-align:top;padding=
+-top:40px;padding-right:0px;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-table" style=3D"font-size:0px;padding:0px;wo=
+rd-break:break-word;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"color:#000=
+000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-he=
+ight:22px;table-layout:fixed;width:100%;border:none;" width=3D"100%">
+<thead>
+</thead>
+<tbody>
+<tr>
+<td class=3D"kl-table-subblock" style=3D"width:60%;overflow:hidden;vertical=
+-align:middle;padding-top:30px;padding-right:20px;padding-bottom:0px;paddin=
+g-left:20px;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><div>
+<p class=3D"jsx-1642896699 text-xsm leading-16r tracking-tightest text-whit=
+e font-tertiary" style=3D"padding-bottom:0; line-height:16px"><span style=
+=3D"font-family: 'Source Code Pro', Courier, 'Lucida Sans Typewriter', 'Luc=
+ida Typewriter', monospace; font-weight: 400; color: #ffffff; background-co=
+lor: #000000; font-size: 14px;">00800 4508 4508</span><br><span style=3D"fo=
+nt-family: 'Source Code Pro', Courier, 'Lucida Sans Typewriter', 'Lucida Ty=
+pewriter', monospace; font-weight: 400; color: #c4c4c4; background-color: #=
+000000; font-size: 14px;">GEB=C3=9CHRENFREIER ANFRUF, MONTAG - FREITAG, 9.0=
+0 - 18:00 UHR</span></p>
+</div></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"background-color:#000000;vertical-align:top;padding=
+-top:16px;padding-right:0px;padding-bottom:0px;padding-left:0px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-table" style=3D"font-size:0px;padding:0px;wo=
+rd-break:break-word;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"color:#000=
+000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-he=
+ight:22px;table-layout:fixed;width:100%;border:none;" width=3D"100%">
+<thead>
+</thead>
+<tbody>
+<tr>
+<td class=3D"kl-table-subblock" style=3D"width:60%;overflow:hidden;vertical=
+-align:middle;padding-top:0px;padding-right:20px;padding-bottom:24px;paddin=
+g-left:20px;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p class=3D"jsx-164=
+2896699 text-xsm leading-16r tracking-tightest text-white font-tertiary" st=
+yle=3D"padding-bottom:0; line-height:16px"><a href=3D"mailto:CUSTOMERCARE.D=
+E@EU.GOREWEAR.COM" style=3D"color:#000; text-decoration:underline"><span st=
+yle=3D"font-family: 'Source Code Pro', Courier, 'Lucida Sans Typewriter', '=
+Lucida Typewriter', monospace; font-weight: 400; color: #ffffff; background=
+-color: #000000; font-size: 14px;">CUSTOMERCARE.DE@EU.GOREWEAR.COM</span></=
+a><br><br></p></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"background-color:#000000;vertical-align:top;padding=
+-top:30px;padding-right:9px;padding-bottom:0px;padding-left:9px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td>
+<div style=3D"width:100%;text-align:center">
+<!--[if true]><table style=3D"all:unset;opacity:0;" border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" ><tr><![endif]-->
+<!--[if !true]><!--><div class=3D"" style=3D"display:inline-block;padding-r=
+ight:13px;"><!--<![endif]-->
+<!--[if true]><td style=3D"padding-right:13px;"><![endif]-->
+<div style=3D"text-align: center;">
+<a style=3D"color:#000; text-decoration:underline" target=3D"_blank" href=
+=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR_2">
+<img alt=3D"Facebook" src=3D"https://d3k81ch9hvuctc.cloudfront.net/assets/e=
+mail/buttons/subtleinverse/facebook_96.png" style=3D"width:48px;" width=3D"=
+48">
+</a>
+</div>
+<!--[if true]></td><![endif]-->
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if !true]><!--><div class=3D"" style=3D"display:inline-block;padding-r=
+ight:13px;"><!--<![endif]-->
+<!--[if true]><td style=3D"padding-right:13px;"><![endif]-->
+<div style=3D"text-align: center;">
+<a style=3D"color:#000; text-decoration:underline" target=3D"_blank" href=
+=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR_3">
+<img alt=3D"Instagram" src=3D"https://d3k81ch9hvuctc.cloudfront.net/assets/=
+email/buttons/subtleinverse/instagram_96.png" style=3D"width:48px;" width=
+=3D"48">
+</a>
+</div>
+<!--[if true]></td><![endif]-->
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if !true]><!--><div class=3D"" style=3D"display:inline-block;padding-r=
+ight:13px;"><!--<![endif]-->
+<!--[if true]><td style=3D"padding-right:13px;"><![endif]-->
+<div style=3D"text-align: center;">
+<a style=3D"color:#000; text-decoration:underline" target=3D"_blank" href=
+=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR_4">
+<img alt=3D"YouTube" src=3D"https://d3k81ch9hvuctc.cloudfront.net/assets/em=
+ail/buttons/subtleinverse/youtube_96.png" style=3D"width:48px;" width=3D"48=
+">
+</a>
+</div>
+<!--[if true]></td><![endif]-->
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if !true]><!--><div class=3D"" style=3D"display:inline-block;padding-r=
+ight:13px;"><!--<![endif]-->
+<!--[if true]><td style=3D"padding-right:13px;"><![endif]-->
+<div style=3D"text-align: center;">
+<a style=3D"color:#000; text-decoration:underline" target=3D"_blank" href=
+=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR_5">
+<img alt=3D"Custom" src=3D"https://d3k81ch9hvuctc.cloudfront.net/company/Tz=
+BidG/images/38499a2d-b250-4e8e-bc0b-e3a7f262378f.png" style=3D"width:48px;"=
+ width=3D"48">
+</a>
+</div>
+<!--[if true]></td><![endif]-->
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if !true]><!--><div class=3D"" style=3D"display:inline-block;"><!--<![=
+endif]-->
+<!--[if true]><td style=3D""><![endif]-->
+<div style=3D"text-align: center;">
+<a style=3D"color:#000; text-decoration:underline" target=3D"_blank" href=
+=3D"https://ctrk.klclick1.com/l/01KDNGCF5358X9X6FEW95TN1WR_6">
+<img alt=3D"Custom" src=3D"https://d3k81ch9hvuctc.cloudfront.net/company/Tz=
+BidG/images/76593180-d747-4b40-ae03-0ecb9143f661.png" style=3D"width:48px;"=
+ width=3D"48">
+</a>
+</div>
+<!--[if true]></td><![endif]-->
+<!--[if !true]><!--></div><!--<![endif]-->
+<!--[if true]></tr></table><![endif]-->
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"mob-no-spc" style=3D"background-color:#000000;vertical-align:t=
+op;padding-top:9px;padding-right:100px;padding-bottom:60px;padding-left:100=
+px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-text" style=3D"font-size:0px;padding:0px;pad=
+ding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;word-bre=
+ak:break-word;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><div>
+<div style=3D"text-align: center; line-height: 100%;">&nbsp;</div>
+<div style=3D"text-align: center; line-height: 100%;"><span style=3D"font-s=
+ize: 10px; color: #525151;">=C2=A9 2025 W. L. Gore &amp; Associates GmbH. G=
+ORE-TEX, GORE-TEX INFINIUM, GTX, PACLITE, SHAKEDRY, GORE WINDSTOPPER, GUARA=
+NTEED TO KEEP YOU DRY, and GORE and designs are trademarks of W. L. Gore &a=
+mp; Associates.</span></div>
+</div></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class=3D"mj-column-per-100 mj-outlook-group-fix component-wrapper" sty=
+le=3D"font-size:0px;text-align:left;direction:ltr;vertical-align:top;width:=
+100%;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"width:100%;" width=3D"100%">
+<tbody>
+<tr>
+<td class=3D"" style=3D"vertical-align:top;padding-top:9px;padding-right:18=
+px;padding-bottom:9px;padding-left:18px;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentatio=
+n" style=3D"" width=3D"100%">
+<tbody>
+<tr>
+<td align=3D"left" class=3D"kl-text" style=3D"font-size:0px;padding:0px;pad=
+ding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;word-bre=
+ak:break-word;">
+<div style=3D"font-family:'Theinhardt', 'Helvetica Neue', Helvetica, Arial,=
+ sans-serif;font-size:18px;font-style:Normal;font-weight:400;letter-spacing=
+:0px;line-height:normal;text-align:left;color:#000000;"><p style=3D"padding=
+-bottom:0; text-align:center"><span style=3D"color: #000000; font-family: A=
+rial, Helvetica, sans-serif; font-size: 10px; text-align: -webkit-center;">=
+Can't see images? <a class=3D"web-view" style=3D"color:#000000;font-weight:=
+normal;text-decoration:underline;" href=3D"https://ctrk.klclick1.com/l/01KD=
+NGCF5358X9X6FEW95TN1WR_7">View in Your Browser</a></span></p></div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!--[if true]></td><![endif]-->
+</div>
+<!--[if true]></tr></table><![endif]-->
+</div>
+<!--[if mso | IE]></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--[if mso | IE]></td></tr></table><![endif]-->
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- TRACKING_PIXEL_BOTTOM -->
+
+</body></html>
+--5dc85f48432f2fe563b646d979a774018f386c752cb192696908b8552a14--

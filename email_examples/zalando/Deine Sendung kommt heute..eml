@@ -1,0 +1,498 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp6201714dlb;
+        Mon, 29 Dec 2025 23:43:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHVlP1fNBqxWFnUEg8ttnhQgFJ9Q/9mj3o7O4p0OKGToPLXlVVT68MJe9yUuNR+zyjD+28V
+X-Received: by 2002:a17:907:86a8:b0:b73:544d:ba2e with SMTP id a640c23a62f3a-b8036f62606mr3585573466b.25.1767080586655;
+        Mon, 29 Dec 2025 23:43:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767080586; cv=none;
+        d=google.com; s=arc-20240605;
+        b=S65u+3Wb4S9mFGr0VaU3RHHuOS5kAfIinGAYbVphU9KX9qH9BubLyOrIXJhhvSgT5h
+         I1JadP2Kh9XZEXYB0io0/pa8He8XZxI3GjFONIlkVz5hopCvHacPQUw6l9mTARZ66yVc
+         R1PtHCQkZjqEktNZbDtWT7VsjvOt3w2VSoiOgcpjx8Ak85gzArViQqMCkMhGLkTypdFk
+         +7C9Im/poZBM3l231ezbDE3JDwr+zRieNggVGCd5eU8UOYfq8FuOm8LjGA3BIPc4wD3M
+         RhAoRIeF5nr2Q0K6leB4PtTcRO/tDL0lKWhU0C9CXq3UOZ/KHccjaaBBNfHgNtXqv5ps
+         AxgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:subject:message-id:to:from:date:dkim-signature
+         :dkim-filter;
+        bh=73FsR3svqUM+rNN1Tvj9iCGan7WL3t1peDv3AYC1kKM=;
+        fh=cn1GiMI3JaU8ksh7qZWqfn4YlX+vmbhniBH/Q3A2AY8=;
+        b=FKoA/7LnyrGI7KwRUn6fEzfXpBGL2RbBnP0+mXz/cpGAGucRIQKpu2eJFesW+HF9/Z
+         9uZtoc9Q9Zb4q7XPaQIHDGyxDx7/3a5i8g11DJz0RSlBbATR7UwoPB+sv/P5hmk/Nrrj
+         QsOAoaDImv0TAsFqpLalijdoqywYBDOl37mlxJUIg7xkzMrvt4AlU+LBn0+eveYLJsLC
+         MsrsjNdxGO143eFo8HS0U6sB0U6zfqDJ5hDcwNaFqda04a6DSkv8jdhvyAgJi9d9CB3V
+         ZoTwY3cwNTKJOvYnUsIU9ZwFXNZXG7AkQtFDgkRAcxkWsSFCuWAIbfOstGRMhyc3UnU7
+         q9mQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@paketankuendigung.myhermes.de header.s=paketankuendigungmyhermesde042821 header.b=pHd1BY8g;
+       spf=pass (google.com: domain of noreply@paketankuendigung.myhermes.de designates 195.68.198.231 as permitted sender) smtp.mailfrom=noreply@paketankuendigung.myhermes.de;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=myhermes.de
+Return-Path: <noreply@paketankuendigung.myhermes.de>
+Received: from mailtsyip1rz3-1.paketankuendigung.myhermes.de (mailtsyip1rz3-1.paketankuendigung.myhermes.de. [195.68.198.231])
+        by mx.google.com with ESMTPS id a640c23a62f3a-b8037a369dasi3075581466b.20.2025.12.29.23.43.06
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Dec 2025 23:43:06 -0800 (PST)
+Received-SPF: pass (google.com: domain of noreply@paketankuendigung.myhermes.de designates 195.68.198.231 as permitted sender) client-ip=195.68.198.231;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@paketankuendigung.myhermes.de header.s=paketankuendigungmyhermesde042821 header.b=pHd1BY8g;
+       spf=pass (google.com: domain of noreply@paketankuendigung.myhermes.de designates 195.68.198.231 as permitted sender) smtp.mailfrom=noreply@paketankuendigung.myhermes.de;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=myhermes.de
+Received: from gcpmailgate.hlg.de (bns-tsi-smtp-gw-vs.int.hlg.de [192.168.140.120])
+	by mailtsyip1rz3-1.paketankuendigung.myhermes.de (Postfix) with ESMTPS id 34DFFC03F80
+	for <artyom.avramenko@gmail.com>; Tue, 30 Dec 2025 08:43:06 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailtsyip1rz3-1.paketankuendigung.myhermes.de 34DFFC03F80
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paketankuendigung.myhermes.de;
+	s=paketankuendigungmyhermesde042821; t=1767080586;
+	bh=73FsR3svqUM+rNN1Tvj9iCGan7WL3t1peDv3AYC1kKM=;
+	h=Date:From:To:Subject:From;
+	b=pHd1BY8gqmElbJOm509pDH1Zr1zD/vL6No4PODHf8b5wWxY1yte0iK8mKpOGeF76Q
+	 IjxvEDTgRCnb+V0W6INZUOB3p6wGAofduFNcID5pxNlLvGu6rzmZprj23a6yN+30lf
+	 Ji9UH+DZUZZS/PdBAOb328mAF3XE5YitYtwftGjI=
+Received: from 0:0:0:0:0:0:0:1 (107.62.96.34.bc.googleusercontent.com [34.96.62.107])
+	by gcpmailgate.hlg.de (Postfix) with ESMTPSA id 281CD3801C07
+	for <artyom.avramenko@gmail.com>; Tue, 30 Dec 2025 08:43:06 +0100 (CET)
+Date: Tue, 30 Dec 2025 08:43:06 +0100 (CET)
+From: 
+	Hermes Benachrichtigungsfunktion <noreply@paketankuendigung.myhermes.de>
+To: artyom.avramenko@gmail.com
+Message-ID: <780793107.4770453.1767080586133@[0:0:0:0:0:0:0:1]>
+Subject: Deine Sendung kommt heute.
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_4769413_2052734253.1767080576542"
+
+------=_Part_4769413_2052734253.1767080576542
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <!--[if !mso]><!-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <!--<![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Hermes Nachricht</title>
+        <style type="text/css">
+            body {
+                background-color: #F3F3F3 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                overflow-x: hidden !important;
+                text-size-adjust: none !important;
+                -webkit-text-size-adjust: none !important;
+                -ms-text-size-adjust: none !important;
+            }
+
+            br, strong br, b br, em br, i br {
+                line-height: 100%;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            div.preheader {
+                display: none !important;
+            }
+
+            #outlook a {
+                padding: 0;
+            }
+
+            table td {
+                border-collapse: collapse;
+                mso-table-lspace: 0;
+                mso-table-rspace: 0;
+            }
+
+            table {
+                border-collapse: collapse;
+                mso-table-lspace: 0;
+                mso-table-rspace: 0;
+            }
+
+            ul, li, hr {
+                margin: 0;
+                padding: 0;
+            }
+
+
+            img {
+                outline: none;
+                text-decoration: none;
+                -ms-interpolation-mode: bicubic;
+                border: none;
+            }
+
+            a img {
+                border: none;
+            }
+
+            a {
+                color: #000000;
+                text-decoration: none;
+            }
+
+
+            /* Fix for Outlook links color fix for links and visited links */
+            span.MsoHyperlink {
+                color: inherit !important;
+                mso-style-priority: 99 !important;
+            }
+
+            span.MsoHyperlinkFollowed {
+                color: inherit !important;
+                mso-style-priority: 99 !important;
+            }
+
+            /* normalise link attributes in Apple Mail / iOS Mail apps - to match the parent element */
+            a[x-apple-data-detectors] {
+                color: inherit !important;
+                text-decoration: none !important;
+                font-size: inherit !important;
+                font-family: inherit !important;
+                font-weight: inherit !important;
+                line-height: inherit !important;
+            }
+
+            /* normalise link attributes in Gmail - to match the parent element */
+            u + #body a {
+                color: inherit;
+                text-decoration: none;
+                font-size: inherit;
+                font-weight: inherit;
+                line-height: inherit;
+            }
+
+            /* CSS3 Effects */
+            .fade {
+                overflow: hidden !important;
+            }
+
+            .fade a img {
+                transition: 0.3s !important;
+                opacity: 1 !important;
+            }
+
+            .wing {
+                line-height: 0;
+            }
+
+            .btn:visited {
+                color: #ffffff !important;
+            }
+
+            .footer a {
+                color: #9d9da0;
+            }
+
+            /* Webfont */
+            @font-face {
+                font-family: 'MarselisOT';
+                font-style: normal;
+                font-weight: 400;
+                src: local('MarselisOT');
+                src: url(https://storage.googleapis.com/myhermes-newsletter/fonts/marselisot/marselisweb_woff2.woff2) format('woff2');
+                mso-font-alt: 'Arial';
+            }
+
+            /* Fallback Webfont */
+            @font-face {
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 400;
+                src: local('Roboto');
+                src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format('woff2');
+                mso-font-alt: 'Arial';
+            }
+
+            @font-face {
+                font-family: 'Roboto-Italic';
+                font-style: italic;
+                font-weight: 400;
+                src: local('Roboto-Italic');
+                src: url(https://fonts.gstatic.com/s/roboto/v27/KFOkCnqEu92Fr1Mu51xIIzIXKMny.woff2) format('woff2');
+                mso-font-alt: 'Arial';
+            }
+
+
+        </style>
+        <!--[if gte mso 9]>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:AllowPNG/>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml><![endif]-->
+
+        <!--[if gt mso 15]>
+        <style type="text/css" media="all"> /* Outlook 2016 Height Fix */
+        table, tr, td {
+            border-collapse: collapse;
+            mso-line-height-rule: exactly;
+        }
+
+        tr {
+            border-collapse: collapse;
+        }
+
+        .btn {
+            width: 340px !important;
+        }
+        </style> <![endif]-->
+    </head>
+
+<body bgcolor="#F3F3F3" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" align="center"
+      style="background-color:#F3F3F3 !important; margin: 0; padding: 0; text-align:center">
+
+    <div class="preheader" style="font-size: 1px; display: none !important;">
+Deine Sendung von <b>Zalando</b> ist in Zustellung und kommt heute.    </div>
+
+    <!--[if mso]>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto">
+        <tr>
+            <td width="600">
+    <![endif]-->
+
+
+    <div align="center" style="background-color: #F3F3F3;">
+
+        <table style="margin: 0 auto; min-width: 350px; max-width: 600px; width: 100%" cellspacing="0"
+               cellpadding="0" border="0" bgcolor="#ffffff" align="center">
+            <tr>
+                <td valign="top" bgcolor="#ffffff">
+
+                    <table border="0" align="center" cellpadding="0" cellspacing="0" width="100%"
+                           style="margin: 0; border-spacing: 0; border-collapse: collapse; max-width:600px;">
+                        <tr>
+                            <td style="padding: 0; text-align: center; background-color: #0091cd"
+                                height="94" valign="middle"
+                                align="center" bgcolor="#0091cd">
+                                <a href="https://www.myhermes.de/?wt_cc1=logo&amp;wt_mc=re_pa36"
+                                   target="_blank"
+                                   style="display:inline-block; margin-top: 24px; color: white; font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 30px; font-style:italic;text-decoration: none;"
+                                   title="Hermes">
+                                    <img alt="Hermes" width="160" height="24"
+                                         src="https://www.myhermes.de/content/emails/paketankuendigung/logo-hermes.png"/>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!--[if (mso)]>
+                            <style>.wing {
+                                display: none !important;
+                            }</style>
+                            <td style="padding:0;line-height:normal;" valign="top"><img
+                                src="https://www.myhermes.de/content/emails/paketankuendigung/schwinge.png"
+                                width="600"></td>
+                            <![endif]-->
+                            <td style="padding:0;max-width:600px;max-height:24px;" valign="top" class="wing"><img
+                                    src="https://www.myhermes.de/content/emails/paketankuendigung/schwinge.png"
+                                    width="100%"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="24">&nbsp;</td>
+                            <td style="text-align: center">
+
+                                <!--[if mso]>
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="374" style="margin: 0 auto" align="center">
+                                    <tr>
+                                        <td width="374">
+                                <![endif]-->
+
+                                <table width="100%"
+                                       style="max-width: 374px; display: inline-block; font-family: Helvetica, Roboto, Arial, sans-serif; font-size: 18px; color: #3c3c41; font-weight: 300; text-align: center">
+
+
+    <tr>
+        <td height="48" style="height:48px;font-size:48px;line-height:48px">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="line-height: 27px" align="center">
+    Hallo,<br/>
+    <div style="line-height:10px">&nbsp;</div>
+    deine Sendung von <b>Zalando</b> ist unterwegs und wird dir heute zugestellt.
+            <br/><br/>
+            
+        </td>
+    </tr>
+        <tr style="line-height: 27px">
+            <td>
+                Voraussichtliche Zustellung am<br>
+    <div style="line-height:10px">&nbsp;</div>
+            </td>
+        </tr>
+        <tr style="line-height: 27px; font-weight: bold">
+            <td>
+                Dienstag, 30.12.2025<br/>
+                        zwischen 16:10 und 18:10 Uhr
+            </td>
+        </tr>
+    <tr>
+        <td height="27" style="height:27px;font-size:27px;line-height:27px">&nbsp;</td>
+    </tr>
+    <tr>
+        <td height="27" style="height:27px;font-size:27px;line-height:27px">&nbsp;</td>
+    </tr>
+        <td>
+            <span style="font-weight: bold;">Updates</span> zum Zeitfenster deiner Zustellung findest du in der Sendungsverfolgung
+        </td>
+    <tr>
+        <td height="27" style="height:27px;font-size:27px;line-height:27px">&nbsp;</td>
+    </tr>
+    <tr>
+        <td align="center">
+    <table class="btn" width="340"
+           style="border-radius: 8px; color: white; background-color: #e9530e; font-family: 'MarselisOT', Roboto, Arial, sans-serif; font-size:18px; min-width: 150px; max-width: 340px; height: 48px; font-weight: normal; text-align: center; text-decoration: none; border-spacing: 0">
+        <tr>
+            <td width="85" valign="middle">
+                <a href="https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation/?wt_cc1=button_sendungsnummer&wt_mc=re_pa36#H1024562675499501017" target="_blank" style="display:block;text-decoration:none;height:48px">
+                    <img src="https://www.myhermes.de/content/emails/paketankuendigung/icn-truck.png"
+                         alt="" width="30">
+                </a>
+            </td>
+            <td valign="middle" align="left" height="48">
+                <a href="https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation/?wt_cc1=button_sendungsnummer&wt_mc=re_pa36#H1024562675499501017" target="_blank"
+                   style="display:block;text-decoration:none;color:white;font-family:'MarselisOT',Roboto,Arial,sans-serif;font-size:18px;line-height:18px;font-weight: normal;padding:15px 0">
+                    Sendungsverfolgung
+                </a>
+            </td>
+        </tr>
+    </table>
+        </td>
+    </tr>
+    <tr>
+        <td height="12" style="height:12px;font-size:12px;line-height:12px">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="color:#9d9da0; font-size: 14px">
+            Sendungsnummer H1024562675499501017
+        </td>
+    </tr>
+
+
+
+    <tr>
+        <td height="60" valign="middle">
+            <div style="background: #d9d9d9; font-size: 1px; line-height: 1px; height: 1px">&nbsp;</div>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family: 'MarselisOT', Roboto, Arial, sans-serif; color:#0090cc; font-size: 24px; font-weight: normal"
+            height="35" valign="top">
+            Hast du noch Fragen?
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 18px; font-weight: 300; line-height: 1.5" valign="top">
+            Hier findest du Antworten rund um deine Zustellung.<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" valign="top">
+    <table class="btn" width="340"
+           style="border-radius:8px;background-color:#9D9DA0;font-family:'MarselisOT',Roboto,Arial,sans-serif;min-width:150px;max-width:340px;height:48px;line-height:18px;text-align:center">
+        <tr>
+            <td valign="middle" align="center" height="48">
+                <a href="https://www.myhermes.de/service/fragen/empfangen/?wt_cc1=faq&wt_mc=re_pa36" target="_blank"
+                   style="font-size:18px;font-weight:normal;padding:15px 0;color:#FFFFFF;text-decoration:none;display:block">
+                    Fragen und Antworten
+                </a>
+            </td>
+        </tr>
+    </table>
+        </td>
+
+    </tr>
+    <tr>
+        <td height="48" style="height:48px;font-size:48px;line-height:48px">&nbsp;</td>
+    </tr>
+                                </table>
+                                <!--[if mso]>
+                                </td>
+                                </tr>
+                                </table>
+                                <![endif]-->
+                            </td>
+                            <td width="24">&nbsp;</td>
+                        </tr>
+                    </table>
+                    <table class="footer" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#3c3c43"
+                           style="color:#9d9da0">
+                        <tr>
+                            <td height="35" colspan="3">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td width="24">&nbsp;</td>
+                            <td style="text-align: center">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                       style="display: inline-block; max-width: 374px;line-height: 20px; font-size: 14px; text-align: left">
+                                    <tr>
+                                        <td width="24">&nbsp;</td>
+                                        <td style="font-family: 'MarselisOT', Helvetica, Arial, sans-serif;color:#fafafa">
+                                            Hermes Germany GmbH
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="24">&nbsp;</td>
+                                        <td style="font-family: Helvetica, Roboto, Arial, sans-serif">
+                                            <a href="https://www.myhermes.de/impressum/?wt_cc1=imprint&amp;wt_mc=re_pa36"
+                                               target="_blank" style="color:#9d9da0;text-decoration:none">
+                                                Impressum
+                                            </a> &nbsp;
+                                            <a href="https://www.myhermes.de/datenschutz/?wt_cc1=datenschutz&amp;wt_mc=re_pa36"
+                                               target="_blank" style="color:#9d9da0;text-decoration:none">
+                                                Datenschutz
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="20" colspan="2" valign="bottom">
+                                            <div style="background: #9d9da0; font-size: 1px; line-height: 1px; height: 1px">
+                                                &nbsp;
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="20" colspan="2">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="24">&nbsp;</td>
+                                        <td style="font-family: Helvetica, Roboto, Arial, sans-serif; color:white">
+                                            Du m&ouml;chtest keine weiteren Informationen zu deiner Sendung erhalten?
+                                            <a href="https://www.myhermes.de/empfangen/benachrichtigungen?wt_cc1=abmelden&amp;wt_mc=re_pa36"
+                                               target="_blank" style="color:#9d9da0;text-decoration:none">
+                                                Hier&nbsp;klicken&nbsp;&#x276F;
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="24">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td height="100" colspan="3">&nbsp;</td>
+                        </tr>
+                    </table>
+            </tr>
+        </table>
+    </div>
+    <!--[if mso]>
+    </td>
+    </tr>
+    </table>
+    <![endif]-->
+</body>
+
+</html>
+------=_Part_4769413_2052734253.1767080576542--

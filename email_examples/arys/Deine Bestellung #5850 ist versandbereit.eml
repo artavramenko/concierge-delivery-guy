@@ -1,0 +1,759 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp6242684dlb;
+        Tue, 30 Dec 2025 01:38:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG39DtGroVz5g31moYCejmUuJPTU1D1bzTGv6cpRwD4HIvxlaBywLyIHrorqbSeTI0v3uvP
+X-Received: by 2002:a05:620a:46a8:b0:8b2:77cf:a02e with SMTP id af79cd13be357-8c09011ff45mr5073441885a.45.1767087481204;
+        Tue, 30 Dec 2025 01:38:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767087481; cv=none;
+        d=google.com; s=arc-20240605;
+        b=doOAoWIkMvHSuw9lReWpjRD0ZpJAhzLwsUpdh+LXf3s36zchPEA0sWziAWjX3NBjCL
+         TvstfBSEYqaiZOzknNkOQ/vWGBetKV5DqSp5mvwu1+mOsvxdiaBXfpx3zFjSh13E8HZU
+         Upr5WLzyxfk4hJGNuzOnAImvEh3I0iQQJKOhPh+R79la8Y/c+k+DnUfUJoVF5t72sf6R
+         kjlfNCdqjtpIQE0o0oxJ28J+nDcnvnTR1ReuKcgcxBcrH4TJT9cwHFv0R422nxFMGSga
+         acyxF3Vez9xbmneV214WyKvZjNOrL98wc/DfiQ/uZoApLGmRT3CzzoZlCz8eJVCi6J04
+         zg+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:message-id:date:from:subject:content-transfer-encoding
+         :mime-version:dkim-signature:dkim-signature;
+        bh=wKPMNfPX/G4MBGta7Fg53VrwA9nBEA8SCLg+hT+EJeI=;
+        fh=l27W328F0eGJeGkKjZ5V26R65e6UGjv5hNRnX4DfN7E=;
+        b=bJAkfkghDLSaEyjr67mHPcPMbxz5W+wx6qn+0+KteP4uKR3SgZNZh3fviJQVdgaz9/
+         xm2sR6htFwN/iUH8FWHO3yf+2zh+e4biHUQfrIDAgtMDckVKuCfeZeVgGjaJ2nNKqaGA
+         jy3vRPsK8OybyxMkGW1QE0SMsC0KsqIEHPvz4R0Fl3Av+DVuuJG4NXdkdgPxSKyDnh8I
+         YZ+VosJroxky1Y9QQlTciTtujugVbAUFKkWFEODgAN+nfzgvV8oGCuuVdYO1WkNz6ODa
+         ZSE2XFvJBE35FxguLRpzUQTj75QGrg45z1s3zXYsUaH9ldR5bcS9vU7tT/qs6RRVbzwz
+         x3nA==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@sendcloud.com header.s=s1 header.b=FEbdcOsv;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=WAQTlBw6;
+       spf=pass (google.com: domain of bounces+19111432-5ef5-artyom.avramenko=gmail.com@em9591.sendcloud.com designates 167.89.68.163 as permitted sender) smtp.mailfrom="bounces+19111432-5ef5-artyom.avramenko=gmail.com@em9591.sendcloud.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=sendcloud.com
+Return-Path: <bounces+19111432-5ef5-artyom.avramenko=gmail.com@em9591.sendcloud.com>
+Received: from o1.ptr1043.sendcloud.com (o1.ptr1043.sendcloud.com. [167.89.68.163])
+        by mx.google.com with ESMTPS id af79cd13be357-8c096687018si3339161485a.114.2025.12.30.01.38.01
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Dec 2025 01:38:01 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounces+19111432-5ef5-artyom.avramenko=gmail.com@em9591.sendcloud.com designates 167.89.68.163 as permitted sender) client-ip=167.89.68.163;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@sendcloud.com header.s=s1 header.b=FEbdcOsv;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=WAQTlBw6;
+       spf=pass (google.com: domain of bounces+19111432-5ef5-artyom.avramenko=gmail.com@em9591.sendcloud.com designates 167.89.68.163 as permitted sender) smtp.mailfrom="bounces+19111432-5ef5-artyom.avramenko=gmail.com@em9591.sendcloud.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=sendcloud.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendcloud.com;
+	h=content-type:mime-version:content-transfer-encoding:subject:from:date:
+	to:cc:content-type:date:feedback-id:from:subject:to;
+	s=s1; bh=wKPMNfPX/G4MBGta7Fg53VrwA9nBEA8SCLg+hT+EJeI=;
+	b=FEbdcOsvDCJ5MKnLTed6yL3v78dLziw3zWtGUatY36OrysXz/vuoqtT2wzg7PJhYTual
+	GLwRD3u/B0S+Th5j3fOMdMDAofqhBjM2P7PsBAMAx9lAgw66XO2nMyhpl1ithl/gSXLj2u
+	aOt3ByhLP0l4T6YYF8FjcqLj/MdSzGAzpL9FijUWZpBwilR76MGboiJug6694qe0n25yZm
+	jvfDoxQ2QmyV0zuGGEt/4KumUogZyFqI7fH6ETm7iYErDd/jCt+XPauZOqDruMZk411s2y
+	lKptH7x/2z0CSS3ZGFIzXIyIICJ2flh/RHwiUcgq96u0vThkldjXxumFmUvRgM7g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.info;
+	h=content-type:mime-version:content-transfer-encoding:subject:from:date:
+	to:cc:content-type:date:feedback-id:from:subject:to;
+	s=smtpapi; bh=wKPMNfPX/G4MBGta7Fg53VrwA9nBEA8SCLg+hT+EJeI=;
+	b=WAQTlBw6MAn3l6fzNKxhC2WrB1tbsgyKkAq4SIqvqdLTnNKNoKDn8izIE/+ppXdLadJ4
+	WBuOZX1DAdXNJqq6jZK2iuc6YNLPNOx7GgxmSaeO25VFgWsY8LU73ZfInmV3PflGFhkCLK
+	aGkNp6d8l2S3EMfJu92ZUu6ITQ6yuOGJU=
+Received: by recvd-6bcd7874db-6l2kp with SMTP id recvd-6bcd7874db-6l2kp-1-69539D78-4C
+	2025-12-30 09:38:00.945971016 +0000 UTC m=+1078304.952934242
+Received: from scp-dramatiq-emails-845bd8bc56-v8f7b (unknown)
+	by geopod-ismtpd-8 (SG) with ESMTP id ZaYO7YzTRGCFcbBLF3VkNQ
+	for <artyom.avramenko@gmail.com>; Tue, 30 Dec 2025 09:38:00.856 +0000 (UTC)
+Content-Type: text/html; charset=utf-8
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Deine Bestellung #5850 ist versandbereit
+From: ARYS Store <no-reply@sendcloud.com>
+Date: Tue, 30 Dec 2025 09:38:00 +0000 (UTC)
+message-id: <176708748061.50.8857336614193162695@sendcloud.com>
+X-SG-EID: 
+ =?us-ascii?Q?u001=2EQR1sLtMaN2ChRDXGNgl+m16uzwJBxDtDijKUBBkX8HxRLUASMqrAz5YG0?=
+ =?us-ascii?Q?CLxzo8GuzSTIbl6y1y5Bd9X68sQRdnHjnuuec5T?=
+ =?us-ascii?Q?w5mC1=2FvQxOeDXqppRmsWVopNUMrmYBfBCszdmUH?=
+ =?us-ascii?Q?o9Z=2FJkXrNjRns0g1c49rLzUIX4ncnpaKwBOc8fQ?=
+ =?us-ascii?Q?n1a+w22wqA5fuG7bV8keeC7fxMo4MUOqeYc0Azi?=
+ =?us-ascii?Q?0I2PgUFtK9RWI1vKTq510U16QHM9b3zZmi8jKMW?= =?us-ascii?Q?yH8F?=
+To: Artem Avramenko <artyom.avramenko@gmail.com>
+X-Entity-ID: u001.yPodIMorbt/CUR1mm8vXmA==
+
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+  <title>
+  </title>
+  <!--[if !mso]><!-- -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+        <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+        </xml>
+        <![endif]-->
+  <!--[if lte mso 11]>
+        <style type="text/css">
+          .mj-outlook-group-fix { width:100% !important; }
+        </style>
+        <![endif]-->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600);
+  </style>
+  <!--<![endif]-->
+  <style type="text/css">
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+
+      .mj-column-per-50 {
+        width: 50% !important;
+        max-width: 50%;
+      }
+
+      .mj-column-per-66-6 {
+        width: 66.6% !important;
+        max-width: 66.6%;
+      }
+
+      .mj-column-per-33-3 {
+        width: 33.3% !important;
+        max-width: 33.3%;
+      }
+
+      .mj-column-px-120 {
+        width: 120px !important;
+        max-width: 120px;
+      }
+    }
+  </style>
+  <style type="text/css">
+    @media only screen and (max-width:480px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type="text/css">
+    a,
+    a:hover,
+    a:visited {
+      color: '#222222';
+    }
+
+    .show_on_mobile {
+      display: none !important;
+    }
+
+    @media only screen and (max-width: 480px) {
+      .show_on_mobile {
+        display: block !important;
+      }
+    }
+
+    .full_image {
+      max-width: 316px;
+      text-align: center;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body style="background-color:#ffffff;">
+  <div style="background-color:#ffffff;"> <!-- start header --> <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:600px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:13px;line-height:1;text-align:center;color:#000000;"><img src="https://media.sendcloud.sc/brands/414638/0df3a49ac6d6e4ab69b287c0ca07232c_thumbnail_7yy7ncn.png" alt="ARYS Store" style="max-width: 250px; max-height: 100px;" /></div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]-->  <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="background:#F7F7F7;background-color:#F7F7F7;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#F7F7F7;background-color:#F7F7F7;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:30px 20px 35px 20px;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:560px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td align="center" style="font-size:0px;padding:0;padding-bottom:10px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:28px;font-weight:600;line-height:1;text-align:center;color:#525252;">Deine Bestellung #5850 ist versandbereit</div>
+                            </td>
+                          </tr>  <tr>
+                            <td align="center" vertical-align="middle" style="font-size:0px;padding:10px 25px;padding-top:10px;word-break:break-word;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
+                                <tr>
+                                  <td align="center" bgcolor="#222222" role="presentation" style="border:none;border-radius:8px;cursor:auto;mso-padding-alt:15px;background:#222222;" valign="middle">
+                                    <p style="display:inline-block;background:#222222;color:white;font-family:Source Sans Pro, Arial;font-size:16px;font-weight:600;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px;mso-padding-alt:0px;border-radius:8px;">
+                                      <!--
+        MJML does not support custom attributes on its components but raw HTML tags does:
+        https://github.com/mjmlio/mjml/issues/200
+        -->  <a href="https://tracking.eu-central-1-0.sendcloud.sc/forward?carrier=dhl_de&amp;code=00340434327779634800&amp;destination=DE&amp;lang=de-de&amp;source=DE&amp;type=parcel&amp;verification=10249&amp;servicepoint_verification=&amp;shipping_product_code=dhl_de%3Adhl_paket%2Ffilial_routing&amp;created_at=2025-12-30&amp;utm_source=sendcloud&amp;utm_medium=email&amp;utm_campaign=ready_for_shipment&amp;utm_content=tracking_button" data-ref="ref-btn-track-and-trace" style="color: white; text-decoration: none;">
+                                        Sendung verfolgen <img width="8px" style="margin-bottom:-1px; padding:0 0 0 10px" src="https://sendcloud-prod-scp-static-files.s3.amazonaws.com/notify/arrow-white.png" />
+                                      </a> 
+                                    </p>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr> 
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]-->
+    <!-- end header --> <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:30px 20px;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      <![endif]-->  <!--[if mso | IE]>
+            <td
+               class="" style="vertical-align:top;width:372.96px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-66-6 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td align="center" style="font-size:0px;padding:20px;word-break:break-word;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                                <tbody>
+                                  <tr>
+                                    <td style="width:332px;">
+                                      <img height="auto" src="https://sendcloud-prod-scp-static-files.s3.amazonaws.com/notify/ready_for_shipment.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="332" />
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          <![endif]--> <!-- end estimated delivery --> <!--[if mso | IE]>
+            <td
+               class="" style="vertical-align:top;width:186.48px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-33-3 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%"> <!-- start delivery address -->
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px 7px 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:13px;font-weight:600;line-height:1;text-align:left;color:#353535;"><img width="10px" style="margin-bottom:-2px; padding:0 3px 0 0" src="https://sendcloud-prod-scp-static-files.s3.amazonaws.com/notify/address_pointer.png"> Lieferadresse</div>
+                            </td>
+                          </tr>  <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px 7px 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:1;text-align:left;color:#585858;">Auerstraße 25</div>
+                            </td>
+                          </tr>  <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px 7px 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:1;text-align:left;color:#585858;">10249 Berlin</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:1;text-align:left;color:#585858;">Deutschland</div>
+                            </td>
+                          </tr>
+                          <!-- end delivery address -->
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          <![endif]-->  <!--[if mso | IE]>
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]-->  <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:0 20px;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:560px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td style="font-size:0px;padding:0;padding-bottom:30px;word-break:break-word;">
+                              <p style="border-top:solid 1px #E9E9E9;font-size:1px;margin:0px auto;width:100%;">
+                              </p>
+                              <!--[if mso | IE]>
+        <table
+           align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #E9E9E9;font-size:1px;margin:0px auto;width:560px;" role="presentation" width="560px"
+        >
+          <tr>
+            <td style="height:0;line-height:0;">
+              &nbsp;
+            </td>
+          </tr>
+        </table>
+      <![endif]-->
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:20px;text-align:left;color:#000000;"><p><span class="tiptap__mention" data-mention-id="3">Artem Avramenko</span>,</p><p>Deine Bestellung <span class="tiptap__mention" data-mention-id="4">#5850</span> ist gepackt und wird von <span class="tiptap__mention" data-mention-id="1">DHL Germany</span> versandt. Mit Klick auf den Button oben kannst Du Deine Sendung verfolgen.</p><p>Mit freundlichen Grüßen,<br><span class="tiptap__mention" data-mention-id="2">ARYS Store</span></p></div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="font-size:0px;padding:0;padding-top:30px;word-break:break-word;">
+                              <p style="border-top:solid 1px #E9E9E9;font-size:1px;margin:0px auto;width:100%;">
+                              </p>
+                              <!--[if mso | IE]>
+        <table
+           align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #E9E9E9;font-size:1px;margin:0px auto;width:560px;" role="presentation" width="560px"
+        >
+          <tr>
+            <td style="height:0;line-height:0;">
+              &nbsp;
+            </td>
+          </tr>
+        </table>
+      <![endif]-->
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]-->
+    <!-- start with order_content --><!-- end with order_content --><!-- start with order number --> <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:30px 20px;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:280px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px 7px 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:13px;font-weight:600;line-height:1;text-align:left;color:#353535;"># Bestellnummer</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:1;text-align:left;color:#585858;">#5850</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="show_on_mobile" style="font-size:0px;word-break:break-word;">
+                              <!--[if mso | IE]>
+    
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="30" style="vertical-align:top;height:30px;">
+      
+    <![endif]-->
+                              <div style="height:30px;"> &nbsp; </div>
+                              <!--[if mso | IE]>
+    
+        </td></tr></table>
+      
+    <![endif]-->
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          <![endif]-->  <!--[if mso | IE]>
+            <td
+               class="" style="vertical-align:top;width:280px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px 7px 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:13px;font-weight:600;line-height:1;text-align:left;color:#353535;"><img width="15px" style="margin-bottom: -3px; padding: 0 3px 0 0" src="https://sendcloud-prod-scp-static-files.s3.amazonaws.com/notify/truck.png"> Sendungsverfolgung</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="font-size:0px;padding:0 20px;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:1;text-align:left;color:#000000;"><mj-raw>  </mj-raw>
+                                <a href="https://tracking.eu-central-1-0.sendcloud.sc/forward?carrier=dhl_de&amp;code=00340434327779634800&amp;destination=DE&amp;lang=de-de&amp;source=DE&amp;type=parcel&amp;verification=10249&amp;servicepoint_verification=&amp;shipping_product_code=dhl_de%3Adhl_paket%2Ffilial_routing&amp;created_at=2025-12-30&amp;utm_source=sendcloud&amp;utm_medium=email&amp;utm_campaign=ready_for_shipment&amp;utm_content=tracking_button" style="color: #353535;">00340434327779634800</a>
+                                <mj-raw>  </mj-raw>
+                                <mj-raw>  </mj-raw>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          <![endif]-->  <!--[if mso | IE]>
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]-->
+    <!-- end with order number --> <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:0 20px;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:560px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;padding-bottom:30px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td style="font-size:0px;padding:0;word-break:break-word;">
+                              <p style="border-top:solid 1px #E9E9E9;font-size:1px;margin:0px auto;width:100%;">
+                              </p>
+                              <!--[if mso | IE]>
+        <table
+           align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #E9E9E9;font-size:1px;margin:0px auto;width:560px;" role="presentation" width="560px"
+        >
+          <tr>
+            <td style="height:0;line-height:0;">
+              &nbsp;
+            </td>
+          </tr>
+        </table>
+      <![endif]-->
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]--> <!-- start footer --> <!--[if mso | IE]>
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:0;padding-top:10px;text-align:center;">
+              <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:600px;"
+            >
+          <![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;padding-bottom:10px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                          <tr>
+                            <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                              <div style="font-family:Source Sans Pro, Arial;font-size:14px;line-height:1;text-align:center;color:#A4A4A4;">Trackingmail wird unterstützt von <a href="https://www.sendcloud.com/?utm_source=notify&utm_medium=email" class="footer__link">
+                                  <img width="120" height="17" src="https://sendcloud-prod-scp-static-files.s3.amazonaws.com/notify/sendcloud_logo.png" style="width: 120px; height:17px; margin-bottom: -2px; margin-left: 4px;" alt="Sendcloud" />
+                                </a></div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+            </td>
+          
+        </tr>
+      
+                  </table>
+                <![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      <![endif]--> <!-- end footer --><!-- ☁️ -->
+  </div>
+<img src="http://url9438.sendcloud.com/wf/open?upn=u001.meKngwSSJjT-2B7tttMRci2ydcgle1VQ6VlunCz6CtMSKr-2B8n-2BYX7nbCUNRx2CmjW0M6KUd9Xm4UQPCTiNZl6y2WimCYMaW3eLc96ZLCaWKbHK7cfyouCFApfz0LZ3LwCOpicxhEi360a6QjRxJgyJmBJE6UsxGxjrrlui4PrTgfMT5784fmCRCDIOScyTBXoocXSx5dNrCVhKARSL9lfJ-2FlbPyu4-2FiAfx-2BP1bn9Osf9U-3D" alt="" width="1" height="1" border="0" style="height:1px !important;width:1px !important;border-width:0 !important;margin-top:0 !important;margin-bottom:0 !important;margin-right:0 !important;margin-left:0 !important;padding-top:0 !important;padding-bottom:0 !important;padding-right:0 !important;padding-left:0 !important;"/></body>
+
+</html>

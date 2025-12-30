@@ -1,0 +1,2109 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp6212869dlb;
+        Tue, 30 Dec 2025 00:15:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE64fXxiVl+TGdPpljVecAIPkjkfsspbtmSY4nNZdUrRjbEX9i4SS00Tp2T/H/B3BouiVhW
+X-Received: by 2002:a17:902:f60c:b0:2a0:8966:7c94 with SMTP id d9443c01a7336-2a2f22262e1mr312892835ad.20.1767082542202;
+        Tue, 30 Dec 2025 00:15:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767082542; cv=none;
+        d=google.com; s=arc-20240605;
+        b=G4keIRPXgDht9yvWPcQvSjVA4fj2MG0WzrPmGDq6rJyFLoDVyDvfuYD7FdK+kQJ4jR
+         DG+7sSiRtWpynTm6+X5C3uFI9njQFoN3rybaQPO0Id8qEA6hXXBihbO7mDDAtqpbPX6y
+         IQygBSBP+u7KHr+/fK3muUoUEjyNIQWP647Gajlh1IT8z0VGI9G6r5jwz1jheugSHBUG
+         8eXf9bh9RsESsDVopTkCN7giNIMXPL5mNdjMHdu9gbh+35KdnCDgsrcy55WiWO5KdZst
+         Fw1K5mm5AVLFLhRuaDVLjykWjXSctAdcax/xEKy1+1yOUcil/REy88wxjdgGl2ZUn/By
+         2QKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:mime-version:from:date:dkim-signature
+         :dkim-signature;
+        bh=GDTLOx8RVXAX5+XgOZf/KF+0FRaobsOiqNcGdLoZPR0=;
+        fh=cn1GiMI3JaU8ksh7qZWqfn4YlX+vmbhniBH/Q3A2AY8=;
+        b=jE14Dm81LijbQQB1W6lHza4fdBxyB2v5eDcdfhYPFVPgLgcwF7LxQX/t8snF3yXJAc
+         v56SodEuMsbEAFxCoPKd3i3oi5CRWWzTH9HnZn63n9mWuM0hNFnN6/luIEkVZV2SozGC
+         PpI7lIddJB1YFwfJ72rS7HL+hC31gA61ml5CIu2tGdws+DWVbvGIvlewxFXTuv+DDHh0
+         KYalDYwlN4pA8zdakeEG7a47SplpO+AfVefOjh15KPQxFQqWdzmW08yB9nM7BPUT8ReI
+         Ff69DwxpkV0Igfrqlp3t70uOM3M9w75CEQuemQvU5aDyMLK3pWY4c/rA5qoMNM1qE6sp
+         hHlg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gls-pakete.de header.s=s1 header.b=b0Ri3fOX;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=WI7P8xpo;
+       spf=pass (google.com: domain of bounces+32441817-1b75-artyom.avramenko=gmail.com@em2460.gls-pakete.de designates 149.72.236.132 as permitted sender) smtp.mailfrom="bounces+32441817-1b75-artyom.avramenko=gmail.com@em2460.gls-pakete.de";
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=gls-pakete.de
+Return-Path: <bounces+32441817-1b75-artyom.avramenko=gmail.com@em2460.gls-pakete.de>
+Received: from o3.ptr1404.gls-pakete.de (o3.ptr1404.gls-pakete.de. [149.72.236.132])
+        by mx.google.com with ESMTPS id d2e1a72fcca58-7ff7b520363si55069366b3a.95.2025.12.30.00.15.41
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Dec 2025 00:15:42 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounces+32441817-1b75-artyom.avramenko=gmail.com@em2460.gls-pakete.de designates 149.72.236.132 as permitted sender) client-ip=149.72.236.132;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gls-pakete.de header.s=s1 header.b=b0Ri3fOX;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=WI7P8xpo;
+       spf=pass (google.com: domain of bounces+32441817-1b75-artyom.avramenko=gmail.com@em2460.gls-pakete.de designates 149.72.236.132 as permitted sender) smtp.mailfrom="bounces+32441817-1b75-artyom.avramenko=gmail.com@em2460.gls-pakete.de";
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=gls-pakete.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gls-pakete.de;
+	h=content-type:date:from:mime-version:subject:to:cc:content-type:date:
+	feedback-id:from:subject:to;
+	s=s1; bh=GDTLOx8RVXAX5+XgOZf/KF+0FRaobsOiqNcGdLoZPR0=;
+	b=b0Ri3fOXuUfklMLES2a6A3tOjrfkoyXo29nOfdtZcCqqjtjIXFUXVGNxx/QB7xhZpW+R
+	5juRkD42mOUZ7eLjyHoTRCXLoCXcoUwTvwBr3/KYtAWnP20VCGR1EXQgsYe/2dnuEXeNyS
+	2S15P3qPzou68C7fkqRPKV9AurckXR+udqpsNc0ALibavrTIkZrThB4vUL/rmYBLjivNqt
+	Hs1jKdhsWU2Tzn+F8x49lzJABoqaxHhHDjBDdK9yfoJaJ6kTRGcjBc9IcwwAkUux+qakoV
+	gWnJn7NRDoGO0YoAgGB7EWHmxPce9/Qg1Ufky0mYGxz5jVyrn8TRNMj0H2ojQoGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.info;
+	h=content-type:date:from:mime-version:subject:to:cc:content-type:date:
+	feedback-id:from:subject:to;
+	s=smtpapi; bh=GDTLOx8RVXAX5+XgOZf/KF+0FRaobsOiqNcGdLoZPR0=;
+	b=WI7P8xpoVW/ocKFZZjNoOnFpZBfdJMs05hpy+Szg0rDIkPkgs0vzxRx+NnFGjgnSGeIo
+	AtkmzKDhV/Ao0Jy/ZEqPUb864DSlK70pNw8FV8Yf3Cz1mDk/806pAZb0ECioVIA60PZLxy
+	pIbQGtYl10SxwsxOf1wvHBJjn4RmONHXI=
+Received: by recvd-64cd985795-vmv9w with SMTP id recvd-64cd985795-vmv9w-1-69538A2C-34
+	2025-12-30 08:15:40.718151836 +0000 UTC m=+1073073.085900823
+Received: from MzI0NDE4MTc (unknown)
+	by geopod-ismtpd-15 (SG) with HTTP
+	id aGF3WKh3TPWq46n6baVFRw
+	Tue, 30 Dec 2025 08:15:40.641 +0000 (UTC)
+Content-Type: multipart/alternative; boundary=e5dc3f75ec419937b3f36945b39ca664020a050eeb056acb0ccf01b9b4fd
+Date: Tue, 30 Dec 2025 08:15:40 +0000 (UTC)
+From: GLS Paket <no-reply@gls-pakete.de>
+Mime-Version: 1.0
+Message-ID: <aGF3WKh3TPWq46n6baVFRw@geopod-ismtpd-15>
+Subject: =?UTF-8?B?8J+Tpg==?= Dein GLS Paket kommt heute!
+X-SG-EID: 
+ =?us-ascii?Q?u001=2EjgtesJwg36SoEZ3cdSDOrkE2pSH9etKI7xKVE8YR1=2FP1wHkNHs1RcF2x2?=
+ =?us-ascii?Q?ylJIXIxvZHq9lW8HWwFLW9ZtZK0A+j6cQakaUne?=
+ =?us-ascii?Q?eELvV=2F7diqiq5NEztpqQn1g5pe9H95yu8uYLR6A?=
+ =?us-ascii?Q?lVkuPLue+p+WRNuDrXX1P1RFdVgpsn=2Fsr8XhYu5?=
+ =?us-ascii?Q?XtwzojoKa9h9QjENPIoOvhDwGJ4U=2FvO9I+c6LDG?=
+ =?us-ascii?Q?LDkMBdcTt0go2RzawcouV25FRtiOQO810Q2b0dz?= =?us-ascii?Q?l3PX?=
+X-SG-ID: 
+ =?us-ascii?Q?u001=2ESdBcvi+Evd=2FbQef8eZF3Bt6ZEVgGlDqTvZPr3jmG5ZSmVOxJvfpoIPMwy?=
+ =?us-ascii?Q?d6=2FIYnp2hLepkwwCTRMZpqfBlDVadutraOZIRuk?=
+ =?us-ascii?Q?SCYdSSozaDhtSJH7H1ElDaiElhBib5ecfHw28ha?=
+ =?us-ascii?Q?5JOVMO2XDkJEYiKelDk9uNTAzTOIkbUJa52GcVq?=
+ =?us-ascii?Q?ifeGfmJgCsDD2=2FODX8bcc0oehWa2UbN1QqfPLlf?=
+ =?us-ascii?Q?HYUoNdcRFDAgyHvCfHsxME=3D?=
+To: artyom.avramenko@gmail.com
+X-Entity-ID: u001.UucKcxd1LMBCE4jSg6BVDg==
+
+--e5dc3f75ec419937b3f36945b39ca664020a050eeb056acb0ccf01b9b4fd
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Mime-Version: 1.0
+
+     =20
+------------------------------------------------
+*Voraussichtliche Lieferung an einen GLS Point:*
+------------------------------------------------
+
+An:
+*
+ ,
+ *
+
+*Auf Karte ansehen (  )*
+
+------------------------
+** *Deine Paketinfos* **
+
+------------------------
+
+*Sendungsnummer*
+12111098592 ( https://url8500.gls-pakete.de/ls/click?upn=3Du001.ImHuU272WT1=
+UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOgmuZ7AXpxpDFI-2B9=
+ZaxiXRaBr-2FSJ5nxDcJ5BwZjH-2FFdgAkSpTXMjJmAGxgagtfRL8inNP1kcmwnCv8XhYxLlEe7=
+DaWqX1Z-2BnroLi-2BvIP1SxgvfiC4lPzUXWIpkODH2uWMyxIMfX6wRlrunrYNl0yrr1NiSDMQw=
+B81oFtZ7ht74qON3-2B4Mi9CC-2F5u80SBDFwwjZ_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZP=
+mTEmPaMHv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2B=
+iyGtwR7sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66=
+IqvaAQOMjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmU7nmjQPgrYY6gcA=
+k2ZwZURpnWi9mS26CFrNUKup22Tp44WjGKTIxDwoCNrC0JTct6TPwbG9Po2zCdnpQ0dRFsQMZdb=
+jPmQSiishNArTuPn-2BHqdpsruxv5Dcu9axy5K3XoXu9ncZnFQyc2InxrCxsCTuU4NvVTRY0owC=
+CfXPIV601qksbfJNZHII6Oo6dcBWMU-3D )  (Referenz: 33512352232900100030-301015=
+02670) ( https://url8500.gls-pakete.de/ls/click?upn=3Du001.ImHuU272WT1Ugcvm=
+GPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOgmuZ7AXpxpDFI-2B9ZaxiX=
+RaBr-2FSJ5nxDcJ5BwZjH-2FFdgAkSpTXMjJmAGxgagtfRL8inNP1kcmwnCv8XhYxLlEe7DaWqX=
+1Z-2BnroLi-2BvIP1SxgvfiC4lPzUXWIpkODH2uWMyxIMfX6wRlrunrYNl0yrr1NiSDMQwB81oF=
+tZ7ht74qON3-2B4Mi9CC-2F5u80SBDFYvOk_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZPmTEmP=
+aMHv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2BiyGtw=
+R7sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66IqvaA=
+QOMjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmXr6b-2FnJmRDTz3t5O6U=
+mfHy682-2BO9P9Dsg5XwSxFckKCISaV7E9MFyTbm1fCVam7mjlOMypkItZLK-2BQwSxFbDbNmzD=
+KwPVCVwRvEZ0nsyd8i-2B39oIbyWqUYO1SOXzKOc-2FiU6CbPP8ZbgBXTTblYGBlosko6E-2BPU=
+ObU0HaYQHNkCMezlmg2xE4AzUG8vQwvC8bI-3D )=20
+
+*Versender*
+MD-Plewiska
+Arvato Diamentowa 1 ,
+62-052 Komorniki
+
+*Empf=E4nger*
+Artem Dede
+Buchschlager Allee 27 - ,
+63303 Dreieich
+
+*Zur Sendungsverfolgung ( https://url8500.gls-pakete.de/ls/click?upn=3Du001=
+.ImHuU272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOgmuZ7=
+AXpxpDFI-2B9ZaxiXRaBr-2FSJ5nxDcJ5BwZjH-2FFdgAkSpTXMjJmAGxgagtfRL8inNP1kcmwn=
+Cv8XhYxLlEe7DaWqX1Z-2BnroLi-2BvIP1SxgvfiC4lPzUXWIpkODH2uWMyxIMfX6wRlrunrYNl=
+0yrr1NiSDMQwB81oFtZ7ht74qON3-2B4Mi9CC-2F5u80SBDFA9q__mpQyLT4TVgt289Lqu-2Bxm=
+5bkAge3yogZPmTEmPaMHv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOm=
+nAGO-2Bxh-2BiyGtwR7sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0s=
+pgQv7JBq5u66IqvaAQOMjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmVRp=
+ltHiIHZLQJSMxm04cVEAnYu8XanN1cNai8iXDAwExbTs47nKnvT0wo0q8y6qxyWdX1-2F06JJNB=
+gnpGhhpMsg0WNjTCbM9T3OvFamp4bzmfcp4q5WxrNz4iAvqzsfjaIMMfN8EVos9QD8yjTLYp3UF=
+b8pOBYSDoUt-2BWhne6eGouw9JHj8VOclN3I5mHtJVQg-3D )*
+
+
+---------------------------------------------------------------------
+*Abstellerlaubnis erteilen, damit deine Pakete zuverl=E4ssig ankommen!*
+---------------------------------------------------------------------
+
+Mit einer dauerhaften GLS Abstellerlaubnis erh=E4ltst du deine Sendungen zu=
+verl=E4ssig an deinem Wunschort, beispielsweise der Terrasse oder Garage. D=
+eine Pakete kommen p=FCnktlich an und hilfst mit, zus=E4tzliche Fahrten zu =
+vermeiden.
+
+Abstellerlaubnis erteilen ( https://url8500.gls-pakete.de/ls/click?upn=3Du0=
+01.ImHuU272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQnyXLc4CiPf23r6NEg-2B7YR3g-2Fw=
+II-2Bt3OTWqa2EX0FJhkpJW-2Fi2zZ3ByCu1EwYnkIw-3D1XGJ_mpQyLT4TVgt289Lqu-2Bxm5b=
+kAge3yogZPmTEmPaMHv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnA=
+GO-2Bxh-2BiyGtwR7sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spg=
+Qv7JBq5u66IqvaAQOMjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmV0EQZ=
+Ut68stviknMMVHtDrSy7bGcGswt6XBWfMgpERX79fvEVDVSEG-2Fh9CTSWq2wqAd3qT5bQw-2Fh=
+6n3rR1WWeg3j-2BnHuSRo-2Bo1wNkZn-2BPGyTX4YL0s6V1O54DHotM74yaoTzhKS-2Ber7b5jm=
+PmID8XsFoLAWP-2BblAc-2FsOXsXafwG1omPg9Y063K6Er-2Fv1KuUTE-3D )
+
+
+*Dies ist eine automatisch generierte Nachricht. Bitte antworte nicht auf d=
+iese E-Mail.*
+
+General Logistics Systems Germany GmbH & Co. OHG
+Sitz: Neuenstein Registergericht: Amtsgericht Bad Hersfeld HRA 863 Pers=F6n=
+lich haftende Gesellschafter: - GLS Beteiligungs GmbH, Sitz: Neuenstein, Re=
+gistergericht: Amtsgericht Bad Hersfeld HRB 787, Gesch=E4ftsf=FChrer: Dr. A=
+chim D=FCnnwald, Moritz Eichh=F6fer. - General Logistics Systems B.V., Sitz=
+: Amsterdam/ Niederlande, Registergericht: Kamer van Koophandel Amsterdam D=
+ossiernr. 34125684, Gesch=E4ftsf=FChrer: Dr. Karl Pfaff.
+--e5dc3f75ec419937b3f36945b39ca664020a050eeb056acb0ccf01b9b4fd
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+Mime-Version: 1.0
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir=3D"ltr" xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:o=3D"urn:sch=
+emas-microsoft-com:office:office" lang=3D"und">
+<head>
+    <meta charset=3D"UTF-8">
+    <meta content=3D"width=3Ddevice-width, initial-scale=3D1" name=3D"viewp=
+ort">
+    <meta name=3D"x-apple-disable-message-reformatting">
+    <meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+    <meta content=3D"telephone=3Dno" name=3D"format-detection">
+    <title></title><!--[if (mso 16)]>
+    <style type=3D"text/css">
+        a {
+            text-decoration: none;
+        }
+    </style>
+    <![endif]--><!--[if gte mso 9]>
+    <style>sup {
+        font-size: 100% !important;
+    }</style><![endif]--><!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG></o:AllowPNG>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
+    <style type=3D"text/css">
+        #outlook a {
+            padding: 0;
+        }
+
+        .es-button {
+            mso-style-priority: 100 !important;
+            text-decoration: none !important;
+        }
+
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .es-desk-hidden {
+            display: none;
+            float: left;
+            overflow: hidden;
+            width: 0;
+            max-height: 0;
+            line-height: 0;
+            mso-hide: all;
+        }
+
+        @media only screen and (max-width: 600px) {
+            p, ul li, ol li, a {
+                line-height: 150% !important
+            }
+
+            h1, h2, h3, h1 a, h2 a, h3 a {
+                line-height: 120% !important
+            }
+
+            h1 {
+                font-size: 30px !important;
+                text-align: left
+            }
+
+            h2 {
+                font-size: 20px !important;
+                text-align: left
+            }
+
+            h3 {
+                font-size: 20px !important;
+                text-align: left
+            }
+
+            .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1=
+ a {
+                font-size: 30px !important;
+                text-align: left
+            }
+
+            .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2=
+ a {
+                font-size: 20px !important;
+                text-align: left
+            }
+
+            .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3=
+ a {
+                font-size: 20px !important;
+                text-align: left
+            }
+
+            .es-menu td a {
+                font-size: 14px !important
+            }
+
+            .es-header-body p, .es-header-body ul li, .es-header-body ol li=
+, .es-header-body a {
+                font-size: 14px !important
+            }
+
+            .es-content-body p, .es-content-body ul li, .es-content-body ol=
+ li, .es-content-body a {
+                font-size: 15px !important
+            }
+
+            .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li=
+, .es-footer-body a {
+                font-size: 10px !important
+            }
+
+            .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-=
+infoblock a {
+                font-size: 12px !important
+            }
+
+            *[class=3D"gmail-fix"] {
+                display: none !important
+            }
+
+            .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 {
+                text-align: center !important
+            }
+
+            .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 {
+                text-align: right !important
+            }
+
+            .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 {
+                text-align: left !important
+            }
+
+            .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img {
+                display: inline !important
+            }
+
+            .es-button-border {
+                display: block !important
+            }
+
+            a.es-button, button.es-button {
+                font-size: 16px !important;
+                display: block !important;
+                padding-right: 0px !important;
+                padding-left: 0px !important
+            }
+
+            .es-adaptive table, .es-left, .es-right {
+                width: 100% !important
+            }
+
+            .es-content table, .es-header table, .es-footer table, .es-cont=
+ent, .es-footer, .es-header {
+                width: 100% !important;
+                max-width: 600px !important
+            }
+
+            .es-adapt-td {
+                display: block !important;
+                width: 100% !important
+            }
+
+            .adapt-img {
+                width: 100% !important;
+                height: auto !important
+            }
+
+            .es-m-p0 {
+                padding: 0 !important
+            }
+
+            .es-m-p0r {
+                padding-right: 0 !important
+            }
+
+            .es-m-p0l {
+                padding-left: 0 !important
+            }
+
+            .es-m-p0t {
+                padding-top: 0 !important
+            }
+
+            .es-m-p0b {
+                padding-bottom: 0 !important
+            }
+
+            .es-m-p20b {
+                padding-bottom: 20px !important
+            }
+
+            .es-mobile-hidden, .es-hidden {
+                display: none !important
+            }
+
+            tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden {
+                width: auto !important;
+                overflow: visible !important;
+                float: none !important;
+                max-height: inherit !important;
+                line-height: inherit !important
+            }
+
+            tr.es-desk-hidden {
+                display: table-row !important
+            }
+
+            table.es-desk-hidden {
+                display: table !important
+            }
+
+            td.es-desk-menu-hidden {
+                display: table-cell !important
+            }
+
+            .es-menu td {
+                width: 1% !important
+            }
+
+            table.es-table-not-adapt, .esd-block-html table {
+                width: auto !important
+            }
+
+            table.es-social {
+                display: inline-block !important
+            }
+
+            table.es-social td {
+                display: inline-block !important
+            }
+
+            .es-desk-hidden {
+                display: table-row !important;
+                width: auto !important;
+                overflow: visible !important;
+                max-height: inherit !important
+            }
+
+            .es-m-p5 {
+                padding: 5px !important
+            }
+
+            .es-m-p5t {
+                padding-top: 5px !important
+            }
+
+            .es-m-p5b {
+                padding-bottom: 5px !important
+            }
+
+            .es-m-p5r {
+                padding-right: 5px !important
+            }
+
+            .es-m-p5l {
+                padding-left: 5px !important
+            }
+
+            .es-m-p10 {
+                padding: 10px !important
+            }
+
+            .es-m-p10t {
+                padding-top: 10px !important
+            }
+
+            .es-m-p10b {
+                padding-bottom: 10px !important
+            }
+
+            .es-m-p10r {
+                padding-right: 10px !important
+            }
+
+            .es-m-p10l {
+                padding-left: 10px !important
+            }
+
+            .es-m-p15 {
+                padding: 15px !important
+            }
+
+            .es-m-p15t {
+                padding-top: 15px !important
+            }
+
+            .es-m-p15b {
+                padding-bottom: 15px !important
+            }
+
+            .es-m-p15r {
+                padding-right: 15px !important
+            }
+
+            .es-m-p15l {
+                padding-left: 15px !important
+            }
+
+            .es-m-p20 {
+                padding: 20px !important
+            }
+
+            .es-m-p20t {
+                padding-top: 20px !important
+            }
+
+            .es-m-p20r {
+                padding-right: 20px !important
+            }
+
+            .es-m-p20l {
+                padding-left: 20px !important
+            }
+
+            .es-m-p25 {
+                padding: 25px !important
+            }
+
+            .es-m-p25t {
+                padding-top: 25px !important
+            }
+
+            .es-m-p25b {
+                padding-bottom: 25px !important
+            }
+
+            .es-m-p25r {
+                padding-right: 25px !important
+            }
+
+            .es-m-p25l {
+                padding-left: 25px !important
+            }
+
+            .es-m-p30 {
+                padding: 30px !important
+            }
+
+            .es-m-p30t {
+                padding-top: 30px !important
+            }
+
+            .es-m-p30b {
+                padding-bottom: 30px !important
+            }
+
+            .es-m-p30r {
+                padding-right: 30px !important
+            }
+
+            .es-m-p30l {
+                padding-left: 30px !important
+            }
+
+            .es-m-p35 {
+                padding: 35px !important
+            }
+
+            .es-m-p35t {
+                padding-top: 35px !important
+            }
+
+            .es-m-p35b {
+                padding-bottom: 35px !important
+            }
+
+            .es-m-p35r {
+                padding-right: 35px !important
+            }
+
+            .es-m-p35l {
+                padding-left: 35px !important
+            }
+
+            .es-m-p40 {
+                padding: 40px !important
+            }
+
+            .es-m-p40t {
+                padding-top: 40px !important
+            }
+
+            .es-m-p40b {
+                padding-bottom: 40px !important
+            }
+
+            .es-m-p40r {
+                padding-right: 40px !important
+            }
+
+            .es-m-p40l {
+                padding-left: 40px !important
+            }
+        }
+    </style>
+</head>
+<body style=3D"width:100%;font-family:arial, 'helvetica neue', helvetica, s=
+ans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0=
+;Margin:0">
+<div dir=3D"ltr" class=3D"es-wrapper-color" lang=3D"und" style=3D"backgroun=
+d-color:#F5F5F5">
+<!--[if gte mso 9]>
+    <v:background xmlns:v=3D"urn:schemas-microsoft-com:vml" fill=3D"t">
+        <v:fill type=3D"tile" color=3D"#F5F5F5"></v:fill>
+    </v:background>
+    <![endif]-->
+    <table class=3D"es-wrapper" width=3D"100%" cellspacing=3D"0" cellpaddin=
+g=3D"0"
+           style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collap=
+se:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;ba=
+ckground-repeat:repeat;background-position:center top;background-color:#F5F=
+5F5">
+        <tr>
+            <td valign=3D"top" style=3D"padding:0;Margin:0">
+                <table class=3D"es-content" cellspacing=3D"0" cellpadding=
+=3D"0" align=3D"center"
+                       style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;b=
+order-collapse:collapse;border-spacing:0px;table-layout:fixed !important;wi=
+dth:100%">
+                    <tr>
+                        <td align=3D"center" style=3D"padding:0;Margin:0">
+                            <table class=3D"es-content-body"
+                                   style=3D"mso-table-lspace:0pt;mso-table-=
+rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f5=
+f5f5;width:600px"
+                                   cellspacing=3D"0" cellpadding=3D"0" bgco=
+lor=3D"#F5F5F5" align=3D"center">
+   =20
+                                <tr>
+                                    <td align=3D"left"
+                                        style=3D"Margin:0;padding-top:20px;=
+padding-right:20px;padding-bottom:30px;padding-left:40px">
+                                        <table width=3D"100%" cellspacing=
+=3D"0" cellpadding=3D"0"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td class=3D"es-m-p0r" vali=
+gn=3D"top" align=3D"center"
+                                                    style=3D"padding:0;Marg=
+in:0;width:540px">
+                                                    <table width=3D"100%" c=
+ellspacing=3D"0" cellpadding=3D"0"
+                                                           style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:=
+0px">
+                                                        <tr>
+                                                            <td style=3D"pa=
+dding:0;Margin:0;font-size:0px" align=3D"center">
+                                                                <a target=
+=3D"_blank" href=3D"#"
+                                                                   style=3D=
+"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-ru=
+le:exactly;text-decoration:none;color:#2CB543;font-size:14px"><img
+                                                                        src=
+=3D"https://cdn.imgpik.com/2023/logo-68654a.png"
+                                                                        alt
+                                                                        sty=
+le=3D"display:block;border:0;outline:none;text-decoration:none;-ms-interpol=
+ation-mode:bicubic"
+                                                                        wid=
+th=3D"91"></a></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class=3D"es-m-p20r es-m-p20l" align=
+=3D"left" style=3D"padding:0;Margin:0">
+                                        <table width=3D"100%" cellspacing=
+=3D"0" cellpadding=3D"0"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td valign=3D"top" align=3D=
+"center" style=3D"padding:0;Margin:0;width:600px">
+                                                    <table style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:=
+0px;background-color:#ffffff;border-radius:16px 16px 0 0"
+                                                           width=3D"100%" c=
+ellspacing=3D"0" cellpadding=3D"0"
+                                                           bgcolor=3D"#ffff=
+ff">
+                                                        <tr>
+                                                            <td class=3D"es=
+-m-p20r es-m-p20l" align=3D"left"
+                                                                style=3D"pa=
+dding:0;Margin:0;padding-top:30px;padding-left:30px;padding-right:30px">
+                                                                <p style=3D=
+"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-=
+height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-se=
+rif;line-height:30px;color:#000000;font-size:18px"><strong>Hallo Artem Dede=
+,</strong>
+                                                                </p></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class=3D"es=
+-m-p20r es-m-p20l" align=3D"left"
+                                                                style=3D"Ma=
+rgin:0;padding-top:10px;padding-bottom:25px;padding-left:30px;padding-right=
+:30px">
+                                                                <p style=3D=
+"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-=
+height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-se=
+rif;line-height:30px;color:#000000;font-size:18px">
+                                                                    gute Na=
+chrichten, dein Paket ist fast da. Mit
+                                                                    Real-Ti=
+me-Tracking kannst du es jetzt live
+                                                                    verfolg=
+en.
+</p></td>
+                                                        </tr>
+                                                        <tr>
+  <td align=3D"center" class=3D"es-m-p20r es-m-p20l" style=3D"padding: 0; m=
+argin: 0; padding-bottom: 10px;">
+    <table role=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" border=
+=3D"0" align=3D"center"=20
+           style=3D"border-collapse: separate; border-spacing: 0; backgroun=
+d-color: #061ab1; border-radius: 30px;">
+      <tr>
+        <td align=3D"center"=20
+            style=3D"padding: 15px 50px; font-family: Arial, sans-serif; fo=
+nt-size: 16px; font-weight: bold;=20
+                   color: #ffffff; text-align: center; border-radius: 30px;=
+ mso-line-height-rule: exactly;">
+          <a href=3D"https://url8500.gls-pakete.de/ls/click?upn=3Du001.ImHu=
+U272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOgmuZ7AXpxp=
+DFI-2B9ZaxiXRaBr-2FSJ5nxDcJ5BwZjH9odDlhhzZOz7hN8xYyXbSjEWdewIOGDcyAs9LxVOTU=
+J-2BUwOlBVaI7wlNqyeR1VdTb3PiJNh6OPSonFdeFqQtEU5FCJ4ZOxX7g9tkelxDfPnLVj0iDlp=
+k3FjXA7PPLLfzs-3DUpok_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZPmTEmPaMHv4jUTBRSCMR=
+Iy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2BiyGtwR7sslWFBQHKkxn=
+7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66IqvaAQOMjHrpu3gXrEK=
+YE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmUx83JJ8NS0teZHcD5JkMjUw-2F-2FLREss=
+J8E2ytJF3I9pMuRj2HgCQ7o7rRqeSOlAKfOX77aGouxAefnNaRx4-2FhX1LGD-2F6oL6Kd6mTWF=
+pvRXVwZgAgZWsr4eJjNc8eOmvwZRytkgMOgx7RBLg4zjZbha-2F61D1MTDWGWK6wkk3xxFILja8=
+iK38Ut-2FFZYuxFRdklpo-3D" target=3D"_blank"=20
+             style=3D"display: inline-block; font-family: Arial, sans-serif=
+; font-size: 16px; font-weight: bold;=20
+                    color: #ffffff; text-decoration: none; line-height: 19p=
+x; text-align: center;">
+            Sendung live verfolgen
+          </a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class=3D"es-m-p20r es-m-p20l" align=
+=3D"left" style=3D"padding:0;Margin:0">
+                                        <table width=3D"100%" cellspacing=
+=3D"0" cellpadding=3D"0"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td valign=3D"top" align=3D=
+"center" style=3D"padding:0;Margin:0;width:600px">
+                                                    <table style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:=
+0px;background-color:#ffffff;border-radius:0 0 16px 16px"
+                                                           width=3D"100%" c=
+ellspacing=3D"0" cellpadding=3D"0"
+                                                           bgcolor=3D"#ffff=
+ff">
+                                                        <tr>
+                                                            <td class=3D"es=
+dev-adapt-off es-m-p20r es-m-p20l" align=3D"left"
+                                                                style=3D"Ma=
+rgin:0;padding-bottom:15px;padding-top:25px;padding-left:30px;padding-right=
+:30px">
+                                                                <table clas=
+s=3D"esdev-mso-table" cellspacing=3D"0"
+                                                                       cell=
+padding=3D"0"
+                                                                       styl=
+e=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bor=
+der-spacing:0px;width:540px">
+                                                                    <tr>
+                                                                        <td=
+ class=3D"esdev-mso-td" valign=3D"top"
+                                                                           =
+ style=3D"padding:0;Margin:0">
+                                                                           =
+ <table class=3D"es-left" cellspacing=3D"0"
+                                                                           =
+        cellpadding=3D"0" align=3D"left"
+                                                                           =
+        style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:=
+collapse;border-spacing:0px;float:left">
+                                                                           =
+     <tr>
+                                                                           =
+         <td align=3D"left"
+                                                                           =
+             style=3D"padding:0;Margin:0;width:42px">
+                                                                           =
+             <table width=3D"100%"
+                                                                           =
+                    cellspacing=3D"0"
+                                                                           =
+                    cellpadding=3D"0"
+                                                                           =
+                    style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px">
+                                                                           =
+                 <tr>
+                                                                           =
+                     <td align=3D"left"
+                                                                           =
+                         class=3D"es-m-p20t"
+                                                                           =
+                         style=3D"padding:0;Margin:0;padding-top:15px;font-=
+size:0px">
+                                                                           =
+                         <img src=3D"https://cdn.imgpik.com/2023/checkmark-=
+circle-outline-687aae.png"
+                                                                           =
+                              alt
+                                                                           =
+                              style=3D"display:block;border:0;outline:none;=
+text-decoration:none;-ms-interpolation-mode:bicubic"
+                                                                           =
+                              width=3D"30">
+                                                                           =
+                     </td>
+                                                                           =
+                 </tr>
+                                                                           =
+             </table>
+                                                                           =
+         </td>
+                                                                           =
+     </tr>
+                                                                           =
+ </table>
+                                                                        </t=
+d>
+                                                                        <td=
+ style=3D"padding:0;Margin:0;width:20px"></td>
+                                                                        <td=
+ class=3D"esdev-mso-td" valign=3D"top"
+                                                                           =
+ style=3D"padding:0;Margin:0">
+                                                                           =
+ <table class=3D"es-right" cellspacing=3D"0"
+                                                                           =
+        cellpadding=3D"0" align=3D"right"
+                                                                           =
+        style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:=
+collapse;border-spacing:0px;float:right">
+                                                                           =
+     <tr>
+                                                                           =
+         <td align=3D"left"
+                                                                           =
+             style=3D"padding:0;Margin:0;width:478px">
+                                                                           =
+             <table width=3D"100%"
+                                                                           =
+                    cellspacing=3D"0"
+                                                                           =
+                    cellpadding=3D"0"
+                                                                           =
+                    style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px">
+                                                                           =
+                 <tr>
+                                                                           =
+                     <td align=3D"left"
+                                                                           =
+                         style=3D"padding:0;Margin:0">
+                                                                           =
+                         <p style=3D"Margin:0;-webkit-text-size-adjust:none=
+;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, =
+'helvetica neue', helvetica, sans-serif;line-height:27px;color:#000000;font=
+-size:18px">
+                                                                           =
+                             Live-Standort
+                                                                           =
+                             des
+                                                                           =
+                             Zustellfahrzeugs
+                                                                           =
+                             und aktueller
+                                                                           =
+                             Lieferzeitraum</p>
+                                                                           =
+                     </td>
+                                                                           =
+                 </tr>
+                                                                           =
+             </table>
+                                                                           =
+         </td>
+                                                                           =
+     </tr>
+                                                                           =
+ </table>
+                                                                        </t=
+d>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class=3D"es=
+dev-adapt-off es-m-p20r es-m-p20l" align=3D"left"
+                                                                style=3D"pa=
+dding:0;Margin:0;padding-bottom:25px;padding-left:30px;padding-right:30px">
+                                                                <table clas=
+s=3D"esdev-mso-table" cellspacing=3D"0"
+                                                                       cell=
+padding=3D"0"
+                                                                       styl=
+e=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;bor=
+der-spacing:0px;width:540px">
+                                                                   =20
+
+                                                                    <tr>
+                                                                        <td=
+ class=3D"esdev-mso-td" valign=3D"top"
+                                                                           =
+ style=3D"padding:0;Margin:0">
+                                                                           =
+ <table class=3D"es-left" cellspacing=3D"0"
+                                                                           =
+        cellpadding=3D"0" align=3D"left"
+                                                                           =
+        style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:=
+collapse;border-spacing:0px;float:left">
+                                                                           =
+     <tr>
+                                                                           =
+         <td align=3D"left"
+                                                                           =
+             style=3D"padding:0;Margin:0;width:42px">
+                                                                           =
+             <table width=3D"100%"
+                                                                           =
+                    cellspacing=3D"0"
+                                                                           =
+                    cellpadding=3D"0"
+                                                                           =
+                    style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px">
+                                                                           =
+                 <tr>
+                                                                           =
+                     <td align=3D"left"
+                                                                           =
+                         class=3D"es-m-p20t"
+                                                                           =
+                         style=3D"padding:0;Margin:0;padding-top:15px;font-=
+size:0px">
+                                                                           =
+                         <img src=3D"https://cdn.imgpik.com/2023/checkmark-=
+circle-outline-687aae.png"
+                                                                           =
+                              alt
+                                                                           =
+                              style=3D"display:block;border:0;outline:none;=
+text-decoration:none;-ms-interpolation-mode:bicubic"
+                                                                           =
+                              width=3D"30">
+                                                                           =
+                     </td>
+                                                                           =
+                 </tr>
+                                                                           =
+             </table>
+                                                                           =
+         </td>
+                                                                           =
+     </tr>
+                                                                           =
+ </table>
+                                                                        </t=
+d>
+                                                                        <td=
+ style=3D"padding:0;Margin:0;width:20px"></td>
+                                                                        <td=
+ class=3D"esdev-mso-td" valign=3D"top"
+                                                                           =
+ style=3D"padding:0;Margin:0">
+                                                                           =
+ <table class=3D"es-right" cellspacing=3D"0"
+                                                                           =
+        cellpadding=3D"0" align=3D"right"
+                                                                           =
+        style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:=
+collapse;border-spacing:0px;float:right">
+                                                                           =
+     <tr>
+                                                                           =
+         <td align=3D"left"
+                                                                           =
+             style=3D"padding:0;Margin:0;width:478px">
+                                                                           =
+             <table width=3D"100%"
+                                                                           =
+                    cellspacing=3D"0"
+                                                                           =
+                    cellpadding=3D"0"
+                                                                           =
+                    style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;bord=
+er-collapse:collapse;border-spacing:0px">
+                                                                           =
+                 <tr>
+                                                                           =
+                     <td align=3D"left"
+                                                                           =
+                         style=3D"padding:0;Margin:0">
+                                                                           =
+                         <p style=3D"Margin:0;-webkit-text-size-adjust:none=
+;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, =
+'helvetica neue', helvetica, sans-serif;line-height:27px;color:#000000;font=
+-size:18px">
+                                                                           =
+                             Abstellgenehmigung
+                                                                           =
+                             oder Lieferung
+                                                                           =
+                             zu deinem
+                                                                           =
+                             Nachbarn =E2=80=93 auch
+                                                                           =
+                             kurzfristig</p>
+                                                                           =
+                     </td>
+                                                                           =
+                 </tr>
+                                                                           =
+             </table>
+                                                                           =
+         </td>
+                                                                           =
+     </tr>
+                                                                           =
+ </table>
+                                                                        </t=
+d>
+                                                                    </tr>
+                                                                   =20
+                                                                </table>
+                                                                   =20
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align=3D"left" style=3D"padding:0;M=
+argin:0;padding-left:20px;padding-right:20px">
+                                        <table cellpadding=3D"0" cellspacin=
+g=3D"0" width=3D"100%"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td align=3D"center" valign=
+=3D"top" style=3D"padding:0;Margin:0;width:560px">
+                                                    <table cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%"
+                                                           style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:=
+0px">
+                                                        <tr>
+                                                            <td align=3D"ce=
+nter" height=3D"15"
+                                                                style=3D"pa=
+dding:0;Margin:0"></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                               =20
+                                <tr>
+                                    <td class=3D"es-m-p20r es-m-p20l" align=
+=3D"left" style=3D"padding:0;Margin:0">
+                                    =20
+                                        <table width=3D"100%" cellspacing=
+=3D"0" cellpadding=3D"0"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td valign=3D"top" align=3D=
+"center" style=3D"padding:0;Margin:0;width:600px">
+                                                  =20
+                                                    <table style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:=
+0px;padding-top:25px;padding-bottom:25px;padding-left:30px;padding-right:30=
+px;background-color:#c8e7f2;border-radius:16px"
+                                                           class=3D"es-m-p2=
+0r es-m-p20l" width=3D"100%" cellspacing=3D"0"
+                                                           cellpadding=3D"0=
+" bgcolor=3D"#C8E7F2">
+                                                        <tr>
+                                                            <td align=3D"le=
+ft" class=3D"es-m-p20r es-m-p20l" style=3D"Margin:0;padding-top:25px;paddin=
+g-right:30px"><h2
+                                                                    style=
+=3D"Margin:0;line-height:26px;mso-line-height-rule:exactly;font-family:aria=
+l, 'helvetica neue', helvetica, sans-serif;font-size:22px;font-style:normal=
+;font-weight:normal;color:#061ab1">
+                                                                <strong>Bis=
+t du nicht zu Hause?</strong></h2></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align=3D"le=
+ft" class=3D"es-m-p20r es-m-p20l"
+                                                                style=3D"Ma=
+rgin:0;padding-top:10px;padding-bottom:25px;padding-right:30px">
+                                                                <p style=3D=
+"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-=
+height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-se=
+rif;line-height:23px;color:#000000;font-size:18px">
+                                                                    Kein Pr=
+oblem! Du kannst Dein Paket auch gerne
+                                                                    kurzfri=
+stig an einen Nachbarn liefern oder an einem
+                                                                    sichere=
+n Ort abstellen lassen.</p></td>
+                                                        </tr>
+                                                                           =
+<tr>
+  <td align=3D"center" class=3D"es-m-p20r es-m-p20l" style=3D"padding: 0; m=
+argin: 0; padding-bottom: 10px;">
+    <table role=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" border=
+=3D"0" align=3D"center"=20
+           style=3D"border-collapse: separate; border-spacing: 0; backgroun=
+d-color:  #ffffff; border-radius: 30px;">
+      <tr>
+        <td align=3D"center"=20
+            style=3D"padding: 15px 50px; font-family: Arial, sans-serif; fo=
+nt-size: 16px; font-weight: bold;=20
+                   color: #ffffff; text-align: center; border-radius: 30px;=
+ mso-line-height-rule: exactly;">
+          <a href=3D"https://url8500.gls-pakete.de/ls/click?upn=3Du001.ImHu=
+U272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOgmuZ7AXpxp=
+DFI-2B9ZaxiXRaBr-2FSJ5nxDcJ5BwZjH9odDlhhzZOz7hN8xYyXbSjEWdewIOGDcyAs9LxVOTU=
+J-2BUwOlBVaI7wlNqyeR1VdTb3PiJNh6OPSonFdeFqQtEU5FCJ4ZOxX7g9tkelxDfPnKZpiLTmn=
+xybABhBL7PfNaptDIBYHhyVaI8s55xvzQkYC6DK_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZPm=
+TEmPaMHv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2Bi=
+yGtwR7sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66I=
+qvaAQOMjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmXQFOUuUQpvI3iiJZ=
+TKPM-2BvLrynpugQq7hqqLFtUS-2BxnNLJFdGbeB2h5HQBDjet98av3DQhzi1x0NR-2B-2FxE1K=
+JZupMxWrnpCBC2a1jbnm-2Fuq4kx5xgQ-2BxAUdIDw4Cf0efYwb2Nm-2B2CNT4u6s3rfldrq4sO=
+dVLdctdXSEZhXdgSBe3oStmRUgPKuodv7AUNH1148-3D" target=3D"_blank"=20
+             style=3D"display: inline-block; font-family: Arial, sans-serif=
+; font-size: 16px; font-weight: bold;=20
+                    color: #061ab1; text-decoration: none; line-height: 19p=
+x; text-align: center;">
+             Jetzt Zustelloption w=C3=A4hlen
+          </a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+                                                    </table>
+                                                  =20
+                                                </td>
+                                            </tr>
+                                        </table>
+                                       =20
+                                        =20
+                                        =20
+                                    </td>
+                                </tr>
+                               =20
+                                                   =20
+                                        =20
+                                              <tr>
+                                    <td align=3D"left" style=3D"padding:0;M=
+argin:0;padding-left:20px;padding-right:20px">
+                                        <table cellpadding=3D"0" cellspacin=
+g=3D"0" width=3D"100%"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td align=3D"center" valign=
+=3D"top" style=3D"padding:0;Margin:0;width:560px">
+                                                    <table cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%"
+                                                           style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:=
+0px">
+                                                        <tr>
+                                                            <td align=3D"ce=
+nter" height=3D"15"
+                                                                style=3D"pa=
+dding:0;Margin:0"></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr> =20
+
+      =20
+=20
+                                <tr>
+    <td class=3D"es-m-p20r es-m-p20l" align=3D"left" style=3D"padding:0;Mar=
+gin:0">
+        <table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0" role=3D"n=
+one"
+               style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-co=
+llapse:collapse;border-spacing:0px">
+            <tr>
+                <td valign=3D"top" align=3D"center" style=3D"padding:0;Marg=
+in:0;width:600px">
+                    <table style=3D"mso-table-lspace:0pt;mso-table-rspace:0=
+pt;border-collapse:separate;border-spacing:0px;background-color:#ffffff;bor=
+der-radius:16px 16px 0 0"
+                           width=3D"100%" cellspacing=3D"0" cellpadding=3D"=
+0"
+                           bgcolor=3D"#ffffff" role=3D"presentation">
+                        <tr>
+                            <td align=3D"left"
+                                style=3D"padding:0;Margin:0;padding-top:30p=
+x;padding-left:30px;padding-right:30px">
+                                <h2 style=3D"Margin:0;line-height:26px;mso-=
+line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sa=
+ns-serif;font-size:22px;font-style:normal;font-weight:normal;color:#061ab1"=
+>
+                                    <strong></strong><strong>Deine Paketinf=
+os</strong><strong></strong><br
+                                        type=3D"_moz"></h2></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td class=3D"es-m-p20r es-m-p20l" align=3D"left" style=3D"padding:0;Mar=
+gin:0">
+        <table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0" role=3D"n=
+one"
+               style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-co=
+llapse:collapse;border-spacing:0px">
+            <tr>
+                <td valign=3D"top" align=3D"center" style=3D"padding:0;Marg=
+in:0;width:600px">
+                    <table style=3D"mso-table-lspace:0pt;mso-table-rspace:0=
+pt;border-collapse:separate;border-spacing:0px;background-color:#ffffff"
+                           width=3D"100%" cellspacing=3D"0" cellpadding=3D"=
+0"
+                           bgcolor=3D"#ffffff" role=3D"presentation">
+                        <tr>
+                            <td class=3D"es-m-p20r es-m-p20l" align=3D"left=
+"
+                                style=3D"padding:0;Margin:0">
+                                <table width=3D"100%" cellspacing=3D"0" cel=
+lpadding=3D"0"
+                                       role=3D"presentation"
+                                       style=3D"mso-table-lspace:0pt;mso-ta=
+ble-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                    <tr>
+                                        <td valign=3D"top" align=3D"center"
+                                            style=3D"padding:0;Margin:0;wid=
+th:600px">
+                                            <table style=3D"mso-table-lspac=
+e:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;back=
+ground-color:#ffffff"
+                                                   width=3D"100%" cellspaci=
+ng=3D"0"
+                                                   cellpadding=3D"0" bgcolo=
+r=3D"#ffffff"
+                                                   role=3D"presentation">
+                                                <tr>
+                                                    <td class=3D"esdev-adap=
+t-off es-m-p10r es-m-p10l"
+                                                        align=3D"left" bgco=
+lor=3D"#ffffff"
+                                                        style=3D"Margin:0;p=
+adding-top:20px;padding-bottom:20px;padding-left:30px;padding-right:30px;ba=
+ckground-color:#ffffff">
+                                                        <table class=3D"esd=
+ev-mso-table"
+                                                               cellspacing=
+=3D"0"
+                                                               cellpadding=
+=3D"0"
+                                                               role=3D"pres=
+entation"
+                                                               style=3D"mso=
+-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spac=
+ing:0px;width:540px">
+                                                            <tr>
+                                                                <td class=
+=3D"esdev-mso-td"
+                                                                    valign=
+=3D"top"
+                                                                    style=
+=3D"padding:0;Margin:0">
+                                                                    <table =
+class=3D"es-left"
+                                                                           =
+cellspacing=3D"0"
+                                                                           =
+cellpadding=3D"0"
+                                                                           =
+align=3D"left"
+                                                                           =
+role=3D"presentation"
+                                                                           =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px;float:left">
+                                                                        <tr=
+>
+                                                                           =
+ <td align=3D"left"
+                                                                           =
+     style=3D"padding:0;Margin:0;width:30px">
+                                                                           =
+     <table width=3D"100%"
+                                                                           =
+            cellspacing=3D"0"
+                                                                           =
+            cellpadding=3D"0"
+                                                                           =
+            role=3D"presentation"
+                                                                           =
+            style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-colla=
+pse:collapse;border-spacing:0px">
+                                                                           =
+         <tr>
+                                                                           =
+             <td align=3D"center"
+                                                                           =
+                 class=3D"es-m-txt-l"
+                                                                           =
+                 style=3D"padding:0;Margin:0;padding-top:10px;font-size:0px=
+">
+                                                                           =
+                 <img src=3D"https://cdn.imgpik.com/2023/orange-dot-6902fc.=
+png"
+                                                                           =
+                      alt
+                                                                           =
+                      style=3D"display:block;border:0;outline:none;text-dec=
+oration:none;-ms-interpolation-mode:bicubic"
+                                                                           =
+                      width=3D"10">
+                                                                           =
+             </td>
+                                                                           =
+         </tr>
+                                                                           =
+     </table>
+                                                                           =
+ </td>
+                                                                        </t=
+r>
+                                                                    </table=
+>
+                                                                </td>
+                                                                <td style=
+=3D"padding:0;Margin:0;width:10px"></td>
+                                                                <td class=
+=3D"esdev-mso-td"
+                                                                    valign=
+=3D"top"
+                                                                    style=
+=3D"padding:0;Margin:0">
+                                                                    <table =
+class=3D"es-right"
+                                                                           =
+cellspacing=3D"0"
+                                                                           =
+cellpadding=3D"0"
+                                                                           =
+align=3D"right"
+                                                                           =
+role=3D"presentation"
+                                                                           =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px;float:right">
+                                                                        <tr=
+>
+                                                                           =
+ <td align=3D"left"
+                                                                           =
+     style=3D"padding:0;Margin:0;width:500px">
+                                                                           =
+     <table width=3D"100%"
+                                                                           =
+            cellspacing=3D"0"
+                                                                           =
+            cellpadding=3D"0"
+                                                                           =
+            role=3D"presentation"
+                                                                           =
+            style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-colla=
+pse:collapse;border-spacing:0px">
+                                                                           =
+         <tr>
+                                                                           =
+             <td align=3D"left"
+                                                                           =
+                 style=3D"padding:0;Margin:0">
+                                                                           =
+                 <p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-tex=
+t-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helveti=
+ca neue', helvetica, sans-serif;line-height:27px;color:#000000;font-size:18=
+px">
+                                                                           =
+                     <strong>Sendungsnummer</strong><br><a
+                                                                           =
+                         target=3D"_blank"
+                                                                           =
+                         href=3D"https://url8500.gls-pakete.de/ls/click?upn=
+=3Du001.ImHuU272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVw=
+qOgmuZ7AXpxpDFI-2B9ZaxiXRaBr-2FSJ5nxDcJ5BwZjH9odDlhhzZOz7hN8xYyXbSjEWdewIOG=
+DcyAs9LxVOTUJ-2BUwOlBVaI7wlNqyeR1VdTb3PiJNh6OPSonFdeFqQtEU5FCJ4ZOxX7g9tkelx=
+DfPnLVj0iDlpk3FjXA7PPLLfzs-3DGWa8_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZPmTEmPaM=
+Hv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2BiyGtwR7=
+sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66IqvaAQO=
+MjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmUQ-2F61jmbYtYwTRt-2F7A=
+BJ8wzUqD4H3IvTp6EaYu460Js7TkriyIrljHdiSDn7KwbFZXmMnxObS-2BbiLXAgpgSYFQ-2FIx=
+G6b3Q1BE1BWTq7ZqBfnHXEEEj8sQNlJjceOTYkEoIIdaTO6qKKgMfg6aw8ocWb3ax3pdQfSARbo=
+PYQ6IvA7P0XnWNsd1SDFHZHMoUxRY-3D"
+                                                                           =
+                         style=3D"-webkit-text-size-adjust:none;-ms-text-si=
+ze-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color=
+:#061ab1;font-size:18px">12111098592</a>
+                                                                           =
+                          <!-- Only show if references exist -->
+   =20
+      <span>
+        (Referenz: <a href=3D"https://url8500.gls-pakete.de/ls/click?upn=3D=
+u001.ImHuU272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOg=
+muZ7AXpxpDFI-2B9ZaxiXRaBr-2FSJ5nxDcJ5BwZjH9odDlhhzZOz7hN8xYyXbSjEWdewIOGDcy=
+As9LxVOTUJ-2BUwOlBVaI7wlNqyeR1VdTb3PiJNh6OPSonFdeFqQtEU5FCJ4ZOxX7g9tkelxDfP=
+nLVj0iDlpk3FjXA7PPLLfzs-3D7v-f_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZPmTEmPaMHv4=
+jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2BiyGtwR7ssl=
+WFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66IqvaAQOMjH=
+rpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmUn8n3pUuTgZzsrieue8Ur4jpC=
+q7hE9fsuovD7lx6Zlucu5GVje-2F47hLd-2Bru1oJLAQLqv54SMGK3TG8UGGLdy9jJm6xIy5Me1=
+fRgGDf-2BUyvcBD26Au-2F8CSdqRREsKBBWXIY6nHAexRIWSh635TWmcIClYurleKBWy-2FhPyB=
+S3dBMKaduOg1xKVgRwt-2BD9xQzkcY-3D" style=3D"color:#061ab1;text-decoration:u=
+nderline">33512352232900100030-30101502670)</a>
+      </span>
+                                                                           =
+                 </p>
+                                                                           =
+             </td>
+                                                                           =
+         </tr>
+                                                                           =
+     </table>
+                                                                           =
+ </td>
+                                                                        </t=
+r>
+                                                                    </table=
+>
+                                                                </td>
+                                                                <td style=
+=3D"padding:0;Margin:0;width:10px"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                               =20
+                                                <tr>
+                                                    <td class=3D"esdev-adap=
+t-off es-m-p10r es-m-p10l"
+                                                        align=3D"left" bgco=
+lor=3D"#ffffff"
+                                                        style=3D"padding:0;=
+Margin:0;padding-bottom:20px;padding-left:30px;padding-right:30px;backgroun=
+d-color:#ffffff">
+                                                        <table class=3D"esd=
+ev-mso-table"
+                                                               cellspacing=
+=3D"0"
+                                                               cellpadding=
+=3D"0"
+                                                               role=3D"pres=
+entation"
+                                                               style=3D"mso=
+-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spac=
+ing:0px;width:540px">
+                                                            <tr>
+                                                                <td class=
+=3D"esdev-mso-td"
+                                                                    valign=
+=3D"top"
+                                                                    style=
+=3D"padding:0;Margin:0">
+                                                                    <table =
+class=3D"es-left"
+                                                                           =
+cellspacing=3D"0"
+                                                                           =
+cellpadding=3D"0"
+                                                                           =
+align=3D"left"
+                                                                           =
+role=3D"presentation"
+                                                                           =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px;float:left">
+                                                                        <tr=
+>
+                                                                           =
+ <td align=3D"left"
+                                                                           =
+     style=3D"padding:0;Margin:0;width:30px">
+                                                                           =
+     <table width=3D"100%"
+                                                                           =
+            cellspacing=3D"0"
+                                                                           =
+            cellpadding=3D"0"
+                                                                           =
+            role=3D"presentation"
+                                                                           =
+            style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-colla=
+pse:collapse;border-spacing:0px">
+                                                                           =
+         <tr>
+                                                                           =
+             <td align=3D"center"
+                                                                           =
+                 class=3D"es-m-txt-l"
+                                                                           =
+                 style=3D"padding:0;Margin:0;padding-top:10px;font-size:0px=
+">
+                                                                           =
+                 <img src=3D"https://cdn.imgpik.com/2023/blue-dot-688a63.pn=
+g"
+                                                                           =
+                      alt
+                                                                           =
+                      style=3D"display:block;border:0;outline:none;text-dec=
+oration:none;-ms-interpolation-mode:bicubic"
+                                                                           =
+                      width=3D"10">
+                                                                           =
+             </td>
+                                                                           =
+         </tr>
+                                                                           =
+     </table>
+                                                                           =
+ </td>
+                                                                        </t=
+r>
+                                                                    </table=
+>
+                                                                </td>
+                                                                <td style=
+=3D"padding:0;Margin:0;width:10px"></td>
+                                                                <td class=
+=3D"esdev-mso-td"
+                                                                    valign=
+=3D"top"
+                                                                    style=
+=3D"padding:0;Margin:0">
+                                                                    <table =
+class=3D"es-right"
+                                                                           =
+cellspacing=3D"0"
+                                                                           =
+cellpadding=3D"0"
+                                                                           =
+align=3D"right"
+                                                                           =
+role=3D"presentation"
+                                                                           =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px;float:right">
+                                                                        <tr=
+>
+                                                                           =
+ <td align=3D"left"
+                                                                           =
+     style=3D"padding:0;Margin:0;width:500px">
+                                                                           =
+     <table width=3D"100%"
+                                                                           =
+            cellspacing=3D"0"
+                                                                           =
+            cellpadding=3D"0"
+                                                                           =
+            role=3D"presentation"
+                                                                           =
+            style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-colla=
+pse:collapse;border-spacing:0px">
+                                                                           =
+         <tr>
+                                                                           =
+             <td align=3D"left"
+                                                                           =
+                 style=3D"padding:0;Margin:0">
+                                                                           =
+                 <p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-tex=
+t-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helveti=
+ca neue', helvetica, sans-serif;line-height:27px;color:#000000;font-size:18=
+px">
+                                                                           =
+                     <strong>Versender</strong><br>MD-Plewiska<br>Arvato Di=
+amentowa 1
+                                                                           =
+                     ,<br>62-052
+                                                                           =
+                     Komorniki
+                                                                           =
+                 </p>
+                                                                           =
+             </td>
+                                                                           =
+         </tr>
+                                                                           =
+     </table>
+                                                                           =
+ </td>
+                                                                        </t=
+r>
+                                                                    </table=
+>
+                                                                </td>
+                                                                <td style=
+=3D"padding:0;Margin:0;width:10px"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class=3D"esdev-adap=
+t-off es-m-p10r es-m-p10l"
+                                                        align=3D"left" bgco=
+lor=3D"#ffffff"
+                                                        style=3D"padding:0;=
+Margin:0;padding-bottom:20px;padding-left:30px;padding-right:30px;backgroun=
+d-color:#ffffff">
+                                                        <table class=3D"esd=
+ev-mso-table"
+                                                               cellspacing=
+=3D"0"
+                                                               cellpadding=
+=3D"0"
+                                                               role=3D"pres=
+entation"
+                                                               style=3D"mso=
+-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spac=
+ing:0px;width:540px">
+                                                            <tr>
+                                                                <td class=
+=3D"esdev-mso-td"
+                                                                    valign=
+=3D"top"
+                                                                    style=
+=3D"padding:0;Margin:0">
+                                                                    <table =
+class=3D"es-left"
+                                                                           =
+cellspacing=3D"0"
+                                                                           =
+cellpadding=3D"0"
+                                                                           =
+align=3D"left"
+                                                                           =
+role=3D"presentation"
+                                                                           =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px;float:left">
+                                                                        <tr=
+>
+                                                                           =
+ <td align=3D"left"
+                                                                           =
+     style=3D"padding:0;Margin:0;width:30px">
+                                                                           =
+     <table width=3D"100%"
+                                                                           =
+            cellspacing=3D"0"
+                                                                           =
+            cellpadding=3D"0"
+                                                                           =
+            role=3D"presentation"
+                                                                           =
+            style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-colla=
+pse:collapse;border-spacing:0px">
+                                                                           =
+         <tr>
+                                                                           =
+             <td align=3D"center"
+                                                                           =
+                 class=3D"es-m-txt-l"
+                                                                           =
+                 style=3D"padding:0;Margin:0;padding-top:10px;font-size:0px=
+">
+                                                                           =
+                 <img src=3D"https://cdn.imgpik.com/2023/yellow-dot-68945c.=
+png"
+                                                                           =
+                      alt
+                                                                           =
+                      style=3D"display:block;border:0;outline:none;text-dec=
+oration:none;-ms-interpolation-mode:bicubic"
+                                                                           =
+                      width=3D"10">
+                                                                           =
+             </td>
+                                                                           =
+         </tr>
+                                                                           =
+     </table>
+                                                                           =
+ </td>
+                                                                        </t=
+r>
+                                                                    </table=
+>
+                                                                </td>
+                                                                <td style=
+=3D"padding:0;Margin:0;width:10px"></td>
+                                                                <td class=
+=3D"esdev-mso-td"
+                                                                    valign=
+=3D"top"
+                                                                    style=
+=3D"padding:0;Margin:0">
+                                                                    <table =
+class=3D"es-right"
+                                                                           =
+cellspacing=3D"0"
+                                                                           =
+cellpadding=3D"0"
+                                                                           =
+align=3D"right"
+                                                                           =
+role=3D"presentation"
+                                                                           =
+style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse=
+;border-spacing:0px;float:right">
+                                                                        <tr=
+>
+                                                                           =
+ <td align=3D"left"
+                                                                           =
+     style=3D"padding:0;Margin:0;width:500px">
+                                                                           =
+     <table width=3D"100%"
+                                                                           =
+            cellspacing=3D"0"
+                                                                           =
+            cellpadding=3D"0"
+                                                                           =
+            role=3D"presentation"
+                                                                           =
+            style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-colla=
+pse:collapse;border-spacing:0px">
+                                                                           =
+         <tr>
+                                                                           =
+             <td align=3D"left"
+                                                                           =
+                 style=3D"padding:0;Margin:0">
+                                                                           =
+                 <p style=3D"Margin:0;-webkit-text-size-adjust:none;-ms-tex=
+t-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helveti=
+ca neue', helvetica, sans-serif;line-height:27px;color:#000000;font-size:18=
+px">
+                                                                           =
+                     <strong>Empf=C3=A4nger</strong><br>Artem Dede<br>Buchs=
+chlager Allee 27 -
+                                                                           =
+                     ,<br>
+                                                                           =
+                     63303
+                                                                           =
+                     Dreieich
+                                                                           =
+                 </p>
+                                                                           =
+             </td>
+                                                                           =
+         </tr>
+                                                                           =
+     </table>
+                                                                           =
+ </td>
+                                                                        </t=
+r>
+                                                                    </table=
+>
+                                                                </td>
+                                                                <td style=
+=3D"padding:0;Margin:0;width:10px"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+<tr>
+    <td class=3D"es-m-p20r es-m-p20l" align=3D"left" style=3D"padding:0;Mar=
+gin:0">
+        <table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0" role=3D"n=
+one"
+               style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;border-co=
+llapse:collapse;border-spacing:0px">
+            <tr>
+                <td valign=3D"top" align=3D"center" style=3D"padding:0;Marg=
+in:0;width:600px">
+                    <table style=3D"mso-table-lspace:0pt;mso-table-rspace:0=
+pt;border-collapse:separate;border-spacing:0px;background-color:#ffffff;bor=
+der-radius:0 0 16px 16px"
+                           width=3D"100%" cellspacing=3D"0" cellpadding=3D"=
+0"
+                           bgcolor=3D"#ffffff" role=3D"presentation">
+                        <tr>=20
+                            <td valign=3D"top" align=3D"center" style=3D"pa=
+dding:0;Margin:0;width:600px">
+                                <table style=3D"mso-table-lspace:0pt;mso-ta=
+ble-rspace:0pt;border-collapse:separate;border-spacing:0px;background-color=
+:#ffffff;border-radius:0 0 16px 16px" width=3D"100%" cellspacing=3D"0" cell=
+padding=3D"0" bgcolor=3D"#ffffff" role=3D"presentation">
+                                    <tr>
+                                        <td align=3D"left" style=3D"padding=
+:0;Margin:0;padding-top:10px;padding-bottom:20px;padding-left:35px">
+                                            <p style=3D"Margin:0;-webkit-te=
+xt-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;=
+font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:27px=
+;color:#000000;font-size:18px">
+                                                <strong><a target=3D"_blank=
+" href=3D"https://url8500.gls-pakete.de/ls/click?upn=3Du001.ImHuU272WT1Ugcv=
+mGPRu3K0NhKfr0YSnjvkkKShIojQ-2FHglL4c2baYuzMCdxyrhVwqOgmuZ7AXpxpDFI-2B9Zaxi=
+XRaBr-2FSJ5nxDcJ5BwZjH9odDlhhzZOz7hN8xYyXbSjEWdewIOGDcyAs9LxVOTUJ-2BUwOlBVa=
+I7wlNqyeR1VdTb3PiJNh6OPSonFdeFqQtEU5FCJ4ZOxX7g9tkelxDfPnLVj0iDlpk3FjXA7PPLL=
+fzs-3DVJqp_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yogZPmTEmPaMHv4jUTBRSCMRIy4ObLWuDzl=
+Xixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh-2BiyGtwR7sslWFBQHKkxn7fAZP6wkixq=
+ADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5u66IqvaAQOMjHrpu3gXrEKYE-2Bgh7keg=
+JiXsgzecBkM11p4MwjkoGSCEzI1CYmXgcv1EZe-2BKC0zN-2BwxdqnUjnRV2YfyTzTWiih5AVP9=
+VkR-2FswqTRAcD1x6Dv7NSblRQm9-2BZnXTqAbQyeDL-2Bb-2FhixPWmX0gUn0Fw9Ynld-2BAGr=
+Z7sVoUJjBaoJnA7KKDH0RSMi4vjHN65jju2m1SjSVpqUn6I97j72ar0tX1C0W3wbRulcTFekx-2=
+FvMymYNSGeXXC4-3D" style=3D"-webkit-text-size-adjust:none;-ms-text-size-adj=
+ust:none;mso-line-height-rule:exactly;text-decoration:none;color:#061ab1;fo=
+nt-size:18px">Zur Sendungsverfolgung<img src=3D"https://cdn.imgpik.com/2023=
+/right-arrow-6919d8.png" alt=3D"icon" width=3D"17" align=3D"absmiddle" styl=
+e=3D"display:inline;border:0;outline:none;text-decoration:none;-ms-interpol=
+ation-mode:bicubic;margin-left:10px"></a></strong>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+                                <tr>
+                                    <td align=3D"left" style=3D"padding:0;M=
+argin:0;padding-left:20px;padding-right:20px">
+                                        <table cellpadding=3D"0" cellspacin=
+g=3D"0" width=3D"100%" role=3D"none"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td align=3D"center" valign=
+=3D"top" style=3D"padding:0;Margin:0;width:560px">
+                                                    <table cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%"
+                                                           role=3D"presenta=
+tion"
+                                                           style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:=
+0px">
+                                                        <tr>
+                                                            <td align=3D"ce=
+nter" height=3D"15"
+                                                                style=3D"pa=
+dding:0;Margin:0"></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                               =20
+                                <tr>
+                                <tr>
+                                    <td class=3D"es-m-p20r es-m-p20l" align=
+=3D"left" style=3D"padding:0;Margin:0">
+                                        <table width=3D"100%" cellspacing=
+=3D"0" cellpadding=3D"0"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td valign=3D"top" align=3D=
+"center" style=3D"padding:0;Margin:0;width:600px">
+                                                    <table style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:=
+0px;background-color:#c0e2ad;border-radius:16px"
+                                                           width=3D"100%" c=
+ellspacing=3D"0" cellpadding=3D"0"
+                                                           bgcolor=3D"#C0E2=
+AD">
+                                                        <tr>
+                                                            <td align=3D"le=
+ft" class=3D"es-m-p20r es-m-p20l"
+                                                                style=3D"pa=
+dding:0;Margin:0;padding-top:25px;padding-left:30px;padding-right:30px">
+                                                                <h2 style=
+=3D"Margin:0;line-height:26px;mso-line-height-rule:exactly;font-family:aria=
+l, 'helvetica neue', helvetica, sans-serif;font-size:22px;font-style:normal=
+;font-weight:normal;color:#061ab1">
+                                                                    <strong=
+>Abstellerlaubnis erteilen, damit deine
+                                                                        Pak=
+ete zuverl=C3=A4ssig ankommen!</strong></h2></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align=3D"le=
+ft" class=3D"es-m-p20r es-m-p20l"
+                                                                style=3D"Ma=
+rgin:0;padding-top:10px;padding-bottom:25px;padding-left:30px;padding-right=
+:30px">
+                                                                <p style=3D=
+"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-=
+height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-se=
+rif;line-height:23px;color:#000000;font-size:18px">
+                                                                    Mit ein=
+er dauerhaften GLS Abstellerlaubnis erh=C3=A4ltst
+                                                                    du dein=
+e Sendungen zuverl=C3=A4ssig an deinem Wunschort,
+                                                                    beispie=
+lsweise der Terrasse oder Garage. Deine
+                                                                    Pakete =
+kommen p=C3=BCnktlich an und hilfst mit,
+                                                                    zus=C3=
+=A4tzliche Fahrten zu vermeiden.</p></td>
+                                                        </tr>
+                                                        <tr>
+  <td align=3D"center" class=3D"es-m-p20r es-m-p20l" style=3D"padding: 10px=
+; margin: 0; padding-bottom: 30px;">
+    <table role=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" border=
+=3D"0" align=3D"center"=20
+           style=3D"border-collapse: separate; border-spacing: 0; backgroun=
+d-color:#061ab1 ; border-radius: 30px;">
+      <tr>
+        <td align=3D"center"=20
+            style=3D"padding: 15px 50px; font-family: Arial, sans-serif; fo=
+nt-size: 18px; font-weight: bold;=20
+                   color: #061ab1; text-align: center; border-radius: 30px;=
+ mso-line-height-rule: exactly;">
+          <a href=3D"https://url8500.gls-pakete.de/ls/click?upn=3Du001.ImHu=
+U272WT1UgcvmGPRu3K0NhKfr0YSnjvkkKShIojQnyXLc4CiPf23r6NEg-2B7YR3g-2FwII-2Bt3=
+OTWqa2EX0FJhkpJW-2Fi2zZ3ByCu1EwYnkIw-3D_9Ke_mpQyLT4TVgt289Lqu-2Bxm5bkAge3yo=
+gZPmTEmPaMHv4jUTBRSCMRIy4ObLWuDzlXixqg6iDUfkE6Soz3MjraA1p0ipmg2ZOmnAGO-2Bxh=
+-2BiyGtwR7sslWFBQHKkxn7fAZP6wkixqADvk2zbUh3JOPBpzu7NFp3d-2BXHC9c0spgQv7JBq5=
+u66IqvaAQOMjHrpu3gXrEKYE-2Bgh7kegJiXsgzecBkM11p4MwjkoGSCEzI1CYmUdf325D7T4tJ=
+-2FU8qsx9eNnHFc-2F34ncc1JEP7qQ1XUvUGnU177sxTOlz8zVRab8KhCrxIrH00Tcjj9afsPkU=
+LUCeQZ4dcs5A68XTy3aV432ajLjvE0cQPGAribyyM3V9CaDjTtg59UH7aI-2B-2BT5XNZedZcCp=
+b7qMDQOgjac0ufmkCBbVfU-2FCr9WqMKCxrgj3iVA-3D" target=3D"_blank"=20
+             style=3D"display: inline-block; font-family: Arial, sans-serif=
+; font-size: 18px; font-weight: bold;=20
+                    color: #ffffff; text-decoration: none; line-height: 22p=
+x; text-align: center;">
+              Abstellerlaubnis erteilen
+          </a>
+        </td>
+      </tr>
+                =20
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+               =20
+                <table cellpadding=3D"0" cellspacing=3D"0" class=3D"es-foot=
+er" align=3D"center"
+                       style=3D"mso-table-lspace:0pt;mso-table-rspace:0pt;b=
+order-collapse:collapse;border-spacing:0px;table-layout:fixed !important;wi=
+dth:100%;background-color:transparent;background-repeat:repeat;background-p=
+osition:center top">
+                    <tr>
+                        <td align=3D"center" style=3D"padding:0;Margin:0">
+                            <table bgcolor=3D"#f5f5f5" class=3D"es-footer-b=
+ody" align=3D"center" cellpadding=3D"0"
+                                   cellspacing=3D"0"
+                                   style=3D"mso-table-lspace:0pt;mso-table-=
+rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f5=
+f5f5;width:600px">
+                                <tr>
+                                    <td align=3D"left"
+                                        style=3D"Margin:0;padding-top:5px;p=
+adding-bottom:20px;padding-left:40px;padding-right:40px">
+                                        <table width=3D"100%" cellspacing=
+=3D"0" cellpadding=3D"0"
+                                               style=3D"mso-table-lspace:0p=
+t;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td valign=3D"top" align=3D=
+"center" style=3D"padding:0;Margin:0;width:520px">
+                                                    <table width=3D"100%" c=
+ellspacing=3D"0" cellpadding=3D"0"
+                                                           style=3D"mso-tab=
+le-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:=
+0px">
+                                                        <tr>
+                                                            <td height=3D"1=
+8" align=3D"center"
+                                                                style=3D"pa=
+dding:0;Margin:0"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align=3D"le=
+ft" style=3D"padding:0;Margin:0"><p
+                                                                    style=
+=3D"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-li=
+ne-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans=
+-serif;line-height:18px;color:#868686;font-size:12px">
+                                                                <strong>Die=
+s ist eine automatisch generierte Nachricht.
+                                                                    Bitte a=
+ntworte nicht auf diese
+                                                                    E-Mail.=
+</strong><br><br>General Logistics Systems
+                                                                Germany Gmb=
+H &amp; Co. OHG<br>Sitz: Neuenstein
+                                                                Registerger=
+icht: Amtsgericht Bad Hersfeld HRA 863
+                                                                Pers=C3=B6n=
+lich haftende Gesellschafter: - GLS Beteiligungs
+                                                                GmbH, Sitz:=
+ Neuenstein, Registergericht: Amtsgericht Bad
+                                                                Hersfeld HR=
+B 787, Gesch=C3=A4ftsf=C3=BChrer: Dr. Achim D=C3=BCnnwald, Moritz Eichh=C3=
+=B6fer. - General Logistics
+                                                                Systems B.V=
+., Sitz: Amsterdam/ Niederlande,
+                                                                Registerger=
+icht: Kamer van Koophandel Amsterdam
+                                                                Dossiernr. =
+34125684, Gesch=C3=A4ftsf=C3=BChrer: Dr. Karl Pfaff.
+                                                            </p></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<img src=3D"https://url8500.gls-pakete.de/wf/open?upn=3Du001.meKngwSSJjT-2B=
+7tttMRci2ydcgle1VQ6VlunCz6CtMSI0Hht8EB6xDfCfk8obYQr9B-2F6xR-2FVJnibqicwAlW5=
+zl77ZVYh8pUCkR3BiHUbNIxiD-2BVPQlD2oMndoBJgiNm-2FFtGNeQ2D-2BZFX-2FBteLVe9NyZ=
+qP0uDjRml64fH5XfuO5Kg5vD61kdgxEgWZSuhN1SCyJaLmuEo58L-2FZJy3uAfaJ5L2I3pBUhxw=
+LK-2FVPXKKeVh66orKL7GwpJeXr8EZA7jxX9y3YWM-2BVJUCA3ZCXVBweV0EpkYORzpuzm4Gofm=
+UzB70VuY8g956R8-2B65q2juQFhvZm8fqqUUG3bI3bWOp92ouFv0N3V4vTXdEXmqBiWFZtn07RR=
+B6XfdoSikMT5nIGw6MaP8PwKnRJjsoyKbYYqIwXA3glpuRW2jvHHpI3Cx3YdZa2kRNFoNhp-2FP=
+YIU1Z5Jg" alt=3D"" width=3D"1" height=3D"1" border=3D"0" style=3D"height:1p=
+x !important;width:1px !important;border-width:0 !important;margin-top:0 !i=
+mportant;margin-bottom:0 !important;margin-right:0 !important;margin-left:0=
+ !important;padding-top:0 !important;padding-bottom:0 !important;padding-ri=
+ght:0 !important;padding-left:0 !important;"/></body>
+</html>
+
+--e5dc3f75ec419937b3f36945b39ca664020a050eeb056acb0ccf01b9b4fd--

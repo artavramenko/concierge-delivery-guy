@@ -1,0 +1,1017 @@
+Delivered-To: artyom.avramenko@gmail.com
+Received: by 2002:a05:7022:2205:b0:11a:4ffb:984e with SMTP id bu5csp5333717dlb;
+        Sun, 28 Dec 2025 09:19:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IElhd3EbqVxtWwMMiBWzyhlxRTDNKE0CHIcmskcNOKbfkJwrkE1+T3GrUsScYGMzwyz13gT
+X-Received: by 2002:a05:690c:893:b0:786:7aaa:a071 with SMTP id 00721157ae682-78fb3ed49e6mr258912147b3.11.1766942393232;
+        Sun, 28 Dec 2025 09:19:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1766942393; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hmmdbLQqV/S/XT4ZF4QO/k+mp15smVpHoR6eCgHNCvp/EX22R7mh6384IAi8fFQdPK
+         O9jJLIGcOXL7S4nqQ9Bf94uqnthtqY+4fUel8Lqezl0QLb2/eqLT5+Z4NcaIHVFrWxJH
+         cRPQPLmpyoC8NS2gCPTR+dALCxvnsS4CnBbU8YWKkidE5QwPKuQ85RF3SLGBvF1sxEbM
+         /IbwwZFTAUwIh+M43/qoa4mF9imkunLavtsBuP3FDHL4xTFgM3bOumm+bkxa2IMNXZz1
+         R2plS7uRO3PIxRGoO2c2/dLz4u+LfoI/6HFeWaPS1CYr6Rbe1US6JEp2ETcwWvpRKQkR
+         6wSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=from:subject:mime-version:date:message-id:to:dkim-signature;
+        bh=B/8UVQ/HOVpm9jEsXV26apcexjViBO0BcfHtYQIhDyc=;
+        fh=cn1GiMI3JaU8ksh7qZWqfn4YlX+vmbhniBH/Q3A2AY8=;
+        b=d8PTALWZj888BeQzy04IL48fcfwtW/VgLftC627PCDVxyJuU+DrKAJkaGwZa8lCWKE
+         JPJgDmSDUj0QA/wYIf4nXNT5r+WlouQdAiE9sxI9UhY1ilnoZymJN821yjN4acSMtETP
+         dBzHm6nFcAOL5GWKC7iTGVwUCt4SGpZnneMkDG5hPjxpM/ZhX7aDWJOuBRwANJevTeuS
+         FVzaeyG4G2RQdCMj3Q3eg47JWS8lqIE1WZSSLln/xQHr38hI/NchahyKi75qP+Q+Lg2c
+         uqs27fxrJWvyC+tBYmN2wFEa2cMqFUqQUiAsMCG0OjpT4ERPxDC9Le1wG+vby0ND1L4i
+         Rjzg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@klarna.de header.s=scph0823 header.b="YpAD/EC6";
+       spf=pass (google.com: domain of msprvs1=20457lwe94nr-=bounces-21947-2@bounce.klarna.de designates 199.15.226.152 as permitted sender) smtp.mailfrom="msprvs1=20457LWe94Nr-=bounces-21947-2@bounce.klarna.de";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=klarna.de
+Return-Path: <msprvs1=20457LWe94Nr-=bounces-21947-2@bounce.klarna.de>
+Received: from mta-15-226-152.klarna.com.sparkpostmail.com (mta-15-226-152.klarna.com.sparkpostmail.com. [199.15.226.152])
+        by mx.google.com with ESMTPS id 00721157ae682-78fb45e6a09si462908757b3.207.2025.12.28.09.19.52
+        for <artyom.avramenko@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Dec 2025 09:19:53 -0800 (PST)
+Received-SPF: pass (google.com: domain of msprvs1=20457lwe94nr-=bounces-21947-2@bounce.klarna.de designates 199.15.226.152 as permitted sender) client-ip=199.15.226.152;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@klarna.de header.s=scph0823 header.b="YpAD/EC6";
+       spf=pass (google.com: domain of msprvs1=20457lwe94nr-=bounces-21947-2@bounce.klarna.de designates 199.15.226.152 as permitted sender) smtp.mailfrom="msprvs1=20457LWe94Nr-=bounces-21947-2@bounce.klarna.de";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=klarna.de
+Return-Path: <msprvs1=20457LWe94Nr-=bounces-21947-2@bounce.klarna.de>
+X-MSFBL: gEkQ5T10cmgfPKxiVIYWrxrrTBW6eCai47egFZq8bdg=|eyJtZXNzYWdlX2lkIjo
+	iNjk0NWI4NjY1MTY5YmIzYTczNDUiLCJzdWJhY2NvdW50X2lkIjoiMiIsInIiOiJ
+	hcnR5b20uYXZyYW1lbmtvQGdtYWlsLmNvbSIsImN1c3RvbWVyX2lkIjoiMjE5NDc
+	iLCJ0ZW5hbnRfaWQiOiJzcGNldSJ9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=klarna.de;
+	s=scph0823; t=1766942392; i=@klarna.de;
+	bh=B/8UVQ/HOVpm9jEsXV26apcexjViBO0BcfHtYQIhDyc=;
+	h=To:Message-ID:Date:Content-Type:Subject:From:From:To:Cc:Subject;
+	b=YpAD/EC6iKJUblFXtvZhIT0vyWsh/PR7azWcUu5jYf5KieGv9STP9F9+Z8OckzOqB
+	 4d6LrFy9WLxhglbL4qlxI5eJAd4KxFjMH7QtuxsHagWpNPE7gCnQUJKtdeevgqcWpP
+	 rZDPblY572E8hPbySq0MtH3+1uJzuzPSTopmooAI=
+Received: from [10.95.215.67] ([10.95.215.67])
+	by i-0fa21e0574f695648.mta3vrest.sd.prd.sparkpost (ecelerity 5.1.0.74732 r(msys-ecelerity:tags/5.1.0.24)) with REST
+	id 54/37-16590-8B661596; Sun, 28 Dec 2025 17:19:52 +0000
+To: artyom.avramenko@gmail.com
+Message-ID: <54.37.16590.8B661596@i-0fa21e0574f695648.mta3vrest.sd.prd.sparkpost>
+Date: Sun, 28 Dec 2025 17:19:52 +0000
+Content-Type: multipart/alternative; boundary="_----htOzkWfw9uYw/sTopJ3T4g===_33/37-16590-8B661596"
+MIME-Version: 1.0
+Subject: Your payment information for ARYS Store
+From: "Klarna" <noreply-de@klarna.de>
+
+--_----htOzkWfw9uYw/sTopJ3T4g===_33/37-16590-8B661596
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+
+Your payment of =E2=82=AC129.00 is due on January 27, 2026.=0A=0Ahttps://cl=
+ick.klarna.de/f/a/Z46XVdCcWvHRuNUmSanhpw~~/AABVuxA~/3KFGZLq26rt8DpxV3qSlva4=
+T33doVfimyIUu0Q4858mbp6QmTmGZ8JSymhMiCB183aGTxNV9VST1SY9DdwP1oxrW1wV5MUEh7o=
+SBCXK8faA26YdnwMB0vERQgi0skD6HlzeiwttymtM3D9SDxH-Cmb1QQ-DTiqSAnSy-7qqX_MRt_=
+DVAndt4PKY1GaW0NVakZXfXU-7jWeHzP3QxVWtYcxrhvGVAxqHiiTtKZUvSRXtdx7nwrnT8J9BD=
+HbDHIfsCH0PUvtBYqpKgQaSde0GIstsOgftjSNObiBVRgx6Zwij9QGKFvxqgoGvMCBVk7zkRNRz=
+obNKbGC_9qUuyICQC5MeSYP0_D6HrMg7CubDRNCg~=0A=0A=C2=A0=0A=0A=0APayment infor=
+mation=0A=0A=C2=A0=0A=0AHi Artem! ARYS Store has now processed your order.=
+=0A=0AYou can make a payment or download the payment information, all in th=
+e Klarna=0Aapp.=0A=0A=C2=A0=0A=0A=C2=A0=0A=0AYour payment of =E2=82=AC129.0=
+0 is due on January 27, 2026.=0A=0A=C2=A0=0A=0AView in Klarna app=0A=0A[htt=
+ps://click.klarna.de/f/a/tqqetg2iLYp8r_fyKcPVhA~~/AABVuxA~/8-rAjXx8li-AS345=
+KQ-jc_M5hFV7lhd2RW4DUDgE1VHAC4vV4IqX5qJON668yQELN-lQwnbJqbD1TEzzsX5hI_8OuFY=
+Klo0tK3ydQgXyz6h5DHcQ3CoRII6S0U-SNP08-noEpcf_LKKhd6HZvRIdmJSA3JhoMCaUTuuoNP=
+sQGO7NqgT6nxgiOQARurz_siWxxUuInFLkw3VZM6RRF7TL-ZYZaCvJYiqGGSCdS_7T8QGMvYf_T=
+WMa90F4_6xtugYOFX9OfAl8QWg0GeVEl5_yoo4SGE-2HuuSHuZQ-qhbTOxRatflwjrXeB2h5XfC=
+AP1PF3ajuaRPKaAe8WfCMLT_MmtoxpxBbTvdPqsrtFrE4R78Omx8rpSFC5R0xkJmlnjzKY2VmA3=
+BlMrAMfwCT634kgCD1kYhxCPMP8Raf05AqWTTlR2K1Xwur03VeGofVV6wYJEQNXAEGMaazbUwAE=
+pTRzRPJZhyCT1iIEiHcfDktZDrYnYlXyPKEXk7opN6ToLdXUIEzZwc8OuI4AUbiXOWwxJ4ZWy2G=
+e8DymmUUb6iVaUSxdBG_qwMx6juK58gNIFYf5wPLdGuqq9SSvWvxbUduBMK4shMj6HVV09nTdqK=
+7-Tj6v_Zw7TW72V_mSWXQhDL0QTFF0VVhyp__g3Sv2GXkpEkkHSCleDGIbWKs1EkZgjEYfvEhMA=
+iLLwW3KkvCTeCFfs52-RYGvQEo9nEf16OQ71aiXgFFzdHvCLtWF0aiRZzh98-xmswVNaaqKl4YD=
+7KfhCgdUJ2mFyYgLlWKcJzXtFqknG1wzxajApI5mgZMYOAIh2TMtMrMtFqL4JLMDqsFAamNzsPN=
+WOqxF0AzDgBUutr3zWI1a0ileBSt6IUftmlNNrgIKszAUg3E8VciIwCmaXcBmZtbegtLjyp5Tik=
+CkM80H3rPDyRO7_GuKzcZLo~]=0A=0A=C2=A0=0A=0AIf now is not a good time to dow=
+nload the app, you can view in browser=0A[https://click.klarna.de/f/a/4R0oH=
+ZnSP9v6a0hi1ddQVw~~/AABVuxA~/2BcgnkVpTKSIYeRPwIvrgBbP1KSLH7451SzhUpSeBbqgBf=
+kA6yhS_VHXPYsrpzlWTQYGpOREbApjK6_G7bpzMXAqyyr8Y2UK3QdvShyJUxWUTXXbbnj1Gid3V=
+0oCw0GSUTc7ruDy51U8cEoLAfXZlg1Z3fDb1BtgDqwsfUAbOfLZ_lxsh6zcXypD_m9L1InghDY_=
+5kMeNis0_5g7XBonY_0Hx9NoBWC8An3-tcB8C0q7xVJb_36J5Tp_s_iSettS8bUVqranUfDCcqa=
+73NneOF59ACZ0mROMtISAiqS2gmvRgo46RlmpfOp8q3w_zWVimjvtGFRmLNy8keeCvFHskeqtek=
+VULFNbp3KTuORrYXDx5htqjoWr8oRIZp7nulo1-aaEm-oK99eySAqy9KcP-mfknchh78jQY8G-1=
+aJYDa9w4v6Sa8_F0fzqDHeDQY1GgNXTkzy5Xaw0LH_eo3utRTxxU2LhO52HbBzc1JTr9hBKhz-Q=
+hxN8-1pJ4QSwBZNJLOPjcMHsf7IRbmkM-R-vtslq-FTVA7EZcDe2IinOJidLw3dbrIRm2-Le9L5=
+-BfWfEcq1_R-peEVBs-Fa9XSWBe2icpPOFMoAziDRPk2LBRprraeNzASaYatbdDo_rX5rgs1Utv=
+nTb4d8wT9zsa-XytktYlkEJos51PXlWFiis8GJ7YzOmeBY9YBM-wbjb_fatasgA0aigG85wakom=
+s760Ah6zHkTGupaLk3ng5PiTV5m1wQpYk4olRuOeryWlkOPNoSu7TwFJzC_RXjOKmMMotA4ePQD=
+cn1fO48kqF3us64HXKvDqaDXl-IdQmcTBoEYQH4ldm8Cqs1kl1OMDbMzexfeL-EN0Yqstxwa956=
+vbw0H4Dn35KpyR7Yl20R8HmV_Qgy59q6Lc6mh7XQ1v4LH6Q~~].=0A=0A=C2=A0=0A=0A=C2=A0=
+=0A=0A=C2=A0Resell with Klarna=0A=0ATurn past purchases into cash.=0A=0A[ht=
+tps://click.klarna.de/f/a/3iHfZJYYJd_M6tl6oz2deg~~/AABVuxA~/YMjdC9Y2XRqhTSj=
+gCV7nvY8pcnmbRUoh7sN7CdMXvnxupSmCGaDRAePMB83WyK-obq8_3KgtMNB05XLLfRWI_c8Gap=
+e-HP4tDyBYQ1-hFiUUP3R3U13z2WORNQPKz_F5MQrmCXiwGBWSIKgLPOf3vsETJXQ5KhGlRdYqv=
+IAlyRLcg-jcI3Yb0CJMpJMA4tjAUsR_QiMfgDY7oetP_v3Vm5YEgLkKKRaOhFc_lQ6aqHotSie8=
+wssrFSfQZ-c8ovCQHO_9RrQ609Mu4BZF-8HnFtax9HEcsE552cPoehyEaERhMF7mmpYDM3bVYIl=
+QpvbmvG0McZnw_AWAG3jmaG64ONdT4DkQ57yhCPToCgVn40c8Ehocx2HRQymDXlcC4ByFbCM1ht=
+7E2L8RhFJ8v7YK1-WwoAqWHJBSy9pRE4fnATFu00hwnaWZ_X8h7pf-ODaHcl1BZPjscPpXbGRp2=
+W1Qn8_Whtk7hwTTdxrBOOXGK2VR5u6t2xTQLewlIUaOEEkM]=0A=0A=C2=A0=0A=0A=0APay by=
+ bank transfer=0A=0A=C2=A0=0A=0AIf you prefer to make your payment manually=
+, please use the payment details=0Aprovided below. Ensure that each order i=
+s paid separately using the unique=0Apayment reference for each transaction=
+.=0A=0A=C2=A0=0A=0ARecipientKlarna Bank AB (publ)=0A=0A=C2=A0=0A=0AIBANDE1=
+3760700120500154000=0A=0A=C2=A0=0A=0AIBIC/SWIFTDEUTDEMM760=0A=0A=C2=A0=0A=
+=0APayment reference9376816810830=0A=0A=C2=A0=0A=0AAmount to pay=E2=82=AC12=
+9.00=0A=0APlease note that the merchant has assigned Klarna Bank AB (publ) =
+to handle the=0Apayment for this order. Therefore, you must send your payme=
+nt to Klarna AB=0A(publ) instead of the merchant.=0A=0A=C2=A0=0A=0A=0ASumma=
+ry=0A=0A=C2=A0=0A=0A=C2=A0=0A=0A=0A=0AARYS Store=0A=0A=C2=A0=0A=0A=C2=A0=0A=
+=0A=C2=A0=0A=0AKlarna order reference   S0JP11CD=0A=C2=A0=0AOrder placed   =
+          December 28, 2025=0A=C2=A0=0APayment option           Pay in 30 d=
+ays=0A=0A=C2=A0=0A=0A=0AOrder details=0A=0A=C2=A0=0A=0ATotal   =E2=82=AC129=
+.00=0A=0A=C2=A0=0A=0AView more details in the Klarna app=0A[https://click.=
+klarna.de/f/a/YGj75g81uAco1GtcOSObsA~~/AABVuxA~/B-vDHQnZRzKJbZEo9b8Ft6abcQ9=
+BROx2Zy0eKyy8Cb5Nulnwt9WFqCvmgv10YryvvsK9ho_cOsTIYAge6COygtO6O1A-N1ABF9Dh-4=
+PP-b1NISVZQECrp8NiiCtNxX7wt_O4ydN_ag7qIc50bLsSZc2TS629_phNKajJdTSe7ROWSVsve=
+5BoWoq8by-DfUDrXEjqylQNY_TBMIEA8B3wGtLLzaAQyqldYzPzccHWM6KuOssvNL1eUMm_WdBy=
+Mx3j87MEQrOALMpbCTpgDyK6vG8ElEhpvhbTkQ3aaspSillQn8XQlsT-iBIOvT3isePSqsxC8pX=
+pEH0Sqs_QM8Npqu7ldFWilPvCtg_HziF5KoHJMVdULgVIxthg-QevkR32-y3NChCmCt-iQxb5NJ=
+Sc7UqzpwLghve3YL91pctncIBWUHP9UIpOqnuQHJVqXTVgjyouw4bi8erzLBBfR4k7yuqaKx36t=
+WylAvFOsMsRT9TGeEYkhB3J5V0eDuuBf-ctqOlmdZhVvOKLt8_euUqRDpOriQxbKPp_XdbKtO6G=
+QLBEEPYsjeCd9zf9VSgR5Sr3TG-ZQLjJsbydKkO58BoR_Va3vXM5IvzSK9k9gy_NXWMlcBdw4Af=
+zVpJb56hXaQVtx3FaLO1pFanemYjO_YpVbZizSUTaAHuHSd-8aFO6WbxnrEo7dsVdvw8NplfOsv=
+-qdeaQD2vHkvBENyNFEPX_guP--5HEGjybbNU22JXGEqG9IqaxJmWz7uvXNciD4GQBQx1dy_GwA=
+ZrzCTnZfPT0-eh0z4VfRPKIVMw5GuuJoBjsV_16B2Go6nnbqJJesk8V0CWhd3D_cpkZh4BSgh--=
+L8xlVHAjF2PJRnwLAlL6D_P9ubo16Rud-hHWlb7oqYfHd3DUWQKWo_LADmW_rW3YvzAu63xvwgj=
+TYDPQ6bxchC4~]=0A=0A=C2=A0=0A=0A=C2=A0=0A=0A=0AHave a question=3F=0A=0A=C2=
+=A0=0A=0AWhat if I have a problem with my order=3F=0A=0A=C2=A0=0A=0AFirst, =
+contact ARYS Store [https://click.klarna.de/f/a/7156DvfweaxrGlaWS2nNUA~~/AA=
+BVuxA~/fqoSJyt6lKblxzf4ei-WEBMWQDK2gC-sW4XohrvTZ9UYTk7_60zB3pbKR8aREk0LPj_C=
+1ki0WhMRUv3ucP-qXK3t7NViAxtyorugCHSPEbrU5Me-_srHeF3AgL3A-8I6]. Then report =
+a problem=0A[https://click.klarna.de/f/a/-1j4kiA31AHKN0AD9NE_Vw~~/AABVuxA~/=
+4WB4kNf8Hnbpuc55n4PI8VhzJjmszEr_CcToG00LGo_U76_lworIfTT_bzXluoe_Vq1cja3YKrw=
+nCYxb-PgZ0to1k6eLvb0h-jNQfj-TI95NBhuyWhC6iGeoe-tcA5wkNPDeTfVgG4Y3VqvpFaETsS=
+N4AQx6x5DEmkmVmaOXc1HR8RJp2zpar2wfAsLxukdkP3EZG_YvrvhJ2in23zTReyD3Z1qTnz153=
+ltPdyVUSLE_47DXmemKeVKxEj7JaGEwLS_xG6pnQOMr5mW-pqMp2K7_X_urjYRVdJl0nAZ9w9Ls=
+2XZgQuSmLVVDy0EIsf4UvtkKnzjHGGP-xlpYFmfrVHhsqJGHedJt0ErNt8rtP48Sy2hBgJuKljh=
+4ssdsryl65RmZmyU_CHtvMDRp8xQY20dwSNvT_a41V9uked86HQrv0Tn9_i_GGmD0iFyWNr15Li=
+3tBajOPPngTCDF-IviIV7h6QiuQxPqVtPtbm6HbPneuj4tbTGOqruXOU_tHlzYdLJ50q3z69KwN=
+Sof7Q5qCMS8uGjL_8KIQS3nB11P7Bqn6Zrt6q24jrO1L0StNC_88o_d_uqPQjHh7tMOcn8NW4mk=
+Ct1fKYv6lSFO4FwtD7oNG0O123D6TSdf3VXYYOf19xOg9NRJDmSeZxXTgHSxe7PI_gk_FXKrO6y=
+clnwR6ae4AjFVQWkHXIpbxkvFEJglE5UlMgjWkeF5WQ64eanO7K-ahlzaMjsajHqMJTLEwgdUHH=
+AZkHZmQUTI2NYJ-JvyeefwskOWyz_syDQAzEa8mxifhtNc0YdkRWnCpF8xRCAO7RK1GMZudQvhl=
+Dm3iKMZfJQJEokwLuhah92e1omjE2ux2Zpe7k7J91FNeVh9kdA~]=0Ain the Klarna app so=
+ we can pause your upcoming payment while the problem is=0Aresolved.=0A=0A=
+=C2=A0=0A=0A---------------------------------------------------------------=
+-----------------=0A=0A=C2=A0=0A=0AStill have questions=3F=0A=0A=C2=A0=0A=
+=0AGet 24/7 support and find answers to your questions with our customer se=
+rvice=0Aassistant.=0A=0A=C2=A0=0A=0AChat with us=0A[https://click.klarna.de=
+/f/a/fnZh1kFdXQL_ptgqm_E5fA~~/AABVuxA~/oVBkt8hDu0mpR89aZXlNQ2_0QXukJZKcjKqp=
+EGRYs4FFhb38SfQ78bTWEYVei69RQxUvvq5oyFETCCMzphVL1Jt2OzjapAIQvvgpt8ALRS12Tjy=
+8m7K05LkPd3Fqy6hTJUgOuoeZUNJ-XfU6KzjayVAVjpOEEqxkGbYKneQQCFzMB5T0yz6ZPxN-Yd=
+DsHz9wz9ZAIGE_BqMAWtuhQuHQnpmxofYjvwbXjk1C3gImBZ6Aw6xJRYqxfxhh4q0D0NbxIuY-w=
+sncTCpKc5WTF_SZ-hHlZg7W1uab8IOMaQHm4VHLUE8ZhqC9WNbVfZTziTMs0Jan-4CM0HWqiEyR=
+oSyMqzQ7UE84eU-8zCpkHMWlyOFVNUiiWDwjJU-jrjzbir2G7KRsGDxQA6E-h9al4SPqN2LPd_U=
+rAGh-ycnErUlau2uDCTAfK2h9imIN3RNvAZPnQ1TXOKt5zN918OazDWejRd3W5JZ-3oDFQoZhD8=
+z-UVZ0x_u7cfEE_II250Jury3FIaPPPNdNALCZG_oPzEqu_-DhB9VV-Ktvpg6E51YLKugX3tM1m=
+WF9GgOtZO-aPrSyZM8KqKdye1EzIo71x8m3Ru8lji8E_ue7k0owMTNfw4NPDjwf3dsnU_NHSa_e=
+PadpNJiMBzlAyAN0om7YFTlNrA~~]=0A=0A=C2=A0=0A=0A=C2=A0=0A=0A=C2=A0=0A=0Ahttp=
+s://click.klarna.de/f/a/9g8BFVtWlPNEmBOAKkeC9w~~/AABVuxA~/3KFGZLq26rt8DpxV3=
+qSlva4T33doVfimyIUu0Q4858mbp6QmTmGZ8JSymhMiCB183aGTxNV9VST1SY9DdwP1oxrW1wV5=
+MUEh7oSBCXK8faA26YdnwMB0vERQgi0skD6HlzeiwttymtM3D9SDxH-Cmb1QQ-DTiqSAnSy-7qq=
+X_MRt_DVAndt4PKY1GaW0NVakZXfXU-7jWeHzP3QxVWtYc7F7kXQ80r_NxtJlo9pk8jJ9zL476j=
+DWoiTSOskcRuS7AJhEY2LbYRc_pcP5X2kvFj199IdsCf8R7K6UhoFWnJ1kZmMIh8cmVRSSWrbx_=
+Du_-8WuqkjXvOCjNj-3NJHg9fP6RiSCWFJEGm9aZlBYdhY~=0A=0A=C2=A0=0A=0AKlarna Ban=
+k AB (publ)=0AOrganisation number: SE556737-0431=0AUSt-IdNr: SE556737043101=
+=0AChairman of the Board: Sebastian Siemiatkowski=0A=0A=C2=A0=0A=0APostal a=
+ddress in Germany=0APostfach 900162=0A90492 N=C3=BCrnberg=0A=0A=C2=A0=0A=0A=
+Headquarters=0ASveav=C3=A4gen 46=0A111 34 Stockholm=0ASweden=0A=0A=C2=A0=0A=
+=0Aklarna.com=0A[https://click.klarna.de/f/a/NOukEo8UKxdAxs9t72xcAg~~/AABVu=
+xA~/GjFw9NvKSl0jPPFK-KdMXsL2Ea6E1uXLGLvbnzPxprO_DRypnrCAfI7z7JVc61jbI3GxhaK=
+EIjNeXwB3aX7moEvG3AtZZUMMTbxabqbTeUmc7noJIQxG0ODPdkK-tJYrmhHubVGh_NT1RcZZV9=
+yUD-YX3lz56qLYND8beB8cx8iRiQbXb9Ff4zSVUA5o1_Mi]=0A=0A=C2=A0=0A=0AHave you r=
+eceived an email that might be a phishing attempt=3F You can report=0Asuspi=
+cious emails with our online form=0A[https://click.klarna.de/f/a/roXN3ZP5N_=
+r0cwhHXe6_dg~~/AABVuxA~/yCm1Uifb7BGCbVx9By-nPdEV60hvzR5LVIox4NqZZRxVuCMEu0X=
+4DtJUFHJHE8d-ErTii4698oDoEvZOccKfc3do2ZuT8CXw6UJ8QiocLk0eJwP9htVIHDbsEj1QMH=
+Tz8OxBr3ZbsGN5kQhFwBAM4mvINLZ-YeiXL7wHJVjrJ044RcY3XoIiOh0wUVuHA4GzKk01R34IA=
+SFgAyI6n-Gset2n00nvgGHImzzyv2aPq9w~].=0ALearn more=0A[https://click.klarna.=
+de/f/a/BcgetjrT_3Vm8RorctJNoA~~/AABVuxA~/F_fs09eh5D68qEGpCGCBcIpb2jWgpVieuQ=
+4Qz919I2uisLaAp3xR5tuo-DiRibjB6CN_aMY3zTkByJc3sW6qpDPRqxE8X2vsOJAnbe2FPNgE8=
+ycnxww3At1Wuk0h23CsEOK8TA1ADccbkLxyABkJwFCjuvhrTkntcXWPmkxLW0kLvx2qemPBGrba=
+sJv_lDECqavrVT1bBXupRZQdQDQSFQ~~]=0Aabout how to spot phishing scams and fr=
+aud more effectively.=0A=0A=C2=A0=0A=0AIf you don't want any emails contain=
+ing deals, inspiration or product news from=0AKlarna in the future, you alw=
+ays have the option to opt out=0A[https://click.klarna.de/f/a/Zp_qPuNj8kpTh=
+zjFBEX_TQ~~/AABVuxA~/e53JwAih_OgtlhczUwMSTuTnXDAVUSrTIfsRBLwWQXMFXgg4LZ0fQ0=
+fTImLXWEp9bzUDzaQdRARlmQVFxLcVkTOmXB0HTQOgQKMvTwX8pyHCJfC_qkxQDn4dUIEPz1wcK=
+b_KnT7TmuLKLY8QWbtMU8orfp8-iKpt9iSqYd2uFTUH-q6weHg3zoa_VYhqaUi_V8LViZCipfmL=
+nu9_8_ZFAWDaE7rzrgNavXmlaqNxerPGmIUiBMQx4hqkd4hGwh1tm05ldoI_WFotCTOx8IQfdEI=
+vlrQTR0dyD7rGMMzc7dSBZA86pbkMd7E2vhIJ8MNuqVX5yFh0zNYGTCZLD0rZ2yglfhV_Z0OV5H=
+q4QSKl_EKOLiV1Nkd4T0cmLLM9wwbn5ZqvdAAMy67zQXIUFWpK3mq6fSQNEONj8bLBgbIgBJP8A=
+GW2YH9PfoNK1fg_WfYr0CRhysWuxIU_giRYG6atBveEB-AloercpEHIswhBsyI4JFQPvB4D1NdO=
+QYONMXay4A0igqftcDLxC-BdRZykbSMicM9Io2I0ZfJ0zaQHjHWTE0ucWhN-i72S2QG3HW0eabV=
+xmmqGmGKnPRycvcVDqbzIGPufUyQ1VxWXnSXM102BZwNwwCGRDNBd-HZ_GSbCNtSwJrlZadP5bx=
+ga33HUWJzaKacyOd6bL5ffKhTWbGLW5ZN0koStfgc4ecHq-yTL0CcNVlrfbS57P3CEBuOYcePo5=
+U02n4AkacWL9iSAy3Tjtjp3_eLCQSCwHCg7Bob5pDkWa7HlaQqulDgkz7BfZFSza5lyrJ0_fcGl=
+zvUcLZk~].
+--_----htOzkWfw9uYw/sTopJ3T4g===_33/37-16590-8B661596
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="UTF-8"
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.=
+w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> <html xmlns=3D"http://www.w3=
+.org/1999/xhtml" xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:=
+schemas-microsoft-com:office:office"><head> <title>Your payment information=
+ for ARYS Store</title> <meta http-equiv=3D"content-type" content=3D"text/h=
+tml; charset=3Dutf-8"> <meta name=3D"viewport" content=3D"width=3Ddevice-wi=
+dth,initial-scale=3D1"> <!--[if !mso]><!--> <meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"> <!--<![endif]--> <meta name=3D"x-apple-disable=
+-message-reformatting"> <meta name=3D"format-detection" content=3D"telephon=
+e=3Dno,address=3Dno,email=3Dno,date=3Dno,url=3Dno"> <meta name=3D"color-sch=
+eme" content=3D"light dark"> <meta name=3D"supported-color-schemes" content=
+=3D"light dark"> <!--[if (gte mso 9)|(IE)]><!--> <link href=3D"https://a.kl=
+arnacdn.net/ui/fonts/v1.4/fonts.css" rel=3D"stylesheet" type=3D"text/css"> =
+<!--<![endif]--> <!--[if (gte mso 9)|(IE)]>=0A<style type=3D"text/css">tabl=
+e {border-collapse: collapse;}</style>=0A<![endif]--> <!--[if gte mso 9]><x=
+ml>=0A  <o:OfficeDocumentSettings>=0A    <o:AllowPNG/>=0A    <o:PixelsPerIn=
+ch>96</o:PixelsPerInch>=0A  </o:OfficeDocumentSettings>=0A</xml><![endif]--=
+> <style type=3D"text/css"> :root {=0A  color-scheme: light dark;=0A  suppo=
+rted-color-schemes: light dark;=0A} </style> <style type=3D"text/css"> div[=
+style*=3D"Margin: 16px 0"] { Margin: 0 !important; } </style> <style type=
+=3D"text/css"> html, body { Margin: 0; padding: 0; border: 0; -webkit-text-=
+size-adjust: 100%; -ms-text-size-adjust: 100%; }=0A=0Aa[x-apple-data-detect=
+ors] { color: inherit !important; text-decoration: none !important; font-si=
+ze: inherit !important; font-family: inherit !important; font-weight: inher=
+it !important; line-height: inherit !important; cursor: text !important; po=
+inter-events: none; }=0Au + #body a               { color: inherit !importa=
+nt; text-decoration: none !important; font-size: inherit !important; font-f=
+amily: inherit !important; font-weight: inherit !important; line-height: in=
+herit !important; cursor: text !important; pointer-events: none; }=0A#Messa=
+geViewBody a        { color: inherit !important; text-decoration: none !imp=
+ortant; font-size: inherit !important; font-family: inherit !important; fon=
+t-weight: inherit !important; line-height: inherit !important; cursor: text=
+ !important; pointer-events: none; }=0A.nolink a                 { color: i=
+nherit !important; text-decoration: none !important; font-size: inherit !im=
+portant; font-family: inherit !important; font-weight: inherit !important; =
+line-height: inherit !important; cursor: text !important; pointer-events: n=
+one; }=0A=0A.email-layout-content { padding-left: 40px; padding-right: 40px=
+; }=0A.email-content-wrapper { max-width: 600px; width: 100%; Margin: 0 aut=
+o; }=0A=0A@media screen and (max-width: 600px) {=0A  .main-container { widt=
+h: 100% !important; }=0A  .flex-img, .banner { width: 100% !important; heig=
+ht: auto !important; }=0A}=0A=0A@media screen and (max-width: 480px) {=0A  =
+.email-layout-content { padding-left: 20px !important; padding-right: 20px=
+ !important; }=0A  .main-container-td { padding-left: 20px !important; padd=
+ing-right: 20px !important; }=0A  .first-installment.centered table tbody t=
+r > td:nth-child(1) { width: 40% !important; }=0A  .first-installment.cente=
+red table tbody tr > td:nth-child(3) { width: 45% !important; }=0A  .second=
+-installment table tbody tr td:nth-child(1) { width: 45% !important; }=0A  =
+.second-installment table tbody tr td:nth-child(3) { width: 45% !important=
+; }=0A  .third-installment table tbody tr td:nth-child(1) { width: 40% !imp=
+ortant; }=0A  .third-installment table tbody tr td:nth-child(3) {  }=0A  .l=
+ast-installment.centered > table tbody tr > td:nth-child(3) { width: 45% !i=
+mportant; }=0A  .last-installment.centered > table tbody tr > td:nth-child(=
+1) { width: 40% !important; }=0A  .payment-plan-status-cell { padding-right=
+: 0px !important; padding-left: 0px !important; }=0A  .payment-plan-status-=
+spacer { width: 0% !important; }=0A  .payment-plan-status-cell .primary { f=
+ont-size: 12px !important; }=0A  .payment-plan-status-cell .secondary { fon=
+t-size: 12px !important; }=0A  .payment-plan-status-cell .secondary-small {=
+ font-size: 9px !important; line-height: 15px !important; }=0A  .responsive=
+-column { display: block !important; width: 100% !important; }=0A  .respons=
+ive-spacer { display: block !important; width: 100% !important; height: 20p=
+x !important; font-size: 20px !important; line-height: 20px !important; }=
+=0A}=0A=0A@media (prefers-color-scheme: dark) {=0A  .main-container { backg=
+round-color: #0c0c0c !important; }=0A  .background-container { background-c=
+olor: #0c0c0c !important; }=0A  h1,=0A  h2,=0A  h3,=0A  h4,=0A  .primary { =
+color: #FEFEFE !important; }=0A  .secondary { color: #AAAAAA !important; }=
+=0A  .btn-a-primary { background-color: #FEFEFE !important; color: #0c0c0c =
+!important; }=0A  .btn-a-secondary { background-color: #242424 !important; =
+color: #EEEEEE !important; }=0A  .alert-info { background-color: #242424 !i=
+mportant; color: #FEFEFE !important; }=0A  .alert-accent { background-color=
+: #06233B !important; color: #FEFEFE !important; }=0A  .alert-success { bac=
+kground-color: #024D29 !important; color: #FEFEFE !important; }=0A  .alert-=
+warning { background-color: #543F13 !important; color: #FEFEFE !important; =
+}=0A  .alert-error { background-color: #4F1209 !important; color: #FEFEFE !=
+important; }=0A  .badge-default { background-color: #242424 !important; col=
+or: #FEFEFE !important; }=0A  .badge-success { background-color: #024D29 !i=
+mportant; color: #FEFEFE !important; }=0A  .list-item-info { color: #FEFEFE=
+ !important; }=0A  .list-item-accent { color: #FEFEFE !important; }=0A  .li=
+st-item-success { color: #06C167 !important; }=0A  .list-item-warning { col=
+or: #FFCF70 !important; }=0A  .list-item-error { color: #E85C4A !important;=
+ }=0A  .divider-line { background-color: #242424 !important; }=0A  .progres=
+s-bar-bg { background-color: #555555 !important; }=0A  .progress-bar { back=
+ground-color: #06C167 !important; }=0A  .standalone { color: #D0AFFF !impor=
+tant; }=0A  .payment-plan-status { background-color: #FEFEFE !important; }=
+=0A  .payment-plan-no-status { background-color: #242424 !important; }=0A  =
+.timeline-black,=0A  .timeline-bullet-black { background-color: #FEFEFE !i=
+mportant; }=0A  .timeline-grey,=0A  .timeline-bullet-grey { background-colo=
+r: #242424 !important; }=0A  .timeline-target { border-color: #FEFEFE !impo=
+rtant; }=0A}=0A=0A[data-ogsc] .main-container { background-color: #0c0c0c !=
+important; }=0A[data-ogsc] .background-container { background-color: #0c0c0=
+c !important; }=0A[data-ogsc] h1,=0A[data-ogsc] h2,=0A[data-ogsc] h3,=0A[da=
+ta-ogsc] h4,=0A[data-ogsc] .primary { color: #FEFEFE !important; }=0A[data-=
+ogsc] .secondary { color: #AAAAAA !important; }=0A[data-ogsc] .btn-a-primar=
+y { background-color: #FEFEFE !important; color: #0c0c0c !important; }=0A[d=
+ata-ogsc] .btn-a-secondary { background-color: #242424 !important; color: #=
+EEEEEE !important; }=0A[data-ogsc] .alert-info { background-color: #242424 =
+!important; color: #FEFEFE !important; }=0A[data-ogsc] .alert-accent { back=
+ground-color: #06233B !important; color: #FEFEFE !important; }=0A[data-ogsc=
+] .alert-success { background-color: #024D29 !important; color: #FEFEFE !im=
+portant; }=0A[data-ogsc] .alert-warning { background-color: #543F13 !import=
+ant; color: #FEFEFE !important; }=0A[data-ogsc] .alert-error { background-c=
+olor: #4F1209 !important; color: #FEFEFE !important; }=0A[data-ogsc] .badge=
+-default { background-color: #242424 !important; color: #FEFEFE !important;=
+ }=0A[data-ogsc] .badge-success { background-color: #024D29 !important; col=
+or: #FEFEFE !important; }=0A[data-ogsc] .list-item-info { color: #FEFEFE !i=
+mportant; }=0A[data-ogsc] .list-item-accent { color: #FEFEFE !important; }=
+=0A[data-ogsc] .list-item-success { color: #06C167 !important; }=0A[data-og=
+sc] .list-item-warning { color: #FFCF70 !important; }=0A[data-ogsc] .list-i=
+tem-error { color: #E85C4A !important; }=0A[data-ogsc] .divider-line { back=
+ground-color: #242424 !important; }=0A[data-ogsc] .progress-bar-bg { backgr=
+ound-color: #555555 !important; }=0A[data-ogsc] .progress-bar { background-=
+color: #06C167 !important; }=0A[data-ogsc] .standalone { color: #D0AFFF !im=
+portant; }=0A[data-ogsc] .payment-plan-status { background-color: #FEFEFE !=
+important; }=0A[data-ogsc] .payment-plan-no-status { background-color: #242=
+424 !important; }=0A[data-ogsc] .timeline-black,=0A[data-ogsc] .timeline-bu=
+llet-black { background-color: #FEFEFE !important; }=0A[data-ogsc] .timelin=
+e-grey,=0A[data-ogsc] .timeline-bullet-grey { background-color: #242424 !im=
+portant; }=0A[data-ogsc] .timeline-target { border-color: #FEFEFE !importan=
+t; }=0A=0A@media (prefers-color-scheme: dark) {=0A  .colors-text-default { =
+color: #FEFEFE !important; }=0A  .colors-text-neutral { color: #AAAAAA !imp=
+ortant; }=0A  .colors-text-disabled { color: #666666 !important; }=0A  .col=
+ors-text-inverse { color: #0C0C0C !important; }=0A  .colors-text-accent { c=
+olor: #D0AFFF !important; }=0A  .colors-text-success { color: #88DBA5 !impo=
+rtant; }=0A  .colors-text-warning { color: #DBCA6E !important; }=0A  .color=
+s-text-error { color: #E47B93 !important; }=0A  .colors-backgrounds-default=
+ { background-color: #0C0C0C !important; }=0A  .colors-backgrounds-subtle-i=
+nline { background-color: #272727 !important; }=0A  .colors-backgrounds-sub=
+tle { background-color: #303030 !important; }=0A  .colors-backgrounds-disab=
+led { background-color: #666666 !important; }=0A  .colors-backgrounds-neutr=
+al { background-color: #AAAAAA !important; }=0A  .colors-backgrounds-invers=
+e { background-color: #FEFEFE !important; }=0A  .colors-backgrounds-accent =
+{ background-color: #2C2242 !important; }=0A  .colors-backgrounds-success {=
+ background-color: #00331D !important; }=0A  .colors-backgrounds-warning { =
+background-color: #423900 !important; }=0A  .colors-backgrounds-error { bac=
+kground-color: #500D22 !important; }=0A  .colors-backgrounds-brand-colors-s=
+ticky-note { background-color: #132905 !important; }=0A  .colors-background=
+s-cashback-green { background-color: #004219 !important; }=0A  .colors-back=
+grounds-brand-colors-pink-100 { background-color: #442A36 !important; }=0A =
+ .colors-backgrounds-brand-colors-eggplant { background-color: #E1D5F7 !imp=
+ortant; }=0A  .colors-backgrounds-brand-colors-klarna-black { background-co=
+lor: #FAF7FE !important; }=0A  .colors-backgrounds-brand-colors-herring { b=
+ackground-color: #343330 !important; }=0A  .colors-borders-default { border=
+-color: #FEFEFE !important; }=0A  .colors-borders-neutral { border-color: #=
+AAAAAA !important; }=0A  .colors-borders-disabled { border-color: #666666 !=
+important; }=0A  .colors-borders-subtle { border-color: #303030 !important;=
+ }=0A  .colors-borders-subtle-inline { border-color: #272727 !important; }=
+=0A  .colors-borders-inverse { border-color: #0C0C0C !important; }=0A} </st=
+yle> </head><body id=3D"body" style=3D"Margin:0;padding:0;border:0;backgrou=
+nd-color:#FEFEFE;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%">=
+=0D=0A<div style=3D"color:transparent;visibility:hidden;opacity:0;font-size=
+:0px;border:0;max-height:1px;width:1px;margin:0px;padding:0px;border-width:=
+0px!important;display:none!important;line-height:0px!important;"><img borde=
+r=3D"0" width=3D"1" height=3D"1" src=3D"https://click.klarna.de/q/U-NW76sY5=
+LkXUbHZY_pUEA~~/AABVuxA~/ilY2EVf3vdkG5rKMm5nkY-GjlIOkvSALOz56syI5s6SCKyLmRD=
+WGHqmYJYWFq-iSUUUiJIotzuI7ONu1fytNWg~~" alt=3D""/></div>=0D=0A<table class=
+=3D"background-container" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" =
+role=3D"presentation" bgcolor=3D"#FEFEFE" width=3D"100%" style=3D"Margin:0;=
+padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-=
+rspace:0pt;background-color:#FEFEFE;width:100%"><tbody><tr><td align=3D"cen=
+ter" valign=3D"top" style=3D"vertical-align:top"><table class=3D"main-conta=
+iner" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation=
+" align=3D"center" bgcolor=3D"#FEFEFE" style=3D"Margin:0;padding:0;border:0=
+;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:1=
+00%;background-color:#FEFEFE"><tbody><tr><td align=3D"left" valign=3D"top" =
+style=3D"text-align:left;vertical-align:top"><div style=3D"font-size:1px;li=
+ne-height:1px;height:0;max-height:0;color:transparent;display:none;visibili=
+ty:collapse;mso-hide:all">Your payment of =E2=82=AC129.00 is due on January=
+ 27, 2026.</div><table role=3D"presentation" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"border-collapse:collapse;border-spacing:0;max-width:100%;wi=
+dth:100%"><tbody><tr><td><table class=3D"email-content-wrapper" role=3D"pre=
+sentation" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"ma=
+x-width:600px;width:100%"><tbody><tr><td class=3D"email-layout-content" ali=
+gn=3D"left" style=3D"padding-top:16px;padding-bottom:16px"><a href=3D"https=
+://click.klarna.de/f/open-in-app/Z46XVdCcWvHRuNUmSanhpw~~/AABVuxA~/3KFGZLq2=
+6rt8DpxV3qSlva4T33doVfimyIUu0Q4858mbp6QmTmGZ8JSymhMiCB183aGTxNV9VST1SY9DdwP=
+1oxrW1wV5MUEh7oSBCXK8faA26YdnwMB0vERQgi0skD6HlzeiwttymtM3D9SDxH-Cmb1QQ-DTiq=
+SAnSy-7qqX_MRt_DVAndt4PKY1GaW0NVakZXfXU-7jWeHzP3QxVWtYcxrhvGVAxqHiiTtKZUvSR=
+Xtdx7nwrnT8J9BDHbDHIfsCH0PUvtBYqpKgQaSde0GIstsOgftjSNObiBVRgx6Zwij9QGKFvxqg=
+oGvMCBVk7zkRNRzobNKbGC_9qUuyICQC5MeSYP0_D6HrMg7CubDRNCg~" target=3D"_blank"=
+ rel=3D"noreferrer" universal=3D"true"><img src=3D"https://x.klarnacdn.net/=
+comms-assets/1.0.10/comms-platform/klarna-logo.png" alt=3D"Klarna" width=3D=
+"98" height=3D"40" style=3D"display:block;-ms-interpolation-mode:bicubic;wi=
+dth:98px;height:40px"></a></td></tr></tbody></table></td></tr></tbody></tab=
+le><table class=3D"email-content-wrapper" role=3D"presentation" cellpadding=
+=3D"0" cellspacing=3D"0" align=3D"center" style=3D"max-width:600px;width:10=
+0%"><tbody><tr><td class=3D"email-layout-content" align=3D"left"><table rol=
+e=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" style=3D"max-width:1=
+00%;width:100%"><tbody><tr><td height=3D"16px" style=3D"height:16px;font-si=
+ze:16px;line-height:16px;padding:0">&nbsp;</td></tr><tr><td><h1 class=3D"co=
+lors-text-default" style=3D"Margin:0;color:#0C0C0C;font-size:31px;font-fami=
+ly:Klarna Title, Roboto, Arial, sans-serif;line-height:33px;font-weight:700=
+;font-stretch:condensed">Payment information</h1></td></tr><tr><td height=
+=3D"8px" style=3D"height:8px;font-size:8px;line-height:8px;padding:0">&nbsp=
+;</td></tr><tr><td><p class=3D"colors-text-default" style=3D"Margin:0;color=
+:#0C0C0C;font-size:16px;font-family:Klarna Text, Roboto, Arial, sans-serif;=
+line-height:21px">Hi Artem! ARYS Store has now processed your order.<br><br=
+>You can make a payment or download the payment information, all in the Kla=
+rna app.</p></td></tr><tr><td height=3D"24px" style=3D"height:24px;font-siz=
+e:24px;line-height:24px;padding:0">&nbsp;</td></tr><tr><td><table role=3D"p=
+resentation" cellpadding=3D"0" cellspacing=3D"0" class=3D"colors-background=
+s-accent" style=3D"max-width:100%;width:100%;padding:16px;background-color:=
+#E4E0F7;border-radius:16px"><tbody><tr><td><table role=3D"presentation" cel=
+lpadding=3D"0" cellspacing=3D"0" style=3D"border-collapse:collapse;border-s=
+pacing:0;max-width:600px;width:auto"><tbody><tr><td valign=3D"top"><img src=
+=3D"https://locker.klarna.com/transform/1ecf84dc-26a0-4634-aeee-62a21050df5=
+9/Email_Alert_Information_1x1_Global=3Fio=3Dtransform:scale,width:40,height=
+:40&amp;format=3Dpng" alt=3D"" width=3D"20" height=3D"20" style=3D"display:=
+block;-ms-interpolation-mode:bicubic;width:20px;height:20px"></td><td width=
+=3D"8px" style=3D"width:8px;height:1px;font-size:1px;line-height:1px;paddin=
+g:0">&nbsp;</td><td valign=3D"top"><p class=3D"colors-text-default" style=
+=3D"Margin:0;color:#0C0C0C;font-size:16px;font-family:Klarna Text, Roboto, =
+Arial, sans-serif;line-height:21px">Your payment of =E2=82=AC129.00 is due =
+on January 27, 2026.</p></td></tr></tbody></table></td></tr></tbody></table=
+></td></tr><tr><td height=3D"24px" style=3D"height:24px;font-size:24px;line=
+-height:24px;padding:0">&nbsp;</td></tr><tr><td><a href=3D"https://click.kl=
+arna.de/f/open-in-app/tqqetg2iLYp8r_fyKcPVhA~~/AABVuxA~/8-rAjXx8li-AS345KQ-=
+jc_M5hFV7lhd2RW4DUDgE1VHAC4vV4IqX5qJON668yQELN-lQwnbJqbD1TEzzsX5hI_8OuFYKlo=
+0tK3ydQgXyz6h5DHcQ3CoRII6S0U-SNP08-noEpcf_LKKhd6HZvRIdmJSA3JhoMCaUTuuoNPsQG=
+O7NqgT6nxgiOQARurz_siWxxUuInFLkw3VZM6RRF7TL-ZYZaCvJYiqGGSCdS_7T8QGMvYf_TWMa=
+90F4_6xtugYOFX9OfAl8QWg0GeVEl5_yoo4SGE-2HuuSHuZQ-qhbTOxRatflwjrXeB2h5XfCAP1=
+PF3ajuaRPKaAe8WfCMLT_MmtoxpxBbTvdPqsrtFrE4R78Omx8rpSFC5R0xkJmlnjzKY2VmA3BlM=
+rAMfwCT634kgCD1kYhxCPMP8Raf05AqWTTlR2K1Xwur03VeGofVV6wYJEQNXAEGMaazbUwAEpTR=
+zRPJZhyCT1iIEiHcfDktZDrYnYlXyPKEXk7opN6ToLdXUIEzZwc8OuI4AUbiXOWwxJ4ZWy2Ge8D=
+ymmUUb6iVaUSxdBG_qwMx6juK58gNIFYf5wPLdGuqq9SSvWvxbUduBMK4shMj6HVV09nTdqK7-T=
+j6v_Zw7TW72V_mSWXQhDL0QTFF0VVhyp__g3Sv2GXkpEkkHSCleDGIbWKs1EkZgjEYfvEhMAiLL=
+wW3KkvCTeCFfs52-RYGvQEo9nEf16OQ71aiXgFFzdHvCLtWF0aiRZzh98-xmswVNaaqKl4YD7Kf=
+hCgdUJ2mFyYgLlWKcJzXtFqknG1wzxajApI5mgZMYOAIh2TMtMrMtFqL4JLMDqsFAamNzsPNWOq=
+xF0AzDgBUutr3zWI1a0ileBSt6IUftmlNNrgIKszAUg3E8VciIwCmaXcBmZtbegtLjyp5TikCkM=
+80H3rPDyRO7_GuKzcZLo~" rel=3D"noreferrer" style=3D"text-decoration:none;dis=
+play:inline-block;border-radius:999px" target=3D"_blank" universal=3D"true"=
+><table role=3D"presentation" cellpadding=3D"0" cellspacing=3D"0" class=3D"=
+colors-backgrounds-inverse colors-borders-default" style=3D"max-width:600px=
+;width:auto;background-color:#0C0C0C;border:1px solid #0C0C0C;border-radius=
+:999px;padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom=
+:12px"><tbody><tr><td align=3D"center"><p class=3D"colors-text-inverse" sty=
+le=3D"Margin:0;color:#FEFEFE;font-size:16px;font-family:Klarna Text, Roboto=
+, Arial, sans-serif;line-height:17px;font-weight:700">View in Klarna app</p=
+></td></tr></tbody></table></a><table role=3D"presentation" style=3D"border=
+-collapse:collapse;border-spacing:0"><tbody><tr><td height=3D"16px" style=
+=3D"height:16px;font-size:16px;line-height:16px;padding:0">&nbsp;</td></tr>=
+</tbody></table><p class=3D"colors-text-neutral" style=3D"Margin:0;color:#5=
+55555;font-size:14px;font-family:Klarna Text, Roboto, Arial, sans-serif;lin=
+e-height:18px">If now is not a good time to download the app, you can <a cl=
+ass=3D"secondary" href=3D"https://click.klarna.de/f/open-in-app/4R0oHZnSP9v=
+6a0hi1ddQVw~~/AABVuxA~/2BcgnkVpTKSIYeRPwIvrgBbP1KSLH7451SzhUpSeBbqgBfkA6yhS=
+_VHXPYsrpzlWTQYGpOREbApjK6_G7bpzMXAqyyr8Y2UK3QdvShyJUxWUTXXbbnj1Gid3V0oCw0G=
+SUTc7ruDy51U8cEoLAfXZlg1Z3fDb1BtgDqwsfUAbOfLZ_lxsh6zcXypD_m9L1InghDY_5kMeNi=
+s0_5g7XBonY_0Hx9NoBWC8An3-tcB8C0q7xVJb_36J5Tp_s_iSettS8bUVqranUfDCcqa73NneO=
+F59ACZ0mROMtISAiqS2gmvRgo46RlmpfOp8q3w_zWVimjvtGFRmLNy8keeCvFHskeqtekVULFNb=
+p3KTuORrYXDx5htqjoWr8oRIZp7nulo1-aaEm-oK99eySAqy9KcP-mfknchh78jQY8G-1aJYDa9=
+w4v6Sa8_F0fzqDHeDQY1GgNXTkzy5Xaw0LH_eo3utRTxxU2LhO52HbBzc1JTr9hBKhz-QhxN8-1=
+pJ4QSwBZNJLOPjcMHsf7IRbmkM-R-vtslq-FTVA7EZcDe2IinOJidLw3dbrIRm2-Le9L5-BfWfE=
+cq1_R-peEVBs-Fa9XSWBe2icpPOFMoAziDRPk2LBRprraeNzASaYatbdDo_rX5rgs1UtvnTb4d8=
+wT9zsa-XytktYlkEJos51PXlWFiis8GJ7YzOmeBY9YBM-wbjb_fatasgA0aigG85wakoms760Ah=
+6zHkTGupaLk3ng5PiTV5m1wQpYk4olRuOeryWlkOPNoSu7TwFJzC_RXjOKmMMotA4ePQDcn1fO4=
+8kqF3us64HXKvDqaDXl-IdQmcTBoEYQH4ldm8Cqs1kl1OMDbMzexfeL-EN0Yqstxwa956vbw0H4=
+Dn35KpyR7Yl20R8HmV_Qgy59q6Lc6mh7XQ1v4LH6Q~~" target=3D"_blank" rel=3D"noref=
+errer" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#555555;f=
+ont-weight:normal;font-size:14px;line-height:20px;text-decoration:underline=
+ !important" universal=3D"true">view in browser</a>.</p></td></tr><tr><td h=
+eight=3D"40px" style=3D"height:40px;font-size:40px;line-height:40px;padding=
+:0">&nbsp;</td></tr><tr><td><table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;b=
+order:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;=
+width:100%;min-width:100%;max-width:100%"><tbody><tr><td align=3D"center" s=
+tyle=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weig=
+ht:bold;font-size:16px;line-height:18px;text-align:center"><!--[if mso]>=0A=
+          <v:roundrect=0A          xmlns:v=3D"urn:schemas-microsoft-com:vml=
+"=0A          xmlns:w=3D"urn:schemas-microsoft-com:office:word"=0A         =
+ href=3D"https://l.klarna.com/22XC=3Fpid=3DTRX&af_dp=3Dklarna%3A%2F%2F&af_s=
+ub1=3D3elY6f2J&af_param_forwarding=3Dfalse&is_retargeting=3Dfalse&c=3DDE.NB=
+ANudge&af_adset=3DResell&deep_link_value=3D%2Fresell%2Fdashboard&af_web_dp=
+=3Dhttps%3A%2F%2Fapp.klarna.com%2Fmanage-payments%2Fresell%2Fdashboard&k_co=
+mmsid=3Dc59431e3-adb6-59b3-9418-aca2c0c3186e"=0A          style=3D"v-text-a=
+nchor:middle;height:85px;width:520px;"=0A          arcsize=3D"25%"=0A      =
+    stroke=3D"f"=0A          fillcolor=3D"#F5F5F5">=0A            <w:anchor=
+lock/>=0A            <center style=3D"font-family:'Klarna Text', Arial,sans=
+-serif;font-weight:bold;font-size:16px;line-height:18px;color:#0c0c0c;"><ta=
+ble class=3D"nudgeBlock lollipop" border=3D"0" cellPadding=3D"0" cellSpacin=
+g=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;bo=
+rder:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;w=
+idth:100%;min-width:100%"><tr><td style=3D"padding-left:20px;padding-right:=
+20px"><table class=3D"spacer" border=3D"0" cellPadding=3D"0" cellSpacing=3D=
+"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border=
+:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width=
+:100%;min-width:100%"><tr><td height=3D"5" style=3D"font-size:5px;line-heig=
+ht:5px;height:5px">=C2=A0</td></tr></table><table border=3D"0" cellPadding=
+=3D"0" cellSpacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Marg=
+in:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-t=
+able-rspace:0pt;width:100%;min-width:100%"><tr><td><img class=3D"nudge-icon=
+" src=3D"https://locker.klarna.com/transform/be64426c-7927-47be-9610-661956=
+f7027f/Email_Retweet_Icon_1x1" alt=3D"" width=3D"50" height=3D"50" border=
+=3D"0" style=3D"display:block;outline:0;-ms-interpolation-mode:bicubic;widt=
+h:50px;height:50px"/></td><td width=3D"15">=C2=A0</td><td><span class=3D"pr=
+imary" style=3D"font-family:&#x27;Klarna Text&#x27;, Arial,sans-serif;color=
+:#0c0c0c;font-weight:bold;font-size:16px;line-height:25px">Resell with Klar=
+na</span><p class=3D"primary" style=3D"font-family:&#x27;Klarna Text&#x27;,=
+ Arial,sans-serif;color:#0c0c0c;font-weight:normal;font-size:14px;line-heig=
+ht:20px;Margin-top:0;Margin-bottom:0">Turn past purchases into cash.</p></t=
+d><td><img src=3D"https://x.klarnacdn.net/comms-assets/1.0.12/comms-platfor=
+m/lollipop/icons/chevron/right.png" alt=3D"" width=3D"12" height=3D"12" bor=
+der=3D"0" style=3D"display:block;outline:0;-ms-interpolation-mode:bicubic;w=
+idth:12px;height:12px"/></td></tr></table></td></tr></table></center>=0A   =
+       </v:roundrect>=0A          <![endif]--> <!--[if !mso]><!--><a class=
+=3D"btn-a-secondary" href=3D"https://click.klarna.de/f/open-in-app/3iHfZJYY=
+Jd_M6tl6oz2deg~~/AABVuxA~/YMjdC9Y2XRqhTSjgCV7nvY8pcnmbRUoh7sN7CdMXvnxupSmCG=
+aDRAePMB83WyK-obq8_3KgtMNB05XLLfRWI_c8Gape-HP4tDyBYQ1-hFiUUP3R3U13z2WORNQPK=
+z_F5MQrmCXiwGBWSIKgLPOf3vsETJXQ5KhGlRdYqvIAlyRLcg-jcI3Yb0CJMpJMA4tjAUsR_QiM=
+fgDY7oetP_v3Vm5YEgLkKKRaOhFc_lQ6aqHotSie8wssrFSfQZ-c8ovCQHO_9RrQ609Mu4BZF-8=
+HnFtax9HEcsE552cPoehyEaERhMF7mmpYDM3bVYIlQpvbmvG0McZnw_AWAG3jmaG64ONdT4DkQ5=
+7yhCPToCgVn40c8Ehocx2HRQymDXlcC4ByFbCM1ht7E2L8RhFJ8v7YK1-WwoAqWHJBSy9pRE4fn=
+ATFu00hwnaWZ_X8h7pf-ODaHcl1BZPjscPpXbGRp2W1Qn8_Whtk7hwTTdxrBOOXGK2VR5u6t2xT=
+QLewlIUaOEEkM" target=3D"_blank" rel=3D"noreferrer" style=3D"font-family:'K=
+larna Text', Arial,sans-serif;color:#0c0c0c;font-weight:normal;font-size:16=
+px;line-height:25px;background-color:#F5F5F5;padding-top:15px;padding-botto=
+m:15px;border-radius:10px;text-decoration:none !important;text-align:left;h=
+eight:auto;mso-height:85px;width:100%;display:block;mso-width:520px;mso-hid=
+e:all" universal=3D"true"><table class=3D"nudgeBlock lollipop" border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" s=
+tyle=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspa=
+ce:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td style=
+=3D"padding-left:20px;padding-right:20px"><table class=3D"spacer" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%=
+" style=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-l=
+space:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td he=
+ight=3D"5" style=3D"font-size:5px;line-height:5px;height:5px">&nbsp;</td></=
+tr></tbody></table><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" =
+role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;b=
+order-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100=
+%;min-width:100%"><tbody><tr><td><img class=3D"nudge-icon" src=3D"https://l=
+ocker.klarna.com/transform/be64426c-7927-47be-9610-661956f7027f/Email_Retwe=
+et_Icon_1x1" alt=3D"" width=3D"50" height=3D"50" border=3D"0" style=3D"disp=
+lay:block;outline:0;-ms-interpolation-mode:bicubic;width:50px;height:50px">=
+</td><td width=3D"15">&nbsp;</td><td><span class=3D"primary" style=3D"font-=
+family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:bold;font-=
+size:16px;line-height:25px">Resell with Klarna</span><p class=3D"primary" s=
+tyle=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weig=
+ht:normal;font-size:14px;line-height:20px;Margin-top:0;Margin-bottom:0">Tur=
+n past purchases into cash.</p></td><td><img src=3D"https://x.klarnacdn.net=
+/comms-assets/1.0.12/comms-platform/lollipop/icons/chevron/right.png" alt=
+=3D"" width=3D"12" height=3D"12" border=3D"0" style=3D"display:block;outlin=
+e:0;-ms-interpolation-mode:bicubic;width:12px;height:12px"></td></tr></tbod=
+y></table></td></tr></tbody></table></a><!-- <![endif]--></td></tr></tbody>=
+</table></td></tr><tr><td height=3D"40px" style=3D"height:40px;font-size:40=
+px;line-height:40px;padding:0">&nbsp;</td></tr><tr><td><h2 style=3D"font-fa=
+mily:'Klarna Text', Roboto, Arial, sans-serif;font-weight:700;font-size:21p=
+x;line-height:22px;Margin-top:0;Margin-bottom:0;color:#0c0c0c">Pay by bank =
+transfer</h2><table class=3D"spacer" border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0=
+;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0p=
+t;width:100%;min-width:100%"><tbody><tr><td height=3D"15" style=3D"font-siz=
+e:15px;line-height:15px;height:15px">&nbsp;</td></tr></tbody></table><p cla=
+ss=3D"primary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#=
+0c0c0c;font-weight:normal;font-size:16px;line-height:25px;Margin-top:0;Marg=
+in-bottom:0">=0AIf you prefer to make your payment manually, please use the=
+ payment details provided below. Ensure that each order is paid separately =
+using the unique payment reference for each transaction.</p><table class=3D=
+"spacer" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentat=
+ion" width=3D"100%" style=3D"Margin:0;padding:0;border:0;border-collapse:co=
+llapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"=
+><tbody><tr><td height=3D"15" style=3D"font-size:15px;line-height:15px;heig=
+ht:15px">&nbsp;</td></tr></tbody></table><table border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:=
+0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-tabl=
+e-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td align=3D"left" valig=
+n=3D"middle" style=3D"vertical-align:middle;padding-top:15px;padding-bottom=
+:15px"><span class=3D"primary" style=3D"font-family:'Klarna Text', Arial,sa=
+ns-serif;color:#0c0c0c;font-weight:normal;font-size:16px;line-height:20px">=
+Recipient</span></td><td align=3D"right" valign=3D"middle" style=3D"vertica=
+l-align:middle;padding-top:15px;padding-bottom:15px;padding-left:15px"><spa=
+n class=3D"primary" style=3D"font-family:'Klarna Text', Arial,sans-serif;co=
+lor:#0c0c0c;font-weight:bold;font-size:16px;line-height:20px">Klarna Bank A=
+B (publ)</span></td></tr><tr><td colspan=3D"2" height=3D"1"><table class=3D=
+"divider" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presenta=
+tion" width=3D"100%" style=3D"Margin:0;padding:0;border:0;border-collapse:c=
+ollapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%=
+"><tbody><tr><td class=3D"divider-line" height=3D"1" style=3D"font-size:1px=
+;line-height:1px;height:1px;background-color:#EEEEEE">&nbsp;</td></tr></tbo=
+dy></table></td></tr><tr><td align=3D"left" valign=3D"middle" style=3D"vert=
+ical-align:middle;padding-top:15px;padding-bottom:15px"><span class=3D"prim=
+ary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;fon=
+t-weight:normal;font-size:16px;line-height:20px">IBAN</span></td><td align=
+=3D"right" valign=3D"middle" style=3D"vertical-align:middle;padding-top:15p=
+x;padding-bottom:15px;padding-left:15px"><span class=3D"primary" style=3D"f=
+ont-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:bold;f=
+ont-size:16px;line-height:20px">DE13760700120500154000</span></td></tr><tr>=
+<td colspan=3D"2" height=3D"1"><table class=3D"divider" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D=
+"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;=
+mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td class=3D"div=
+ider-line" height=3D"1" style=3D"font-size:1px;line-height:1px;height:1px;b=
+ackground-color:#EEEEEE">&nbsp;</td></tr></tbody></table></td></tr><tr><td =
+align=3D"left" valign=3D"middle" style=3D"vertical-align:middle;padding-top=
+:15px;padding-bottom:15px"><span class=3D"primary" style=3D"font-family:'Kl=
+arna Text', Arial,sans-serif;color:#0c0c0c;font-weight:normal;font-size:16p=
+x;line-height:20px">IBIC/SWIFT</span></td><td align=3D"right" valign=3D"mid=
+dle" style=3D"vertical-align:middle;padding-top:15px;padding-bottom:15px;pa=
+dding-left:15px"><span class=3D"primary" style=3D"font-family:'Klarna Text'=
+, Arial,sans-serif;color:#0c0c0c;font-weight:bold;font-size:16px;line-heigh=
+t:20px">DEUTDEMM760</span></td></tr><tr><td colspan=3D"2" height=3D"1"><tab=
+le class=3D"divider" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;borde=
+r-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;mi=
+n-width:100%"><tbody><tr><td class=3D"divider-line" height=3D"1" style=3D"f=
+ont-size:1px;line-height:1px;height:1px;background-color:#EEEEEE">&nbsp;</t=
+d></tr></tbody></table></td></tr><tr><td align=3D"left" valign=3D"middle" s=
+tyle=3D"vertical-align:middle;padding-top:15px;padding-bottom:15px"><span c=
+lass=3D"primary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color=
+:#0c0c0c;font-weight:normal;font-size:16px;line-height:20px">Payment refere=
+nce</span></td><td align=3D"right" valign=3D"middle" style=3D"vertical-alig=
+n:middle;padding-top:15px;padding-bottom:15px;padding-left:15px"><span clas=
+s=3D"primary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0=
+c0c0c;font-weight:bold;font-size:16px;line-height:20px">9376816810830</span=
+></td></tr><tr><td colspan=3D"2" height=3D"1"><table class=3D"divider" bord=
+er=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D=
+"100%" style=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-ta=
+ble-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><=
+td class=3D"divider-line" height=3D"1" style=3D"font-size:1px;line-height:1=
+px;height:1px;background-color:#EEEEEE">&nbsp;</td></tr></tbody></table></t=
+d></tr><tr><td align=3D"left" valign=3D"middle" style=3D"vertical-align:mid=
+dle;padding-top:15px;padding-bottom:15px"><span class=3D"primary" style=3D"=
+font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:norma=
+l;font-size:16px;line-height:20px">Amount to pay</span></td><td align=3D"ri=
+ght" valign=3D"middle" style=3D"vertical-align:middle;padding-top:15px;padd=
+ing-bottom:15px;padding-left:15px"><span class=3D"primary" style=3D"font-fa=
+mily:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:bold;font-si=
+ze:16px;line-height:20px">=E2=82=AC129.00</span></td></tr></tbody></table><=
+p class=3D"secondary" style=3D"font-family:'Klarna Text', Arial,sans-serif;=
+color:#555555;font-weight:normal;font-size:14px;line-height:20px;Margin-top=
+:0;Margin-bottom:0">Please note that the merchant has assigned Klarna Bank =
+AB (publ) to handle the payment for this order. Therefore, you must send yo=
+ur payment to Klarna AB (publ) instead of the merchant.</p></td></tr><tr><t=
+d height=3D"40px" style=3D"height:40px;font-size:40px;line-height:40px;padd=
+ing:0">&nbsp;</td></tr><tr><td><h2 style=3D"font-family:'Klarna Text', Robo=
+to, Arial, sans-serif;font-weight:700;font-size:21px;line-height:22px;Margi=
+n-top:0;Margin-bottom:0;color:#0c0c0c">Summary</h2><table class=3D"spacer" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" widt=
+h=3D"100%" style=3D"Margin:0;padding:0;border:0;border-collapse:collapse;ms=
+o-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><=
+tr><td height=3D"15" style=3D"font-size:15px;line-height:15px;height:15px">=
+&nbsp;</td></tr></tbody></table><table class=3D"spacer" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D=
+"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;=
+mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"10=
+" style=3D"font-size:10px;line-height:10px;height:10px">&nbsp;</td></tr></t=
+body></table><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;borde=
+r-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;mi=
+n-width:100%"><tbody><tr><td align=3D"left" valign=3D"center" width=3D"40" =
+style=3D"width:40px;padding-right:15px"><p style=3D"Margin-top:0;Margin-bot=
+tom:0">=0A<!--[if (gte mso 9)|(IE)]>        <v:oval xmlns:v=3D"urn:schemas-=
+microsoft-com:vml" xmlns:w=3D"urn:schemas-microsoft-com:office:word" style=
+=3D"height:40px;width:40px;" fill=3D"true" stroke=3D"true" strokecolor=3D"#=
+EEEEEE" strokeweight=3D"1pt" >=0A          <v:fill type=3D"frame" src=3D"ht=
+tps://assets.klarnacdn.net/rs:fit:300:300:1:1/bg:255:255:255/image/81a9a148=
+-84a6-4062-b96d-d991b394dea9/4b25d4c9c345961fab07b1a64c8a28b9=3Fwidth=3D80&=
+height=3D80" style=3D"height:40px;width:40px;" />=0A        </v:oval>=0A   =
+   <![endif]--><!--[if !IE]><!--><img src=3D"https://assets.klarnacdn.net/r=
+s:fit:300:300:1:1/bg:255:255:255/image/81a9a148-84a6-4062-b96d-d991b394dea9=
+/4b25d4c9c345961fab07b1a64c8a28b9=3Fwidth=3D80&amp;height=3D80" alt=3D"" wi=
+dth=3D"40" height=3D"40" border=3D"1" style=3D"display:block;border:1px sol=
+id #EEEEEE;outline:0;-ms-interpolation-mode:bicubic;width:40px;height:40px;=
+border-radius:50%"><!--<![endif]--></p></td><td align=3D"left" valign=3D"ce=
+nter"><span class=3D"primary" style=3D"font-family:'Klarna Text', Arial,san=
+s-serif;color:#0c0c0c;font-weight:bold;font-size:16px;line-height:25px">ARY=
+S Store</span></td></tr></tbody></table><table class=3D"spacer" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" =
+style=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lsp=
+ace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td heig=
+ht=3D"10" style=3D"font-size:10px;line-height:10px;height:10px">&nbsp;</td>=
+</tr></tbody></table><table class=3D"spacer" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;p=
+adding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-r=
+space:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"10" style=3D"=
+font-size:10px;line-height:10px;height:10px">&nbsp;</td></tr></tbody></tabl=
+e><table class=3D"divider" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;=
+border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:10=
+0%;min-width:100%"><tbody><tr><td class=3D"divider-line" height=3D"1" style=
+=3D"font-size:1px;line-height:1px;height:1px;background-color:#EEEEEE">&nbs=
+p;</td></tr></tbody></table><table class=3D"real-table" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D=
+"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;=
+mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td align=3D"lef=
+t" valign=3D"middle" style=3D"vertical-align:middle;padding-top:15px;paddin=
+g-bottom:15px"><span class=3D"primary" style=3D"font-family:'Klarna Text', =
+Arial,sans-serif;color:#0c0c0c;font-weight:normal;font-size:16px;line-heigh=
+t:20px">Klarna order reference</span></td><td align=3D"right" valign=3D"mid=
+dle" style=3D"vertical-align:middle;padding-top:15px;padding-bottom:15px;pa=
+dding-left:15px"><span class=3D"primary" style=3D"font-family:'Klarna Text'=
+, Arial,sans-serif;color:#0c0c0c;font-weight:bold;font-size:16px;line-heigh=
+t:20px">S0JP11CD</span></td></tr><tr><td colspan=3D"2" height=3D"1"><table =
+class=3D"divider" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"=
+presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;border-co=
+llapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-wi=
+dth:100%"><tbody><tr><td class=3D"divider-line" height=3D"1" style=3D"font-=
+size:1px;line-height:1px;height:1px;background-color:#EEEEEE">&nbsp;</td></=
+tr></tbody></table></td></tr><tr><td align=3D"left" valign=3D"middle" style=
+=3D"vertical-align:middle;padding-top:15px;padding-bottom:15px"><span class=
+=3D"primary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c=
+0c0c;font-weight:normal;font-size:16px;line-height:20px">Order placed</span=
+></td><td align=3D"right" valign=3D"middle" style=3D"vertical-align:middle;=
+padding-top:15px;padding-bottom:15px;padding-left:15px"><span class=3D"prim=
+ary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;fon=
+t-weight:bold;font-size:16px;line-height:20px">December 28, 2025</span></td=
+></tr><tr><td colspan=3D"2" height=3D"1"><table class=3D"divider" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%=
+" style=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-l=
+space:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td cl=
+ass=3D"divider-line" height=3D"1" style=3D"font-size:1px;line-height:1px;he=
+ight:1px;background-color:#EEEEEE">&nbsp;</td></tr></tbody></table></td></t=
+r><tr><td align=3D"left" valign=3D"middle" style=3D"vertical-align:middle;p=
+adding-top:15px;padding-bottom:15px"><span class=3D"primary" style=3D"font-=
+family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:normal;fon=
+t-size:16px;line-height:20px">Payment option</span></td><td align=3D"right"=
+ valign=3D"middle" style=3D"vertical-align:middle;padding-top:15px;padding-=
+bottom:15px;padding-left:15px"><span class=3D"primary" style=3D"font-family=
+:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:bold;font-size:1=
+6px;line-height:20px">Pay in 30 days</span></td></tr></tbody></table><table=
+ class=3D"spacer" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"=
+presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;border-co=
+llapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-wi=
+dth:100%"><tbody><tr><td height=3D"30" style=3D"font-size:30px;line-height:=
+30px;height:30px">&nbsp;</td></tr></tbody></table><h3 style=3D"font-family:=
+'Klarna Text', Roboto, Arial, sans-serif;font-weight:700;font-size:18px;lin=
+e-height:19px;Margin-top:0;Margin-bottom:0;color:#0c0c0c">Order details</h3=
+><table class=3D"spacer" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" r=
+ole=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;bo=
+rder-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%=
+;min-width:100%"><tbody><tr><td height=3D"15" style=3D"font-size:15px;line-=
+height:15px;height:15px">&nbsp;</td></tr></tbody></table><table class=3D"re=
+al-table" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presenta=
+tion" width=3D"100%" style=3D"Margin:0;padding:0;border:0;border-collapse:c=
+ollapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%=
+"><tbody><tr><td align=3D"left" valign=3D"middle" style=3D"vertical-align:m=
+iddle;padding-top:20px;padding-bottom:20px"><span class=3D"primary" style=
+=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:n=
+ormal;font-size:16px;line-height:20px">Total</span></td><td align=3D"right"=
+ valign=3D"middle" style=3D"vertical-align:middle;padding-top:20px;padding-=
+bottom:20px;padding-left:15px;white-space:nowrap"><span class=3D"primary" s=
+tyle=3D"font-family:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weig=
+ht:bold;font-size:16px;line-height:20px">=E2=82=AC129.00</span></td></tr>=
+=0A</tbody></table><table class=3D"spacer" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;pad=
+ding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rsp=
+ace:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"15" style=3D"fo=
+nt-size:15px;line-height:15px;height:15px">&nbsp;</td></tr></tbody></table>=
+<p style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#4A20BA;font-=
+weight:bold;font-size:16px;line-height:25px;text-decoration:none !important=
+;Margin-top:0;Margin-bottom:0"><a class=3D"standalone" href=3D"https://clic=
+k.klarna.de/f/open-in-app/YGj75g81uAco1GtcOSObsA~~/AABVuxA~/B-vDHQnZRzKJbZE=
+o9b8Ft6abcQ9BROx2Zy0eKyy8Cb5Nulnwt9WFqCvmgv10YryvvsK9ho_cOsTIYAge6COygtO6O1=
+A-N1ABF9Dh-4PP-b1NISVZQECrp8NiiCtNxX7wt_O4ydN_ag7qIc50bLsSZc2TS629_phNKajJd=
+TSe7ROWSVsve5BoWoq8by-DfUDrXEjqylQNY_TBMIEA8B3wGtLLzaAQyqldYzPzccHWM6KuOssv=
+NL1eUMm_WdByMx3j87MEQrOALMpbCTpgDyK6vG8ElEhpvhbTkQ3aaspSillQn8XQlsT-iBIOvT3=
+isePSqsxC8pXpEH0Sqs_QM8Npqu7ldFWilPvCtg_HziF5KoHJMVdULgVIxthg-QevkR32-y3NCh=
+CmCt-iQxb5NJSc7UqzpwLghve3YL91pctncIBWUHP9UIpOqnuQHJVqXTVgjyouw4bi8erzLBBfR=
+4k7yuqaKx36tWylAvFOsMsRT9TGeEYkhB3J5V0eDuuBf-ctqOlmdZhVvOKLt8_euUqRDpOriQxb=
+KPp_XdbKtO6GQLBEEPYsjeCd9zf9VSgR5Sr3TG-ZQLjJsbydKkO58BoR_Va3vXM5IvzSK9k9gy_=
+NXWMlcBdw4AfzVpJb56hXaQVtx3FaLO1pFanemYjO_YpVbZizSUTaAHuHSd-8aFO6WbxnrEo7ds=
+Vdvw8NplfOsv-qdeaQD2vHkvBENyNFEPX_guP--5HEGjybbNU22JXGEqG9IqaxJmWz7uvXNciD4=
+GQBQx1dy_GwAZrzCTnZfPT0-eh0z4VfRPKIVMw5GuuJoBjsV_16B2Go6nnbqJJesk8V0CWhd3D_=
+cpkZh4BSgh--L8xlVHAjF2PJRnwLAlL6D_P9ubo16Rud-hHWlb7oqYfHd3DUWQKWo_LADmW_rW3=
+YvzAu63xvwgjTYDPQ6bxchC4~" target=3D"_blank" rel=3D"noreferrer" style=3D"fo=
+nt-family:'Klarna Text', Arial,sans-serif;color:#4A20BA;font-weight:bold;fo=
+nt-size:16px;line-height:25px;text-decoration:none !important" universal=3D=
+"true">=0AView more details in the Klarna app</a></p></td></tr><tr><td heig=
+ht=3D"40px" style=3D"height:40px;font-size:40px;line-height:40px;padding:0"=
+>&nbsp;</td></tr><tr><td><img src=3D"https://locker.klarna.com/transform/b7=
+b22dec-cb92-47a3-9b72-ab617dde4444/Email_AIChat_Icon_1x1=3Fio=3Dtransform:s=
+cale,width:96,height:96&amp;format=3Dpng" alt=3D"Speech bubble with sparkle=
+ icon." width=3D"48" height=3D"48" style=3D"display:block;-ms-interpolation=
+-mode:bicubic;width:48px;height:48px"><table role=3D"presentation" style=3D=
+"border-collapse:collapse;border-spacing:0"><tbody><tr><td height=3D"16px" =
+style=3D"height:16px;font-size:16px;line-height:16px;padding:0">&nbsp;</td>=
+</tr></tbody></table><h2 class=3D"colors-text-default" style=3D"Margin:0;co=
+lor:#0C0C0C;font-size:21px;font-family:Klarna Text, Roboto, Arial, sans-ser=
+if;line-height:22px;font-weight:700">Have a question=3F</h2><table role=3D"=
+presentation" style=3D"border-collapse:collapse;border-spacing:0"><tbody><t=
+r>=0A<td height=3D"32px" style=3D"height:32px;font-size:32px;line-height:32=
+px;padding:0">&nbsp;</td></tr></tbody></table><p class=3D"colors-text-defau=
+lt" style=3D"Margin:0;color:#0C0C0C;font-size:18px;font-family:Klarna Text,=
+ Roboto, Arial, sans-serif;line-height:19px;font-weight:700">What if I have=
+ a problem with my order=3F</p><table role=3D"presentation" style=3D"border=
+-collapse:collapse;border-spacing:0"><tbody><tr><td height=3D"4px" style=3D=
+"height:4px;font-size:4px;line-height:4px;padding:0">&nbsp;</td></tr></tbod=
+y></table><p class=3D"colors-text-default" style=3D"Margin:0;color:#0C0C0C;=
+font-size:16px;font-family:Klarna Text, Roboto, Arial, sans-serif;line-heig=
+ht:21px">First, contact <a class=3D"primary" href=3D"https://click.klarna.d=
+e/f/a/7156DvfweaxrGlaWS2nNUA~~/AABVuxA~/fqoSJyt6lKblxzf4ei-WEBMWQDK2gC-sW4X=
+ohrvTZ9UYTk7_60zB3pbKR8aREk0LPj_C1ki0WhMRUv3ucP-qXK3t7NViAxtyorugCHSPEbrU5M=
+e-_srHeF3AgL3A-8I6" target=3D"_blank" rel=3D"noreferrer" style=3D"font-fami=
+ly:'Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:normal;font-si=
+ze:16px;line-height:25px;text-decoration:underline !important">ARYS Store</=
+a>=0A. Then <a class=3D"primary" href=3D"https://click.klarna.de/f/open-in-=
+app/-1j4kiA31AHKN0AD9NE_Vw~~/AABVuxA~/4WB4kNf8Hnbpuc55n4PI8VhzJjmszEr_CcToG=
+00LGo_U76_lworIfTT_bzXluoe_Vq1cja3YKrwnCYxb-PgZ0to1k6eLvb0h-jNQfj-TI95NBhuy=
+WhC6iGeoe-tcA5wkNPDeTfVgG4Y3VqvpFaETsSN4AQx6x5DEmkmVmaOXc1HR8RJp2zpar2wfAsL=
+xukdkP3EZG_YvrvhJ2in23zTReyD3Z1qTnz153ltPdyVUSLE_47DXmemKeVKxEj7JaGEwLS_xG6=
+pnQOMr5mW-pqMp2K7_X_urjYRVdJl0nAZ9w9Ls2XZgQuSmLVVDy0EIsf4UvtkKnzjHGGP-xlpYF=
+mfrVHhsqJGHedJt0ErNt8rtP48Sy2hBgJuKljh4ssdsryl65RmZmyU_CHtvMDRp8xQY20dwSNvT=
+_a41V9uked86HQrv0Tn9_i_GGmD0iFyWNr15Li3tBajOPPngTCDF-IviIV7h6QiuQxPqVtPtbm6=
+HbPneuj4tbTGOqruXOU_tHlzYdLJ50q3z69KwNSof7Q5qCMS8uGjL_8KIQS3nB11P7Bqn6Zrt6q=
+24jrO1L0StNC_88o_d_uqPQjHh7tMOcn8NW4mkCt1fKYv6lSFO4FwtD7oNG0O123D6TSdf3VXYY=
+Of19xOg9NRJDmSeZxXTgHSxe7PI_gk_FXKrO6yclnwR6ae4AjFVQWkHXIpbxkvFEJglE5UlMgjW=
+keF5WQ64eanO7K-ahlzaMjsajHqMJTLEwgdUHHAZkHZmQUTI2NYJ-JvyeefwskOWyz_syDQAzEa=
+8mxifhtNc0YdkRWnCpF8xRCAO7RK1GMZudQvhlDm3iKMZfJQJEokwLuhah92e1omjE2ux2Zpe7k=
+7J91FNeVh9kdA~" target=3D"_blank" rel=3D"noreferrer" style=3D"font-family:'=
+Klarna Text', Arial,sans-serif;color:#0c0c0c;font-weight:normal;font-size:1=
+6px;line-height:25px;text-decoration:underline !important" universal=3D"tru=
+e">report a problem</a>=0A in the Klarna app so we can pause your upcoming =
+payment while the problem is resolved.</p><table role=3D"presentation" styl=
+e=3D"border-collapse:collapse;border-spacing:0"><tbody><tr><td height=3D"16=
+px" style=3D"height:16px;font-size:16px;line-height:16px;padding:0">&nbsp;<=
+/td></tr></tbody></table><table role=3D"presentation" cellpadding=3D"0" cel=
+lspacing=3D"0" style=3D"max-width:100%;width:100%"><tbody><tr><td align=3D"=
+left"><hr class=3D"colors-backgrounds-subtle" style=3D"border:none;backgrou=
+nd-color:#EEEEEE;height:1px;font-size:1px;line-height:1px;Margin:0;padding:=
+0;max-width:100%"></td></tr></tbody></table><table role=3D"presentation" st=
+yle=3D"border-collapse:collapse;border-spacing:0"><tbody><tr><td height=3D"=
+16px" style=3D"height:16px;font-size:16px;line-height:16px;padding:0">&nbsp=
+;</td></tr></tbody></table><p class=3D"colors-text-default" style=3D"Margin=
+:0;color:#0C0C0C;font-size:18px;font-family:Klarna Text, Roboto, Arial, san=
+s-serif;line-height:19px;font-weight:700">Still have questions=3F</p><table=
+ role=3D"presentation" style=3D"border-collapse:collapse;border-spacing:0">=
+<tbody><tr><td height=3D"4px" style=3D"height:4px;font-size:4px;line-height=
+:4px;padding:0">&nbsp;</td></tr></tbody></table><p class=3D"colors-text-def=
+ault" style=3D"Margin:0;color:#0C0C0C;font-size:16px;font-family:Klarna Tex=
+t, Roboto, Arial, sans-serif;line-height:21px">Get 24/7 support and find an=
+swers to your questions with our customer service assistant.</p><table role=
+=3D"presentation" style=3D"border-collapse:collapse;border-spacing:0"><tbod=
+y><tr><td height=3D"16px" style=3D"height:16px;font-size:16px;line-height:1=
+6px;padding:0">&nbsp;</td></tr></tbody></table><p style=3D"color:#4A20BA;fo=
+nt-size:16px;font-family:Klarna Text, Roboto, Arial, sans-serif;line-height=
+:21px;font-weight:700;text-decoration:none;Margin:0" class=3D"colors-text-a=
+ccent"><a href=3D"https://click.klarna.de/f/open-in-app/fnZh1kFdXQL_ptgqm_E=
+5fA~~/AABVuxA~/oVBkt8hDu0mpR89aZXlNQ2_0QXukJZKcjKqpEGRYs4FFhb38SfQ78bTWEYVe=
+i69RQxUvvq5oyFETCCMzphVL1Jt2OzjapAIQvvgpt8ALRS12Tjy8m7K05LkPd3Fqy6hTJUgOuoe=
+ZUNJ-XfU6KzjayVAVjpOEEqxkGbYKneQQCFzMB5T0yz6ZPxN-YdDsHz9wz9ZAIGE_BqMAWtuhQu=
+HQnpmxofYjvwbXjk1C3gImBZ6Aw6xJRYqxfxhh4q0D0NbxIuY-wsncTCpKc5WTF_SZ-hHlZg7W1=
+uab8IOMaQHm4VHLUE8ZhqC9WNbVfZTziTMs0Jan-4CM0HWqiEyRoSyMqzQ7UE84eU-8zCpkHMWl=
+yOFVNUiiWDwjJU-jrjzbir2G7KRsGDxQA6E-h9al4SPqN2LPd_UrAGh-ycnErUlau2uDCTAfK2h=
+9imIN3RNvAZPnQ1TXOKt5zN918OazDWejRd3W5JZ-3oDFQoZhD8z-UVZ0x_u7cfEE_II250Jury=
+3FIaPPPNdNALCZG_oPzEqu_-DhB9VV-Ktvpg6E51YLKugX3tM1mWF9GgOtZO-aPrSyZM8KqKdye=
+1EzIo71x8m3Ru8lji8E_ue7k0owMTNfw4NPDjwf3dsnU_NHSa_ePadpNJiMBzlAyAN0om7YFTlN=
+rA~~" rel=3D"noreferrer" style=3D"color:#4A20BA;font-size:16px;font-family:=
+Klarna Text, Roboto, Arial, sans-serif;line-height:21px;font-weight:700;tex=
+t-decoration:none" target=3D"_blank" class=3D"colors-text-accent" universal=
+=3D"true">Chat with us</a></p></td></tr><tr><td height=3D"40px" style=3D"he=
+ight:40px;font-size:40px;line-height:40px;padding:0">&nbsp;</td></tr><tr><t=
+d><table class=3D"footer" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" =
+role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;b=
+order-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100=
+%;min-width:100%"><tbody><tr><td><table class=3D"divider" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=
+=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0=
+pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td class=3D"=
+divider-line" height=3D"1" style=3D"font-size:1px;line-height:1px;height:1p=
+x;background-color:#EEEEEE">&nbsp;</td></tr></tbody></table><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"1=
+00%" style=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-tabl=
+e-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td=
+><table class=3D"spacer" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" r=
+ole=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;bo=
+rder-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%=
+;min-width:100%"><tbody><tr><td height=3D"30" style=3D"font-size:30px;line-=
+height:30px;height:30px">&nbsp;</td></tr></tbody></table><table border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"Margin=
+:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-tab=
+le-rspace:0pt"><tbody><tr><td valign=3D"middle" style=3D"color:#000000;font=
+-size:20px;line-height:20px;font-weight:bold;vertical-align:middle"><a href=
+=3D"https://click.klarna.de/f/open-in-app/9g8BFVtWlPNEmBOAKkeC9w~~/AABVuxA~=
+/3KFGZLq26rt8DpxV3qSlva4T33doVfimyIUu0Q4858mbp6QmTmGZ8JSymhMiCB183aGTxNV9VS=
+T1SY9DdwP1oxrW1wV5MUEh7oSBCXK8faA26YdnwMB0vERQgi0skD6HlzeiwttymtM3D9SDxH-Cm=
+b1QQ-DTiqSAnSy-7qqX_MRt_DVAndt4PKY1GaW0NVakZXfXU-7jWeHzP3QxVWtYc7F7kXQ80r_N=
+xtJlo9pk8jJ9zL476jDWoiTSOskcRuS7AJhEY2LbYRc_pcP5X2kvFj199IdsCf8R7K6UhoFWnJ1=
+kZmMIh8cmVRSSWrbx_Du_-8WuqkjXvOCjNj-3NJHg9fP6RiSCWFJEGm9aZlBYdhY~" target=
+=3D"_blank" rel=3D"noreferrer" universal=3D"true"><img src=3D"https://x.kla=
+rnacdn.net/comms-assets/1.0.10/comms-platform/klarna-logo.png" alt=3D"Klarn=
+a." width=3D"98" height=3D"40" border=3D"0" style=3D"display:block;outline:=
+0;-ms-interpolation-mode:bicubic;width:98px;height:40px"></a></td></tr></tb=
+ody></table><table class=3D"spacer" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;padding:0;=
+border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt=
+;width:100%;min-width:100%"><tbody><tr><td height=3D"30" style=3D"font-size=
+:30px;line-height:30px;height:30px">&nbsp;</td></tr></tbody></table><p clas=
+s=3D"secondary" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:=
+#555555;font-weight:normal;font-size:14px;line-height:20px;Margin-top:0;Mar=
+gin-bottom:0">Klarna Bank AB (publ)<br>Organisation number: <span class=3D"=
+nolink" style=3D"font-family:inherit !important;font-size:inherit !importan=
+t;font-weight:inherit !important;line-height:inherit !important;color:inher=
+it !important;text-decoration:none !important;cursor:text">SE556737-0431</s=
+pan><br>USt-IdNr: <span class=3D"nolink" style=3D"font-family:inherit !impo=
+rtant;font-size:inherit !important;font-weight:inherit !important;line-heig=
+ht:inherit !important;color:inherit !important;text-decoration:none !import=
+ant;cursor:text">SE556737043101</span><br>Chairman of the Board: Sebastian =
+Siemiatkowski</p><table class=3D"spacer" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;paddi=
+ng:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspac=
+e:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"15" style=3D"font=
+-size:15px;line-height:15px;height:15px">&nbsp;</td></tr></tbody></table><p=
+ class=3D"secondary" style=3D"font-family:'Klarna Text', Arial,sans-serif;c=
+olor:#555555;font-weight:normal;font-size:14px;line-height:20px;Margin-top:=
+0;Margin-bottom:0">Postal address in Germany<br><span class=3D"nolink" styl=
+e=3D"font-family:inherit !important;font-size:inherit !important;font-weigh=
+t:inherit !important;line-height:inherit !important;color:inherit !importan=
+t;text-decoration:none !important;cursor:text">Postfach 900162</span><br><s=
+pan class=3D"nolink" style=3D"font-family:inherit !important;font-size:inhe=
+rit !important;font-weight:inherit !important;line-height:inherit !importan=
+t;color:inherit !important;text-decoration:none !important;cursor:text">=0A=
+90492 N=C3=BCrnberg</span></p><table class=3D"spacer" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"M=
+argin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;ms=
+o-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"15" =
+style=3D"font-size:15px;line-height:15px;height:15px">&nbsp;</td></tr></tbo=
+dy></table><p class=3D"secondary" style=3D"font-family:'Klarna Text', Arial=
+,sans-serif;color:#555555;font-weight:normal;font-size:14px;line-height:20p=
+x;Margin-top:0;Margin-bottom:0">Headquarters<br><span class=3D"nolink" styl=
+e=3D"font-family:inherit !important;font-size:inherit !important;font-weigh=
+t:inherit !important;line-height:inherit !important;color:inherit !importan=
+t;text-decoration:none !important;cursor:text">Sveav=C3=A4gen 46</span><br>=
+<span class=3D"nolink" style=3D"font-family:inherit !important;font-size:in=
+herit !important;font-weight:inherit !important;line-height:inherit !import=
+ant;color:inherit !important;text-decoration:none !important;cursor:text">1=
+11 34 Stockholm</span><br>Sweden</p><table class=3D"spacer" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" styl=
+e=3D"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:=
+0pt;mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td height=
+=3D"15" style=3D"font-size:15px;line-height:15px;height:15px">&nbsp;</td></=
+tr></tbody></table><a class=3D"secondary" href=3D"https://click.klarna.de/f=
+/a/NOukEo8UKxdAxs9t72xcAg~~/AABVuxA~/GjFw9NvKSl0jPPFK-KdMXsL2Ea6E1uXLGLvbnz=
+PxprO_DRypnrCAfI7z7JVc61jbI3GxhaKEIjNeXwB3aX7moEvG3AtZZUMMTbxabqbTeUmc7noJI=
+QxG0ODPdkK-tJYrmhHubVGh_NT1RcZZV9yUD-YX3lz56qLYND8beB8cx8iRiQbXb9Ff4zSVUA5o=
+1_Mi" target=3D"_blank" rel=3D"noreferrer" style=3D"font-family:'Klarna Tex=
+t', Arial,sans-serif;color:#555555;font-weight:normal;font-size:14px;line-h=
+eight:20px;text-decoration:underline !important">klarna.com</a><table class=
+=3D"spacer" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presen=
+tation" width=3D"100%" style=3D"Margin:0;padding:0;border:0;border-collapse=
+:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;min-width:10=
+0%"><tbody><tr><td height=3D"15" style=3D"font-size:15px;line-height:15px;h=
+eight:15px">&nbsp;</td></tr></tbody></table><p class=3D"secondary" style=3D=
+"font-family:'Klarna Text', Arial,sans-serif;color:#555555;font-weight:norm=
+al;font-size:14px;line-height:20px;Margin-top:0;Margin-bottom:0">Have you r=
+eceived an email that might be a phishing attempt=3F You can report suspici=
+ous emails with our <a class=3D"secondary" href=3D"https://click.klarna.de/=
+f/a/roXN3ZP5N_r0cwhHXe6_dg~~/AABVuxA~/yCm1Uifb7BGCbVx9By-nPdEV60hvzR5LVIox4=
+NqZZRxVuCMEu0X4DtJUFHJHE8d-ErTii4698oDoEvZOccKfc3do2ZuT8CXw6UJ8QiocLk0eJwP9=
+htVIHDbsEj1QMHTz8OxBr3ZbsGN5kQhFwBAM4mvINLZ-YeiXL7wHJVjrJ044RcY3XoIiOh0wUVu=
+HA4GzKk01R34IASFgAyI6n-Gset2n00nvgGHImzzyv2aPq9w~" target=3D"_blank" rel=3D=
+"noreferrer" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#55=
+5555;font-weight:normal;font-size:14px;line-height:20px;text-decoration:und=
+erline !important">online form</a>. <a class=3D"secondary" href=3D"https://=
+click.klarna.de/f/a/BcgetjrT_3Vm8RorctJNoA~~/AABVuxA~/F_fs09eh5D68qEGpCGCBc=
+Ipb2jWgpVieuQ4Qz919I2uisLaAp3xR5tuo-DiRibjB6CN_aMY3zTkByJc3sW6qpDPRqxE8X2vs=
+OJAnbe2FPNgE8ycnxww3At1Wuk0h23CsEOK8TA1ADccbkLxyABkJwFCjuvhrTkntcXWPmkxLW0k=
+Lvx2qemPBGrbasJv_lDECqavrVT1bBXupRZQdQDQSFQ~~" target=3D"_blank" rel=3D"nor=
+eferrer" style=3D"font-family:'Klarna Text', Arial,sans-serif;color:#555555=
+;font-weight:normal;font-size:14px;line-height:20px;text-decoration:underli=
+ne !important">Learn more</a> about how to spot phishing scams and fraud mo=
+re effectively.</p><table class=3D"spacer" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0;pad=
+ding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rsp=
+ace:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"15" style=3D"fo=
+nt-size:15px;line-height:15px;height:15px">&nbsp;</td></tr></tbody></table>=
+=0A<p class=3D"secondary" style=3D"font-family:'Klarna Text', Arial,sans-se=
+rif;color:#555555;font-weight:normal;font-size:14px;line-height:20px;Margin=
+-top:0;Margin-bottom:0">If you don't want any emails containing deals, insp=
+iration or product news from Klarna in the future, you always have the opti=
+on to <a class=3D"secondary" href=3D"https://click.klarna.de/f/a/Zp_qPuNj8k=
+pThzjFBEX_TQ~~/AABVuxA~/e53JwAih_OgtlhczUwMSTuTnXDAVUSrTIfsRBLwWQXMFXgg4LZ0=
+fQ0fTImLXWEp9bzUDzaQdRARlmQVFxLcVkTOmXB0HTQOgQKMvTwX8pyHCJfC_qkxQDn4dUIEPz1=
+wcKb_KnT7TmuLKLY8QWbtMU8orfp8-iKpt9iSqYd2uFTUH-q6weHg3zoa_VYhqaUi_V8LViZCip=
+fmLnu9_8_ZFAWDaE7rzrgNavXmlaqNxerPGmIUiBMQx4hqkd4hGwh1tm05ldoI_WFotCTOx8IQf=
+dEIvlrQTR0dyD7rGMMzc7dSBZA86pbkMd7E2vhIJ8MNuqVX5yFh0zNYGTCZLD0rZ2yglfhV_Z0O=
+V5Hq4QSKl_EKOLiV1Nkd4T0cmLLM9wwbn5ZqvdAAMy67zQXIUFWpK3mq6fSQNEONj8bLBgbIgBJ=
+P8AGW2YH9PfoNK1fg_WfYr0CRhysWuxIU_giRYG6atBveEB-AloercpEHIswhBsyI4JFQPvB4D1=
+NdOQYONMXay4A0igqftcDLxC-BdRZykbSMicM9Io2I0ZfJ0zaQHjHWTE0ucWhN-i72S2QG3HW0e=
+abVxmmqGmGKnPRycvcVDqbzIGPufUyQ1VxWXnSXM102BZwNwwCGRDNBd-HZ_GSbCNtSwJrlZadP=
+5bxga33HUWJzaKacyOd6bL5ffKhTWbGLW5ZN0koStfgc4ecHq-yTL0CcNVlrfbS57P3CEBuOYce=
+Po5U02n4AkacWL9iSAy3Tjtjp3_eLCQSCwHCg7Bob5pDkWa7HlaQqulDgkz7BfZFSza5lyrJ0_f=
+cGlzvUcLZk~" target=3D"_blank" rel=3D"noreferrer" style=3D"font-family:'Kla=
+rna Text', Arial,sans-serif;color:#555555;font-weight:normal;font-size:14px=
+;line-height:20px;text-decoration:underline !important">opt out</a>.</p></t=
+d></tr></tbody></table><table class=3D"spacer" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D"Margin:0=
+;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;mso-table=
+-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"30" style=
+=3D"font-size:30px;line-height:30px;height:30px">&nbsp;</td></tr></tbody></=
+table></td></tr></tbody></table><table class=3D"spacer" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" role=3D"presentation" width=3D"100%" style=3D=
+"Margin:0;padding:0;border:0;border-collapse:collapse;mso-table-lspace:0pt;=
+mso-table-rspace:0pt;width:100%;min-width:100%"><tbody><tr><td height=3D"50=
+" style=3D"font-size:50px;line-height:50px;height:50px">&nbsp;</td></tr></t=
+body></table></td></tr></tbody></table></td></tr>=0A</tbody></table></td></=
+tr></tbody></table></td></tr></tbody></table>=0D=0A<img border=3D"0" width=
+=3D"1" height=3D"1" alt=3D"" src=3D"https://click.klarna.de/q/iJ2q01rrsiBqh=
+mby-zIyYg~~/AABVuxA~/6uPOVQ-jrXYNeVlpFNbNYLJj2eLQPftVYbQWbDO3pfYccU2SyMIGRI=
+QOCdXIS8uqKtcmuPuGaOOpSLIPuebaJw~~">=0D=0A</body></html>
+--_----htOzkWfw9uYw/sTopJ3T4g===_33/37-16590-8B661596--
+
