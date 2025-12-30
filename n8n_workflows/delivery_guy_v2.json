@@ -34,7 +34,7 @@
         "returnAll": false,
         "limit": 100,
         "filters": {
-          "q": "=newer_than:5d category:primary {order OR bestellung OR shipped OR versandt OR tracking OR sendung OR delivery OR lieferung OR zustellung OR paket OR package OR confirmation OR bestätigung OR dispatch OR shipment OR arriving OR courier OR abholung OR zugestellt OR deine OR your}"
+          "q": "=newer_than:5d {order OR bestellung OR shipped OR versandt OR tracking OR sendung OR delivery OR lieferung OR zustellung OR paket OR package OR confirmation OR bestätigung OR dispatch OR shipment OR arriving OR courier OR abholung OR zugestellt OR deine OR your}"
         },
         "options": {
           "labelIds": ["INBOX"]
@@ -240,7 +240,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Find matching order and decide: CREATE or UPDATE\nconst parsed = $('Parse Response').first().json;\nconst allItems = $input.all();\n// Handle empty sheet - filter out empty items\nconst existingOrders = allItems.filter(item => item.json && Object.keys(item.json).length > 0).map(item => item.json);\n\n// Helper: Generate multiple match keys from an identifier\n// This handles different separator meanings:\n// - Dots are usually formatting (99.60.xxx → 9960xxx)\n// - Dashes are usually separators (XXX-30101502670 → split into parts)\nfunction generateMatchKeys(identifier) {\n  if (!identifier) return [];\n  const id = String(identifier).trim();\n  if (!id) return [];\n  \n  const keys = new Set();\n  \n  // 1. Original (case-insensitive)\n  keys.add(id.toUpperCase());\n  \n  // 2. Dots removed only (Swiss Post style: 99.60.xxx → 9960xxx)\n  const dotsRemoved = id.replace(/\\./g, '').toUpperCase();\n  keys.add(dotsRemoved);\n  \n  // 3. Split on dashes and underscores (compound references)\n  id.split(/[-_]/).forEach(part => {\n    const trimmed = part.trim();\n    if (trimmed.length >= 5) {  // Only meaningful parts\n      keys.add(trimmed.toUpperCase());\n      keys.add(trimmed.replace(/\\./g, '').toUpperCase());\n    }\n  });\n  \n  // 4. All number sequences >= 6 digits (catch embedded IDs)\n  const numbers = id.match(/\\d{6,}/g) || [];\n  numbers.forEach(n => keys.add(n));\n  \n  return [...keys];\n}\n\n// Build lookup maps with multi-key indexing\nconst byKey = new Map();           // order_key -> order\nconst byIdentifier = new Map();    // any identifier variation -> order_key\nconst byStoreOrderId = new Map();  // store_orderid -> order_key\n\nexistingOrders.forEach(order => {\n  if (order.order_key) {\n    byKey.set(order.order_key, order);\n    \n    // Index ALL tracking numbers with ALL their variations\n    if (order.tracking_numbers) {\n      String(order.tracking_numbers).split(', ').forEach(tn => {\n        generateMatchKeys(tn).forEach(key => {\n          byIdentifier.set(key, order.order_key);\n        });\n      });\n    }\n    \n    // Index order IDs with ALL their variations\n    if (order.order_id) {\n      String(order.order_id).split(', ').forEach(oid => {\n        generateMatchKeys(oid).forEach(key => {\n          byIdentifier.set(key, order.order_key);\n        });\n        // Also store+orderId combo\n        if (order.store) {\n          const storeNorm = String(order.store).toLowerCase().replace(/[^a-z0-9]/g, '');\n          byStoreOrderId.set(`${storeNorm}_${oid.trim()}`, order.order_key);\n        }\n      });\n    }\n  }\n});\n\nlet orderKey = parsed.orderKey;\nlet existingOrder = byKey.get(orderKey);\nlet matchMethod = existingOrder ? 'direct_key' : null;\n\n// Helper: Try to find match using multi-key strategy\nfunction findByIdentifier(identifier) {\n  const keys = generateMatchKeys(identifier);\n  for (const key of keys) {\n    const found = byIdentifier.get(key);\n    if (found) return found;\n  }\n  return null;\n}\n\n// Level 2: Try tracking numbers (using multi-key matching)\nif (!existingOrder && parsed.trackingNumbers?.length > 0) {\n  for (const tn of parsed.trackingNumbers) {\n    const foundKey = findByIdentifier(tn);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'tracking_number';\n      break;\n    }\n  }\n}\n\n// Level 3: Try order IDs (using multi-key matching)\nif (!existingOrder && parsed.orderIds?.length > 0) {\n  for (const oid of parsed.orderIds) {\n    const foundKey = findByIdentifier(oid);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'order_id_match';\n      break;\n    }\n  }\n}\n\n// Level 4: Try store + orderId (explicit combo)\nif (!existingOrder && parsed.orderIds?.length > 0 && parsed.effectiveStore) {\n  const storeNorm = parsed.effectiveStore.toLowerCase().replace(/[^a-z0-9]/g, '');\n  for (const oid of parsed.orderIds) {\n    const lookupKey = `${storeNorm}_${String(oid).trim()}`;\n    const foundKey = byStoreOrderId.get(lookupKey);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'store_orderid';\n      break;\n    }\n  }\n}\n\n// Level 5: Try reference numbers (split and match parts)\nif (!existingOrder && parsed.referenceNumbers?.length > 0) {\n  for (const ref of parsed.referenceNumbers) {\n    const foundKey = findByIdentifier(ref);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'reference_match';\n      break;\n    }\n  }\n}\n\n// Level 6: Try carrier + mentioned_store validation\nif (!existingOrder && ['carrier', 'logistics'].includes(parsed.senderType) && parsed.mentionedStore) {\n  const mentionedNorm = parsed.mentionedStore.toLowerCase().replace(/[^a-z0-9]/g, '');\n  // Try all identifiers and validate store matches\n  const allIds = [...(parsed.trackingNumbers || []), ...(parsed.referenceNumbers || [])];\n  for (const id of allIds) {\n    const foundKey = findByIdentifier(id);\n    if (foundKey) {\n      const order = byKey.get(foundKey);\n      if (order) {\n        const orderStoreNorm = String(order.store || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n        if (orderStoreNorm.includes(mentionedNorm) || mentionedNorm.includes(orderStoreNorm)) {\n          orderKey = foundKey;\n          existingOrder = order;\n          matchMethod = 'carrier_store_verified';\n          break;\n        }\n      }\n    }\n  }\n}\n\nif (existingOrder) {\n  // MERGE data for UPDATE\n  const STATUS_ORDER = ['unknown', 'ordered', 'confirmed', 'processing', 'shipped', 'in_transit', 'out_for_delivery', 'delivered', 'returned'];\n  const merged = { ...existingOrder };\n  const incoming = parsed.rowData;\n  \n  // Status: only progress forward\n  const oldIdx = STATUS_ORDER.indexOf(merged.status || 'unknown');\n  const newIdx = STATUS_ORDER.indexOf(incoming.status || 'unknown');\n  if (newIdx > oldIdx || incoming.status === 'returned') {\n    merged.status = incoming.status;\n  }\n  \n  // Fill missing fields\n  ['tracking_url', 'store_order_url', 'delivery_provider', 'expected_delivery', 'amount', 'currency', 'item_description', 'delivery_address'].forEach(f => {\n    if (!merged[f] && incoming[f]) merged[f] = incoming[f];\n  });\n  \n  // Merge tracking numbers (handle arrays or strings)\n  const existingTN = String(merged.tracking_numbers || '').split(', ').filter(t => t);\n  const incomingTN = String(incoming.tracking_numbers || '').split(', ').filter(t => t);\n  // Also add normalized versions for deduplication\n  const allTN = [...existingTN, ...incomingTN];\n  const uniqueTN = [...new Set(allTN.map(t => t.trim()).filter(t => t))];\n  merged.tracking_numbers = uniqueTN.join(', ');\n  \n  // Order date: keep existing or use incoming\n  if (!merged.order_date && incoming.order_date) merged.order_date = incoming.order_date;\n  \n  // Actual delivery\n  if (!merged.actual_delivery && incoming.actual_delivery) merged.actual_delivery = incoming.actual_delivery;\n  \n  // Always update\n  merged.last_updated = incoming.last_updated;\n  merged.last_email_subject = incoming.last_email_subject;\n  merged.last_email_date = incoming.last_email_date;\n  \n  // Append notes\n  if (incoming.notes && !merged.notes?.includes(incoming.notes)) {\n    merged.notes = merged.notes ? merged.notes + ' | ' + incoming.notes : incoming.notes;\n  }\n  \n  return { action: 'update', orderKey, matchMethod, data: merged };\n} else {\n  return { action: 'create', orderKey, data: parsed.rowData };\n}"
+        "jsCode": "// Find matching order and decide: CREATE or UPDATE\nconst parsed = $('Parse Response').first().json;\nconst allItems = $input.all();\n// Handle empty sheet - filter out empty items\nconst existingOrders = allItems.filter(item => item.json && Object.keys(item.json).length > 0).map(item => item.json);\n\n// Helper: Generate multiple match keys from an identifier\n// This handles different separator meanings:\n// - Dots are usually formatting (99.60.xxx → 9960xxx)\n// - Dashes are usually separators (XXX-30101502670 → split into parts)\nfunction generateMatchKeys(identifier) {\n  if (!identifier) return [];\n  const id = String(identifier).trim();\n  if (!id) return [];\n  \n  const keys = new Set();\n  \n  // 1. Original (case-insensitive)\n  keys.add(id.toUpperCase());\n  \n  // 2. Dots removed only (Swiss Post style: 99.60.xxx → 9960xxx)\n  const dotsRemoved = id.replace(/\\./g, '').toUpperCase();\n  keys.add(dotsRemoved);\n  \n  // 3. Split on dashes and underscores (compound references)\n  id.split(/[-_]/).forEach(part => {\n    const trimmed = part.trim();\n    if (trimmed.length >= 5) {  // Only meaningful parts\n      keys.add(trimmed.toUpperCase());\n      keys.add(trimmed.replace(/\\./g, '').toUpperCase());\n    }\n  });\n  \n  // 4. All number sequences >= 6 digits (catch embedded IDs)\n  const numbers = id.match(/\\d{6,}/g) || [];\n  numbers.forEach(n => keys.add(n));\n  \n  return [...keys];\n}\n\n// Build lookup maps with multi-key indexing\nconst byKey = new Map();           // order_key -> order\nconst byIdentifier = new Map();    // any identifier variation -> order_key\nconst byStoreOrderId = new Map();  // store_orderid -> order_key\n\nexistingOrders.forEach(order => {\n  if (order.order_key) {\n    byKey.set(order.order_key, order);\n    \n    // Index ALL tracking numbers with ALL their variations\n    if (order.tracking_numbers) {\n      String(order.tracking_numbers).split(', ').forEach(tn => {\n        generateMatchKeys(tn).forEach(key => {\n          byIdentifier.set(key, order.order_key);\n        });\n      });\n    }\n    \n    // Index order IDs with ALL their variations\n    if (order.order_id) {\n      String(order.order_id).split(', ').forEach(oid => {\n        generateMatchKeys(oid).forEach(key => {\n          byIdentifier.set(key, order.order_key);\n        });\n        // Also store+orderId combo\n        if (order.store) {\n          const storeNorm = String(order.store).toLowerCase().replace(/[^a-z0-9]/g, '');\n          byStoreOrderId.set(`${storeNorm}_${oid.trim()}`, order.order_key);\n        }\n      });\n    }\n  }\n});\n\nlet orderKey = parsed.orderKey;\nlet existingOrder = byKey.get(orderKey);\nlet matchMethod = existingOrder ? 'direct_key' : null;\n\n// Helper: Try to find match using multi-key strategy\nfunction findByIdentifier(identifier) {\n  const keys = generateMatchKeys(identifier);\n  for (const key of keys) {\n    const found = byIdentifier.get(key);\n    if (found) return found;\n  }\n  return null;\n}\n\n// Level 2: Try tracking numbers (using multi-key matching)\nif (!existingOrder && parsed.trackingNumbers?.length > 0) {\n  for (const tn of parsed.trackingNumbers) {\n    const foundKey = findByIdentifier(tn);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'tracking_number';\n      break;\n    }\n  }\n}\n\n// Level 3: Try order IDs (using multi-key matching)\nif (!existingOrder && parsed.orderIds?.length > 0) {\n  for (const oid of parsed.orderIds) {\n    const foundKey = findByIdentifier(oid);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'order_id_match';\n      break;\n    }\n  }\n}\n\n// Level 4: Try store + orderId (explicit combo)\nif (!existingOrder && parsed.orderIds?.length > 0 && parsed.effectiveStore) {\n  const storeNorm = parsed.effectiveStore.toLowerCase().replace(/[^a-z0-9]/g, '');\n  for (const oid of parsed.orderIds) {\n    const lookupKey = `${storeNorm}_${String(oid).trim()}`;\n    const foundKey = byStoreOrderId.get(lookupKey);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'store_orderid';\n      break;\n    }\n  }\n}\n\n// Level 5: Try reference numbers (split and match parts)\nif (!existingOrder && parsed.referenceNumbers?.length > 0) {\n  for (const ref of parsed.referenceNumbers) {\n    const foundKey = findByIdentifier(ref);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'reference_match';\n      break;\n    }\n  }\n}\n\n// Level 6: Try carrier + mentioned_store validation\nif (!existingOrder && ['carrier', 'logistics'].includes(parsed.senderType) && parsed.mentionedStore) {\n  const mentionedNorm = parsed.mentionedStore.toLowerCase().replace(/[^a-z0-9]/g, '');\n  // Try all identifiers and validate store matches\n  const allIds = [...(parsed.trackingNumbers || []), ...(parsed.referenceNumbers || [])];\n  for (const id of allIds) {\n    const foundKey = findByIdentifier(id);\n    if (foundKey) {\n      const order = byKey.get(foundKey);\n      if (order) {\n        const orderStoreNorm = String(order.store || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n        if (orderStoreNorm.includes(mentionedNorm) || mentionedNorm.includes(orderStoreNorm)) {\n          orderKey = foundKey;\n          existingOrder = order;\n          matchMethod = 'carrier_store_verified';\n          break;\n        }\n      }\n    }\n  }\n}\n\n// Check for duplicate records that should be merged\n// This handles: carrier email arrives before store shipping notification\nlet duplicateToDelete = null;\nif (existingOrder && parsed.trackingNumbers?.length > 0) {\n  // We found a match - but check if there's ANOTHER record with same tracking\n  for (const tn of parsed.trackingNumbers) {\n    const keys = generateMatchKeys(tn);\n    for (const key of keys) {\n      const otherKey = byIdentifier.get(key);\n      if (otherKey && otherKey !== orderKey) {\n        const otherOrder = byKey.get(otherKey);\n        // If other record has no order_id (carrier-created), mark for merge\n        if (otherOrder && !otherOrder.order_id) {\n          duplicateToDelete = otherKey;\n          // Merge tracking numbers from duplicate\n          if (otherOrder.tracking_numbers) {\n            parsed.trackingNumbers.push(...String(otherOrder.tracking_numbers).split(', '));\n          }\n          if (otherOrder.tracking_url && !parsed.rowData.tracking_url) {\n            parsed.rowData.tracking_url = otherOrder.tracking_url;\n          }\n          break;\n        }\n      }\n    }\n    if (duplicateToDelete) break;\n  }\n}\n\nif (existingOrder) {\n  // MERGE data for UPDATE\n  const STATUS_ORDER = ['unknown', 'ordered', 'confirmed', 'processing', 'shipped', 'in_transit', 'out_for_delivery', 'delivered', 'returned'];\n  const merged = { ...existingOrder };\n  const incoming = parsed.rowData;\n  \n  // If we found a duplicate, merge its data too\n  if (duplicateToDelete) {\n    const dupOrder = byKey.get(duplicateToDelete);\n    if (dupOrder) {\n      ['tracking_url', 'delivery_provider', 'expected_delivery', 'delivery_address'].forEach(f => {\n        if (!merged[f] && dupOrder[f]) merged[f] = dupOrder[f];\n      });\n      // Merge tracking numbers from duplicate\n      const dupTN = String(dupOrder.tracking_numbers || '').split(', ').filter(t => t);\n      incoming.tracking_numbers = incoming.tracking_numbers + ', ' + dupTN.join(', ');\n    }\n  }\n  \n  // Status: only progress forward\n  const oldIdx = STATUS_ORDER.indexOf(merged.status || 'unknown');\n  const newIdx = STATUS_ORDER.indexOf(incoming.status || 'unknown');\n  if (newIdx > oldIdx || incoming.status === 'returned') {\n    merged.status = incoming.status;\n  }\n  \n  // Fill missing fields\n  ['tracking_url', 'store_order_url', 'delivery_provider', 'expected_delivery', 'amount', 'currency', 'item_description', 'delivery_address'].forEach(f => {\n    if (!merged[f] && incoming[f]) merged[f] = incoming[f];\n  });\n  \n  // Merge tracking numbers (handle arrays or strings)\n  const existingTN = String(merged.tracking_numbers || '').split(', ').filter(t => t);\n  const incomingTN = String(incoming.tracking_numbers || '').split(', ').filter(t => t);\n  // Also add normalized versions for deduplication\n  const allTN = [...existingTN, ...incomingTN];\n  const uniqueTN = [...new Set(allTN.map(t => t.trim()).filter(t => t))];\n  merged.tracking_numbers = uniqueTN.join(', ');\n  \n  // Order date: keep existing or use incoming\n  if (!merged.order_date && incoming.order_date) merged.order_date = incoming.order_date;\n  \n  // Actual delivery\n  if (!merged.actual_delivery && incoming.actual_delivery) merged.actual_delivery = incoming.actual_delivery;\n  \n  // Always update\n  merged.last_updated = incoming.last_updated;\n  merged.last_email_subject = incoming.last_email_subject;\n  merged.last_email_date = incoming.last_email_date;\n  \n  // Append notes\n  if (incoming.notes && !merged.notes?.includes(incoming.notes)) {\n    merged.notes = merged.notes ? merged.notes + ' | ' + incoming.notes : incoming.notes;\n  }\n  \n  // Return with duplicate info for marking\n  return { action: 'update', orderKey, matchMethod, duplicateToMerge: duplicateToDelete, data: merged };\n} else {\n  return { action: 'create', orderKey, data: parsed.rowData };\n}"
       },
       "id": "find-match",
       "name": "Find Match & Merge",
@@ -403,7 +403,7 @@
       "name": "Done",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [3400, 600]
+      "position": [3600, 600]
     },
     {
       "parameters": {},
@@ -412,6 +412,70 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $('Find Match & Merge').item.json.duplicateToMerge }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-duplicate",
+      "name": "Has Duplicate?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [3400, 700]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1H_Kr_hgdlBpl6cdZbf0ZW6cBCpw7zwCoJHoXUJ-O83Q"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columnsToMatchOn": ["order_key"],
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_key": "={{ $('Find Match & Merge').item.json.duplicateToMerge }}",
+            "status": "merged",
+            "notes": "=Merged into: {{ $('Find Match & Merge').item.json.orderKey }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "sheets-mark-merged",
+      "name": "Sheets: Mark Merged",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [3600, 800],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
     }
   ],
   "connections": {
@@ -476,6 +540,15 @@
       "main": [[{ "node": "Loop Over Emails", "type": "main", "index": 0 }]]
     },
     "Sheets: Update": {
+      "main": [[{ "node": "Has Duplicate?", "type": "main", "index": 0 }]]
+    },
+    "Has Duplicate?": {
+      "main": [
+        [{ "node": "Loop Over Emails", "type": "main", "index": 0 }],
+        [{ "node": "Sheets: Mark Merged", "type": "main", "index": 0 }]
+      ]
+    },
+    "Sheets: Mark Merged": {
       "main": [[{ "node": "Loop Over Emails", "type": "main", "index": 0 }]]
     }
   },
