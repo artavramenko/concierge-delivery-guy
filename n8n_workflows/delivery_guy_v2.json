@@ -103,7 +103,12 @@
     {
       "parameters": {
         "operation": "get",
-        "messageId": "={{ $json.id }}"
+        "messageId": "={{ $json.id }}",
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": false
+        },
+        "simple": false
       },
       "id": "gmail-get-full",
       "name": "Gmail: Get Full Message",
@@ -119,7 +124,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Merge full email body with filtered email metadata\nconst fullEmail = $input.first().json;\nconst filteredEmail = $('Loop Over Emails').first().json;\n\n// Get text content - prefer textPlain, fallback to snippet\nlet textContent = fullEmail.textPlain || '';\nif (!textContent && fullEmail.textHtml) {\n  // Strip HTML tags as fallback\n  textContent = fullEmail.textHtml.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').substring(0, 8000);\n}\nif (!textContent) {\n  textContent = fullEmail.snippet || filteredEmail.snippet || '';\n}\n\nreturn {\n  id: filteredEmail.id,\n  threadId: filteredEmail.threadId,\n  subject: filteredEmail.subject,\n  from: filteredEmail.from,\n  date: filteredEmail.date,\n  snippet: filteredEmail.snippet,\n  textPlain: textContent,\n  owner: filteredEmail.owner\n};"
+        "jsCode": "// Merge full email body with filtered email metadata\nconst fullEmail = $input.first().json;\nconst filteredEmail = $('Loop Over Emails').first().json;\n\n// Helper to decode base64url\nfunction decodeBase64Url(str) {\n  if (!str) return '';\n  try {\n    // Replace URL-safe chars and add padding\n    const base64 = str.replace(/-/g, '+').replace(/_/g, '/');\n    const padded = base64 + '=='.slice(0, (4 - base64.length % 4) % 4);\n    return Buffer.from(padded, 'base64').toString('utf-8');\n  } catch (e) {\n    return '';\n  }\n}\n\n// Extract body from Gmail payload structure\nfunction extractBody(payload) {\n  if (!payload) return { text: '', html: '' };\n  \n  let text = '';\n  let html = '';\n  \n  // Direct body\n  if (payload.body?.data) {\n    const decoded = decodeBase64Url(payload.body.data);\n    if (payload.mimeType === 'text/plain') text = decoded;\n    if (payload.mimeType === 'text/html') html = decoded;\n  }\n  \n  // Multipart - check parts recursively\n  if (payload.parts) {\n    for (const part of payload.parts) {\n      if (part.mimeType === 'text/plain' && part.body?.data) {\n        text = decodeBase64Url(part.body.data);\n      } else if (part.mimeType === 'text/html' && part.body?.data) {\n        html = decodeBase64Url(part.body.data);\n      } else if (part.parts) {\n        // Nested multipart\n        const nested = extractBody(part);\n        if (!text && nested.text) text = nested.text;\n        if (!html && nested.html) html = nested.html;\n      }\n    }\n  }\n  \n  return { text, html };\n}\n\nconst body = extractBody(fullEmail.payload);\n\n// Get text content - prefer plain text, fallback to stripped HTML, then snippet\nlet textContent = body.text || '';\nif (!textContent && body.html) {\n  // Strip HTML tags\n  textContent = body.html.replace(/<style[^>]*>.*?<\\/style>/gi, '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 15000);\n}\nif (!textContent) {\n  textContent = fullEmail.snippet || filteredEmail.snippet || '';\n}\n\nreturn {\n  id: filteredEmail.id,\n  threadId: filteredEmail.threadId,\n  subject: filteredEmail.subject,\n  from: filteredEmail.from,\n  date: filteredEmail.date,\n  snippet: filteredEmail.snippet,\n  textPlain: textContent,\n  owner: filteredEmail.owner\n};"
       },
       "id": "merge-email-data",
       "name": "Merge Email Data",
