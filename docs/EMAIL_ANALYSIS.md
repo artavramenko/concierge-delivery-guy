@@ -9,13 +9,13 @@ Based on real email samples from: Zalando, Massimo Dutti, GOREWEAR, ARYS
 ### 1. ZALANDO Order (Split into 2 packages!)
 | Email | From | Key Data |
 |-------|------|----------|
-| Thanks for your order | Zalando | Order confirmed, NO order ID |
-| Your parcel will arrive 30/12-31/12 | Zalando | Tracking: `H1024562675499501017` (Hermes) |
+| Thanks for your order | Zalando | Order ID: `10103677626050` |
+| Your parcel will arrive 30/12-31/12 | Zalando | Order ID: `10103677626050` + Tracking: `H1024562675499501017` (Hermes) |
 | Deine Hermes Sendung von Zalando ist auf dem Weg | Hermes | Tracking: `H1024562675499501017`, mentions "Zalando" |
 | Deine Sendung kommt heute | Hermes | Tracking: `H1024562675499501017` |
-| Your parcel will arrive 03/01-07/01 | Zalando | **SECOND PACKAGE!** Tracking: `JD000390015819013542` |
+| Your parcel will arrive 03/01-07/01 | Zalando | Order ID: `10103677626050` + **SECOND PACKAGE!** Tracking: `JD000390015819013542` |
 
-**Challenge:** No order ID - must link by tracking number AND store name mention in carrier email
+**Linking:** Order ID `10103677626050` links all Zalando emails; tracking numbers link carrier emails
 
 ---
 
@@ -63,10 +63,10 @@ Based on real email samples from: Zalando, Massimo Dutti, GOREWEAR, ARYS
 ### Order IDs
 | Store | Format | Example |
 |-------|--------|---------|
-| Zalando | **NONE** | - |
+| Zalando | Numeric, 14 digits | `10103677626050` |
 | Massimo Dutti | Numeric, 11 digits | `30101502670` |
 | GOREWEAR | Numeric, 6 digits | `517746` |
-| ARYS | Numeric, 4 digits | `5850` |
+| ARYS | Numeric, 4 digits with # | `#5850` |
 
 ### Tracking Numbers
 | Carrier | Format | Example |
