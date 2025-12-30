@@ -419,15 +419,15 @@
           "options": {
             "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "strict"
+            "typeValidation": "loose"
           },
           "conditions": [
             {
-              "leftValue": "={{ $('Find Match & Merge').item.json.duplicateToMerge }}",
-              "rightValue": "",
+              "leftValue": "={{ !!$('Find Match & Merge').item.json.duplicateToMerge }}",
+              "rightValue": true,
               "operator": {
-                "type": "string",
-                "operation": "notEmpty"
+                "type": "boolean",
+                "operation": "equals"
               }
             }
           ],
