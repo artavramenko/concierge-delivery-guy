@@ -1,0 +1,444 @@
+{
+  "name": "🚚 Delivery Guy v2 (Sequential)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule (Every 3h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Configuration\nconst OWNER = 'Artem'; // Change this to your name\nconst SHEET_ID = '1H_Kr_hgdlBpl6cdZbf0ZW6cBCpw7zwCoJHoXUJ-O83Q';\n\nreturn {\n  owner: OWNER,\n  sheetId: SHEET_ID\n};"
+      },
+      "id": "config",
+      "name": "Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 400]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 50,
+        "filters": {
+          "q": "=newer_than:1d {order OR bestellung OR shipped OR versandt OR tracking OR sendung OR delivery OR lieferung OR zustellung OR paket OR package OR confirmation OR bestätigung OR dispatch OR shipment OR arriving OR courier OR abholung OR zugestellt OR deine OR your}"
+        },
+        "options": {
+          "labelIds": ["INBOX"]
+        }
+      },
+      "id": "gmail-get-emails",
+      "name": "Gmail: Get Emails",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [600, 400],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter emails - lightweight pre-filter before Claude\nconst emails = $input.all();\nconst config = $('Config').first().json;\n\n// EXCLUDED SENDERS - skip entirely\nconst EXCLUDED_SENDERS = ['klarna', 'paypal', 'stripe', 'newsletter', 'marketing', 'promo'];\n\n// Keywords that indicate order/delivery emails\nconst ORDER_KEYWORDS = [\n  'order confirmation', 'order #', 'your order', 'order placed', 'order received',\n  'shipped', 'shipping', 'has shipped', 'tracking', 'track your', 'track package',\n  'delivery', 'delivered', 'out for delivery', 'arriving', 'dispatched', 'dispatch',\n  'package', 'parcel', 'shipment', 'courier',\n  'bestellbestätigung', 'bestellung', 'bestellt', 'deine bestellung',\n  'versandt', 'versand', 'sendungsverfolgung', 'verfolgen',\n  'lieferung', 'zustellung', 'zugestellt', 'unterwegs', 'abholung',\n  'paket', 'sendung', 'deine sendung', 'ihr paket'\n];\n\nconst KNOWN_SENDERS = [\n  'amazon', 'zalando', 'asos', 'aboutyou', 'otto', 'hm.com', 'zara',\n  'ebay', 'etsy', 'aliexpress', 'mediamarkt', 'saturn', 'ikea',\n  'dhl', 'dpd', 'hermes', 'myhermes', 'ups', 'gls', 'fedex',\n  'post.ch', 'swisspost', 'deutschepost', 'laposte',\n  'noreply', 'no-reply', 'pakete', 'delivery', 'shipping', 'logistics',\n  'gorewear', 'massimo', 'massimodutti', 'arys'\n];\n\nconst results = [];\n\nfor (const item of emails) {\n  const email = item.json;\n  const subject = (email.Subject || email.subject || '').toLowerCase();\n  const from = (email.From || email.from || '').toLowerCase();\n  const snippet = (email.snippet || '').toLowerCase();\n  \n  // Skip excluded senders\n  if (EXCLUDED_SENDERS.some(ex => from.includes(ex))) continue;\n  \n  const matchesKeyword = ORDER_KEYWORDS.some(kw => subject.includes(kw) || snippet.includes(kw));\n  const matchesSender = KNOWN_SENDERS.some(s => from.includes(s));\n  \n  if (matchesKeyword || matchesSender) {\n    const dateMs = parseInt(email.internalDate) || Date.now();\n    results.push({\n      json: {\n        id: email.id,\n        threadId: email.threadId,\n        subject: email.Subject || email.subject || '',\n        from: email.From || email.from || '',\n        date: new Date(dateMs).toISOString(),\n        snippet: email.snippet || '',\n        textPlain: email.textPlain || email.snippet || '',\n        owner: config.owner\n      }\n    });\n  }\n}\n\nif (results.length === 0) {\n  return [{ json: { noEmails: true, message: 'No order-related emails found' } }];\n}\n\nreturn results;"
+      },
+      "id": "filter-emails",
+      "name": "Filter: Order Emails",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.noEmails }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-emails",
+      "name": "Has Emails?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1000, 400]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "loop-emails",
+      "name": "Loop Over Emails",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1200, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Claude request for single email\nconst email = $input.first().json;\n\nconst prompt = `You are Delivery Guy, an expert email analyzer for parcel tracking. Extract ALL order/delivery information.\n\nEmail Subject: ${email.subject || 'N/A'}\nFrom: ${email.from || 'N/A'}\nDate: ${email.date || 'N/A'}\nContent: ${email.textPlain || email.snippet || 'N/A'}\n\nRespond ONLY with valid JSON:\n{\n  \"is_order_related\": true/false,\n  \"email_type\": \"order_confirmation|shipping_notification|delivery_update|out_for_delivery|delivered|invoice|payment|return|other\",\n  \"sender_type\": \"shop|carrier|logistics|marketplace\",\n  \"store\": \"the ACTUAL STORE/BRAND name (see rules below)\",\n  \"mentioned_store\": \"store mentioned in carrier/logistics emails, or null\",\n  \"order_ids\": [\"ALL order/reference numbers\"],\n  \"tracking_numbers\": [\"ALL tracking numbers\"],\n  \"item_description\": \"items ordered (max 100 chars)\",\n  \"amount\": number or null,\n  \"currency\": \"EUR|USD|CHF|GBP\",\n  \"status\": \"ordered|confirmed|processing|shipped|in_transit|out_for_delivery|delivered|returned|unknown\",\n  \"delivery_provider\": \"DHL|DPD|Hermes|UPS|GLS|FedEx|PostCH|other\",\n  \"tracking_url\": \"full URL for tracking or null\",\n  \"store_order_url\": \"URL to view order on store website or null\",\n  \"expected_delivery\": \"YYYY-MM-DD format ONLY\",\n  \"notes\": \"important details\"\n}\n\nRULES:\n1. STORE: For carriers (DHL, Hermes, GLS), look for 'von X', 'from X' to find actual store\n2. STORE: For logistics (BARTH+CO), look for 'ex. Fa.' to find actual store\n3. DATES: Always YYYY-MM-DD. Convert '30/12/25' to '2025-12-30'\n4. TRACKING: DHL=20 digits, Hermes=H102.../JD000..., GLS=alphanumeric\n5. URLs: Look for 'track', 'sendung', 'order-detail', 'myaccount'`;\n\nconst requestBody = {\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 1500,\n  messages: [{ role: 'user', content: prompt }]\n};\n\nreturn { requestBody, emailData: email };"
+      },
+      "id": "prepare-claude",
+      "name": "Prepare Claude",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1400, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.requestBody }}",
+        "options": {}
+      },
+      "id": "claude-analyze",
+      "name": "Claude: Analyze",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CLAUDE_CREDENTIAL_ID",
+          "name": "Claude Api Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Claude response for single email\nconst response = $input.first().json;\nconst emailData = $('Prepare Claude').first().json.emailData;\n\nlet analysis;\ntry {\n  const content = response.content?.[0]?.text || '{}';\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : { is_order_related: false };\n} catch (e) {\n  analysis = { is_order_related: false, error: e.message };\n}\n\nif (!analysis.is_order_related) {\n  return { skip: true, reason: analysis.email_type || 'not_order_related' };\n}\n\n// Normalize arrays\nconst orderIds = Array.isArray(analysis.order_ids) ? analysis.order_ids : (analysis.order_id ? [analysis.order_id] : []);\nconst trackingNumbers = Array.isArray(analysis.tracking_numbers) ? analysis.tracking_numbers : (analysis.tracking_number ? [analysis.tracking_number] : []);\n\n// Determine effective store\nconst senderType = analysis.sender_type || 'shop';\nconst needsMentionedStore = ['carrier', 'logistics'].includes(senderType);\nconst effectiveStore = needsMentionedStore \n  ? (analysis.mentioned_store || analysis.store || 'unknown')\n  : (analysis.store || 'unknown');\n\nconst storeName = effectiveStore.toLowerCase().replace(/[^a-z0-9]/g, '');\nconst primaryOrderId = orderIds[0] || '';\n\n// Generate order key\nlet orderKey;\nif (primaryOrderId) {\n  orderKey = `${storeName}_${String(primaryOrderId).replace(/[^a-z0-9]/gi, '')}`;\n} else if (trackingNumbers[0]) {\n  orderKey = `${storeName}_track_${trackingNumbers[0].replace(/[^a-z0-9]/gi, '')}`;\n} else {\n  orderKey = `${storeName}_${emailData.id || Date.now()}`;\n}\n\nconst now = new Date().toISOString();\nconst emailDate = emailData.date ? new Date(emailData.date).toISOString().split('T')[0] : now.split('T')[0];\n\n// Extract email address\nconst emailMatch = (emailData.from || '').match(/<([^>]+)>/);\nconst emailAccount = emailMatch ? emailMatch[1] : emailData.from || '';\n\nreturn {\n  skip: false,\n  orderKey,\n  senderType,\n  effectiveStore,\n  orderIds,\n  trackingNumbers,\n  mentionedStore: analysis.mentioned_store || null,\n  rowData: {\n    order_key: orderKey,\n    order_id: orderIds.join(', '),\n    owner: emailData.owner || 'Unknown',\n    email_account: emailAccount,\n    store: effectiveStore,\n    item_description: (analysis.item_description || '').substring(0, 100),\n    order_date: analysis.email_type === 'order_confirmation' ? emailDate : '',\n    amount: analysis.amount || '',\n    currency: analysis.currency || 'EUR',\n    status: analysis.status || 'unknown',\n    delivery_provider: analysis.delivery_provider || '',\n    tracking_numbers: trackingNumbers.join(', '),\n    tracking_url: analysis.tracking_url || '',\n    store_order_url: analysis.store_order_url || '',\n    expected_delivery: analysis.expected_delivery || '',\n    actual_delivery: analysis.status === 'delivered' ? emailDate : '',\n    last_updated: now,\n    last_email_subject: emailData.subject || '',\n    last_email_date: emailData.date || '',\n    notes: analysis.notes || ''\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1800, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-skip",
+      "name": "Skip?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2000, 500]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1H_Kr_hgdlBpl6cdZbf0ZW6cBCpw7zwCoJHoXUJ-O83Q"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "fetch-orders",
+      "name": "Fetch Orders",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2200, 600],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Find matching order and decide: CREATE or UPDATE\nconst parsed = $('Parse Response').first().json;\nconst existingOrders = $input.all().map(item => item.json);\n\n// Build lookup maps\nconst byKey = new Map();\nconst byTracking = new Map();\nconst byStoreOrderId = new Map();\n\nexistingOrders.forEach(order => {\n  if (order.order_key) {\n    byKey.set(order.order_key, order);\n    \n    // Index tracking numbers\n    if (order.tracking_numbers) {\n      String(order.tracking_numbers).split(', ').forEach(tn => {\n        if (tn) byTracking.set(tn.trim(), order.order_key);\n      });\n    }\n    \n    // Index store+orderId\n    if (order.order_id && order.store) {\n      const storeNorm = String(order.store).toLowerCase().replace(/[^a-z0-9]/g, '');\n      String(order.order_id).split(', ').forEach(oid => {\n        if (oid) byStoreOrderId.set(`${storeNorm}_${oid.trim()}`, order.order_key);\n      });\n    }\n  }\n});\n\nlet orderKey = parsed.orderKey;\nlet existingOrder = byKey.get(orderKey);\nlet matchMethod = existingOrder ? 'direct_key' : null;\n\n// Level 2: Try tracking number\nif (!existingOrder && parsed.trackingNumbers?.length > 0) {\n  for (const tn of parsed.trackingNumbers) {\n    const foundKey = byTracking.get(tn);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'tracking_number';\n      break;\n    }\n  }\n}\n\n// Level 3: Try mentioned_store + tracking (for carrier emails)\nif (!existingOrder && ['carrier', 'logistics'].includes(parsed.senderType) && parsed.mentionedStore) {\n  const mentionedNorm = parsed.mentionedStore.toLowerCase().replace(/[^a-z0-9]/g, '');\n  for (const tn of (parsed.trackingNumbers || [])) {\n    const foundKey = byTracking.get(tn);\n    if (foundKey) {\n      const order = byKey.get(foundKey);\n      if (order) {\n        const orderStoreNorm = String(order.store || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n        if (orderStoreNorm.includes(mentionedNorm) || mentionedNorm.includes(orderStoreNorm)) {\n          orderKey = foundKey;\n          existingOrder = order;\n          matchMethod = 'carrier_store_link';\n          break;\n        }\n      }\n    }\n  }\n}\n\n// Level 4: Try store + orderId\nif (!existingOrder && parsed.orderIds?.length > 0) {\n  const storeNorm = parsed.effectiveStore.toLowerCase().replace(/[^a-z0-9]/g, '');\n  for (const oid of parsed.orderIds) {\n    const lookupKey = `${storeNorm}_${String(oid).trim()}`;\n    const foundKey = byStoreOrderId.get(lookupKey);\n    if (foundKey) {\n      orderKey = foundKey;\n      existingOrder = byKey.get(foundKey);\n      matchMethod = 'store_orderid';\n      break;\n    }\n  }\n}\n\nif (existingOrder) {\n  // MERGE data for UPDATE\n  const STATUS_ORDER = ['unknown', 'ordered', 'confirmed', 'processing', 'shipped', 'in_transit', 'out_for_delivery', 'delivered', 'returned'];\n  const merged = { ...existingOrder };\n  const incoming = parsed.rowData;\n  \n  // Status: only progress forward\n  const oldIdx = STATUS_ORDER.indexOf(merged.status || 'unknown');\n  const newIdx = STATUS_ORDER.indexOf(incoming.status || 'unknown');\n  if (newIdx > oldIdx || incoming.status === 'returned') {\n    merged.status = incoming.status;\n  }\n  \n  // Fill missing fields\n  ['tracking_url', 'store_order_url', 'delivery_provider', 'expected_delivery', 'amount', 'currency', 'item_description'].forEach(f => {\n    if (!merged[f] && incoming[f]) merged[f] = incoming[f];\n  });\n  \n  // Merge tracking numbers\n  const existingTN = (merged.tracking_numbers || '').split(', ').filter(t => t);\n  const incomingTN = (incoming.tracking_numbers || '').split(', ').filter(t => t);\n  merged.tracking_numbers = [...new Set([...existingTN, ...incomingTN])].join(', ');\n  \n  // Order date: keep existing or use incoming\n  if (!merged.order_date && incoming.order_date) merged.order_date = incoming.order_date;\n  \n  // Actual delivery\n  if (!merged.actual_delivery && incoming.actual_delivery) merged.actual_delivery = incoming.actual_delivery;\n  \n  // Always update\n  merged.last_updated = incoming.last_updated;\n  merged.last_email_subject = incoming.last_email_subject;\n  merged.last_email_date = incoming.last_email_date;\n  \n  // Append notes\n  if (incoming.notes && !merged.notes?.includes(incoming.notes)) {\n    merged.notes = merged.notes ? merged.notes + ' | ' + incoming.notes : incoming.notes;\n  }\n  \n  return { action: 'update', orderKey, matchMethod, data: merged };\n} else {\n  return { action: 'create', orderKey, data: parsed.rowData };\n}"
+      },
+      "id": "find-match",
+      "name": "Find Match & Merge",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2400, 600]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "create",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputLabel": "Create"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "update",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputLabel": "Update"
+            }
+          ]
+        },
+        "options": { "fallbackOutput": "none" }
+      },
+      "id": "switch-action",
+      "name": "Create or Update?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [2600, 600]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1H_Kr_hgdlBpl6cdZbf0ZW6cBCpw7zwCoJHoXUJ-O83Q"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_key": "={{ $json.data.order_key }}",
+            "order_id": "={{ $json.data.order_id }}",
+            "owner": "={{ $json.data.owner }}",
+            "email_account": "={{ $json.data.email_account }}",
+            "store": "={{ $json.data.store }}",
+            "item_description": "={{ $json.data.item_description }}",
+            "order_date": "={{ $json.data.order_date }}",
+            "amount": "={{ $json.data.amount }}",
+            "currency": "={{ $json.data.currency }}",
+            "status": "={{ $json.data.status }}",
+            "delivery_provider": "={{ $json.data.delivery_provider }}",
+            "tracking_numbers": "={{ $json.data.tracking_numbers }}",
+            "tracking_url": "={{ $json.data.tracking_url }}",
+            "store_order_url": "={{ $json.data.store_order_url }}",
+            "expected_delivery": "={{ $json.data.expected_delivery }}",
+            "actual_delivery": "={{ $json.data.actual_delivery }}",
+            "last_updated": "={{ $json.data.last_updated }}",
+            "last_email_subject": "={{ $json.data.last_email_subject }}",
+            "last_email_date": "={{ $json.data.last_email_date }}",
+            "notes": "={{ $json.data.notes }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "sheets-create",
+      "name": "Sheets: Create",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2800, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1H_Kr_hgdlBpl6cdZbf0ZW6cBCpw7zwCoJHoXUJ-O83Q"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_key": "={{ $json.orderKey }}",
+            "order_id": "={{ $json.data.order_id }}",
+            "store": "={{ $json.data.store }}",
+            "item_description": "={{ $json.data.item_description }}",
+            "order_date": "={{ $json.data.order_date }}",
+            "amount": "={{ $json.data.amount }}",
+            "currency": "={{ $json.data.currency }}",
+            "status": "={{ $json.data.status }}",
+            "delivery_provider": "={{ $json.data.delivery_provider }}",
+            "tracking_numbers": "={{ $json.data.tracking_numbers }}",
+            "tracking_url": "={{ $json.data.tracking_url }}",
+            "store_order_url": "={{ $json.data.store_order_url }}",
+            "expected_delivery": "={{ $json.data.expected_delivery }}",
+            "actual_delivery": "={{ $json.data.actual_delivery }}",
+            "last_updated": "={{ $json.data.last_updated }}",
+            "last_email_subject": "={{ $json.data.last_email_subject }}",
+            "last_email_date": "={{ $json.data.last_email_date }}",
+            "notes": "={{ $json.data.notes }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "sheets-update",
+      "name": "Sheets: Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2800, 700],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "noop-done",
+      "name": "Done",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [3000, 600]
+    },
+    {
+      "parameters": {},
+      "id": "noop-no-emails",
+      "name": "No Emails",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1200, 300]
+    }
+  ],
+  "connections": {
+    "Schedule (Every 3h)": {
+      "main": [[{ "node": "Config", "type": "main", "index": 0 }]]
+    },
+    "Config": {
+      "main": [[{ "node": "Gmail: Get Emails", "type": "main", "index": 0 }]]
+    },
+    "Gmail: Get Emails": {
+      "main": [[{ "node": "Filter: Order Emails", "type": "main", "index": 0 }]]
+    },
+    "Filter: Order Emails": {
+      "main": [[{ "node": "Has Emails?", "type": "main", "index": 0 }]]
+    },
+    "Has Emails?": {
+      "main": [
+        [{ "node": "No Emails", "type": "main", "index": 0 }],
+        [{ "node": "Loop Over Emails", "type": "main", "index": 0 }]
+      ]
+    },
+    "Loop Over Emails": {
+      "main": [
+        [{ "node": "Done", "type": "main", "index": 0 }],
+        [{ "node": "Prepare Claude", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Claude": {
+      "main": [[{ "node": "Claude: Analyze", "type": "main", "index": 0 }]]
+    },
+    "Claude: Analyze": {
+      "main": [[{ "node": "Parse Response", "type": "main", "index": 0 }]]
+    },
+    "Parse Response": {
+      "main": [[{ "node": "Skip?", "type": "main", "index": 0 }]]
+    },
+    "Skip?": {
+      "main": [
+        [{ "node": "Loop Over Emails", "type": "main", "index": 0 }],
+        [{ "node": "Fetch Orders", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fetch Orders": {
+      "main": [[{ "node": "Find Match & Merge", "type": "main", "index": 0 }]]
+    },
+    "Find Match & Merge": {
+      "main": [[{ "node": "Create or Update?", "type": "main", "index": 0 }]]
+    },
+    "Create or Update?": {
+      "main": [
+        [{ "node": "Sheets: Create", "type": "main", "index": 0 }],
+        [{ "node": "Sheets: Update", "type": "main", "index": 0 }]
+      ]
+    },
+    "Sheets: Create": {
+      "main": [[{ "node": "Loop Over Emails", "type": "main", "index": 0 }]]
+    },
+    "Sheets: Update": {
+      "main": [[{ "node": "Loop Over Emails", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
+
