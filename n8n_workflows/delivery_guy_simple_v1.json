@@ -92,6 +92,16 @@
     },
     {
       "parameters": {
+        "jsCode": "// Prepare Claude API request body with properly escaped content\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const email = item.json;\n  \n  const prompt = `You are Delivery Guy, an email analysis assistant for parcel tracking. Analyze this email and extract order/delivery information if present.\n\nEmail Subject: ${email.subject || 'N/A'}\nFrom: ${email.from || 'N/A'}\nDate: ${email.date || 'N/A'}\nContent: ${email.textPlain || email.snippet || 'N/A'}\n\nRespond ONLY with valid JSON (no markdown, no explanation):\n{\n  \"is_order_related\": true or false,\n  \"email_type\": \"order_confirmation|shipping_notification|delivery_update|delivered|return|tracking_info|promotional|other\",\n  \"order_id\": \"order/reference number or null\",\n  \"store\": \"store/shop name or null\",\n  \"item_description\": \"brief description of items (max 100 chars) or null\",\n  \"amount\": number or null,\n  \"currency\": \"EUR\" or detected currency,\n  \"status\": \"ordered|confirmed|shipped|out_for_delivery|delivered|returned|unknown\",\n  \"delivery_provider\": \"DHL|DPD|Hermes|UPS|GLS|FedEx|Amazon Logistics|null\",\n  \"tracking_number\": \"tracking number or null\",\n  \"tracking_url\": \"full tracking URL or null\",\n  \"store_order_url\": \"URL to order status page on store's website or null\",\n  \"expected_delivery\": \"YYYY-MM-DD or null\",\n  \"notes\": \"important details or null\"\n}\n\nIf not order-related (promotional, newsletter, etc), set is_order_related: false.`;\n\n  const requestBody = {\n    model: 'claude-sonnet-4-20250514',\n    max_tokens: 1500,\n    messages: [\n      {\n        role: 'user',\n        content: prompt\n      }\n    ]\n  };\n  \n  results.push({ json: { requestBody, emailData: email } });\n}\n\nreturn results;"
+      },
+      "id": "prepare-claude-request",
+      "name": "Prepare Claude Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 500]
+    },
+    {
+      "parameters": {
         "method": "POST",
         "url": "https://api.anthropic.com/v1/messages",
         "authentication": "genericCredentialType",
@@ -111,14 +121,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 1500,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"You are Delivery Guy, an email analysis assistant for parcel tracking. Analyze this email and extract order/delivery information if present.\\n\\nEmail Subject: {{ $json.subject }}\\nFrom: {{ $json.from }}\\nDate: {{ $json.date }}\\nContent: {{ $json.textPlain }}\\n\\nRespond ONLY with valid JSON (no markdown, no explanation):\\n{\\n  \\\"is_order_related\\\": true or false,\\n  \\\"email_type\\\": \\\"order_confirmation|shipping_notification|delivery_update|delivered|return|tracking_info|promotional|other\\\",\\n  \\\"order_id\\\": \\\"order/reference number or null\\\",\\n  \\\"store\\\": \\\"store/shop name or null\\\",\\n  \\\"item_description\\\": \\\"brief description of items (max 100 chars) or null\\\",\\n  \\\"amount\\\": number or null,\\n  \\\"currency\\\": \\\"EUR\\\" or detected currency,\\n  \\\"status\\\": \\\"ordered|confirmed|shipped|out_for_delivery|delivered|returned|unknown\\\",\\n  \\\"delivery_provider\\\": \\\"DHL|DPD|Hermes|UPS|GLS|FedEx|Amazon Logistics|null\\\",\\n  \\\"tracking_number\\\": \\\"tracking number or null\\\",\\n  \\\"tracking_url\\\": \\\"full tracking URL or null\\\",\\n  \\\"store_order_url\\\": \\\"URL to order status page on store's website or null\\\",\\n  \\\"expected_delivery\\\": \\\"YYYY-MM-DD or null\\\",\\n  \\\"notes\\\": \\\"important details or null\\\"\\n}\\n\\nIf not order-related (promotional, newsletter, etc), set is_order_related: false.\"\n    }\n  ]\n}",
+        "jsonBody": "={{ $json.requestBody }}",
         "options": {}
       },
       "id": "claude-analyze",
       "name": "Analyze with Claude",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1300, 500],
+      "position": [1400, 500],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CLAUDE_CREDENTIAL_ID",
@@ -128,7 +138,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Parse Claude responses - process ALL items\nconst allResponses = $input.all();\nconst allEmails = $('Filter: Order Emails').all();\nconst results = [];\n\nfor (let i = 0; i < allResponses.length; i++) {\n  const response = allResponses[i].json;\n  const emailData = allEmails[i]?.json || {};\n  \n  let analysis;\n  try {\n    const content = response.content?.[0]?.text || '{}';\n    const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n    analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : { is_order_related: false };\n  } catch (e) {\n    analysis = { is_order_related: false, error: e.message };\n  }\n  \n  if (!analysis.is_order_related) {\n    results.push({ json: { skip: true, reason: analysis.email_type || 'not_order_related', emailId: emailData.id } });\n    continue;\n  }\n  \n  // Generate unique order key based on store + order_id (or timestamp if no order_id)\n  const storeName = (analysis.store || 'unknown').toLowerCase().replace(/[^a-z0-9]/g, '');\n  const orderKey = analysis.order_id \n    ? `${storeName}_${analysis.order_id.replace(/[^a-z0-9]/gi, '')}`\n    : `${storeName}_${emailData.id || Date.now()}`;\n  \n  const now = new Date().toISOString();\n  const emailDate = emailData.date ? new Date(emailData.date).toISOString().split('T')[0] : now.split('T')[0];\n  \n  // Extract email from \"Name <email@domain.com>\" format\n  const emailMatch = (emailData.from || '').match(/<([^>]+)>/);\n  const emailAccount = emailMatch ? emailMatch[1] : emailData.from || '';\n  \n  results.push({\n    json: {\n      skip: false,\n      orderKey,\n      analysis,\n      emailData: {\n        id: emailData.id,\n        subject: emailData.subject,\n        from: emailData.from,\n        date: emailData.date,\n        owner: emailData.owner\n      },\n      rowData: {\n        order_key: orderKey,\n        order_id: analysis.order_id || '',\n        owner: emailData.owner || 'Unknown',\n        email_account: emailAccount,\n        store: analysis.store || 'Unknown',\n        item_description: (analysis.item_description || '').substring(0, 100),\n        order_date: analysis.email_type === 'order_confirmation' ? emailDate : '',\n        amount: analysis.amount || '',\n        currency: analysis.currency || 'EUR',\n        status: analysis.status || 'unknown',\n        delivery_provider: analysis.delivery_provider || '',\n        tracking_number: analysis.tracking_number || '',\n        tracking_url: analysis.tracking_url || '',\n        store_order_url: analysis.store_order_url || '',\n        expected_delivery: analysis.expected_delivery || '',\n        actual_delivery: analysis.status === 'delivered' ? emailDate : '',\n        last_updated: now,\n        last_email_subject: emailData.subject || '',\n        last_email_date: emailData.date || '',\n        notes: analysis.notes || ''\n      }\n    }\n  });\n}\n\nreturn results;"
+        "jsCode": "// Parse Claude responses - process ALL items\nconst allResponses = $input.all();\nconst allPrepared = $('Prepare Claude Request').all();\nconst results = [];\n\nfor (let i = 0; i < allResponses.length; i++) {\n  const response = allResponses[i].json;\n  const emailData = allPrepared[i]?.json?.emailData || {};\n  \n  let analysis;\n  try {\n    const content = response.content?.[0]?.text || '{}';\n    const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n    analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : { is_order_related: false };\n  } catch (e) {\n    analysis = { is_order_related: false, error: e.message };\n  }\n  \n  if (!analysis.is_order_related) {\n    results.push({ json: { skip: true, reason: analysis.email_type || 'not_order_related', emailId: emailData.id } });\n    continue;\n  }\n  \n  // Generate unique order key based on store + order_id (or timestamp if no order_id)\n  const storeName = (analysis.store || 'unknown').toLowerCase().replace(/[^a-z0-9]/g, '');\n  const orderKey = analysis.order_id \n    ? `${storeName}_${analysis.order_id.replace(/[^a-z0-9]/gi, '')}`\n    : `${storeName}_${emailData.id || Date.now()}`;\n  \n  const now = new Date().toISOString();\n  const emailDate = emailData.date ? new Date(emailData.date).toISOString().split('T')[0] : now.split('T')[0];\n  \n  // Extract email from \"Name <email@domain.com>\" format\n  const emailMatch = (emailData.from || '').match(/<([^>]+)>/);\n  const emailAccount = emailMatch ? emailMatch[1] : emailData.from || '';\n  \n  results.push({\n    json: {\n      skip: false,\n      orderKey,\n      analysis,\n      emailData: {\n        id: emailData.id,\n        subject: emailData.subject,\n        from: emailData.from,\n        date: emailData.date,\n        owner: emailData.owner\n      },\n      rowData: {\n        order_key: orderKey,\n        order_id: analysis.order_id || '',\n        owner: emailData.owner || 'Unknown',\n        email_account: emailAccount,\n        store: analysis.store || 'Unknown',\n        item_description: (analysis.item_description || '').substring(0, 100),\n        order_date: analysis.email_type === 'order_confirmation' ? emailDate : '',\n        amount: analysis.amount || '',\n        currency: analysis.currency || 'EUR',\n        status: analysis.status || 'unknown',\n        delivery_provider: analysis.delivery_provider || '',\n        tracking_number: analysis.tracking_number || '',\n        tracking_url: analysis.tracking_url || '',\n        store_order_url: analysis.store_order_url || '',\n        expected_delivery: analysis.expected_delivery || '',\n        actual_delivery: analysis.status === 'delivered' ? emailDate : '',\n        last_updated: now,\n        last_email_subject: emailData.subject || '',\n        last_email_date: emailData.date || '',\n        notes: analysis.notes || ''\n      }\n    }\n  });\n}\n\nreturn results;"
       },
       "id": "parse-response",
       "name": "Parse Response",
@@ -407,6 +417,13 @@
     "Has Emails?": {
       "main": [
         [],
+        [
+          { "node": "Prepare Claude Request", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Prepare Claude Request": {
+      "main": [
         [
           { "node": "Analyze with Claude", "type": "main", "index": 0 }
         ]
