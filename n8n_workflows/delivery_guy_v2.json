@@ -545,8 +545,8 @@
     },
     "Has Duplicate?": {
       "main": [
-        [{ "node": "Loop Over Emails", "type": "main", "index": 0 }],
-        [{ "node": "Sheets: Mark Merged", "type": "main", "index": 0 }]
+        [{ "node": "Sheets: Mark Merged", "type": "main", "index": 0 }],
+        [{ "node": "Loop Over Emails", "type": "main", "index": 0 }]
       ]
     },
     "Sheets: Mark Merged": {
